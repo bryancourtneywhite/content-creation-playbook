@@ -378,6 +378,159 @@
   }
   .cost-summary strong { color: #fff; }
 
+  /* ---------- GOLDEN META EXAMPLES ---------- */
+  .frontpage-note {
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto 40px;
+    color: var(--muted);
+    font-size: 15px;
+  }
+  .frontpage-note .fp-badge {
+    display: inline-block;
+    margin: 0 4px;
+    padding: 3px 12px;
+    border-radius: 999px;
+    background: rgba(214, 30, 44, 0.16);
+    color: #ff8089;
+    border: 1px solid rgba(214, 30, 44, 0.4);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  .example {
+    margin-bottom: 34px;
+    padding: 26px;
+    border-radius: 22px;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+  }
+  .example-head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .example-thumb {
+    width: 240px;
+    max-width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid rgba(214, 30, 44, 0.35);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    display: block;
+  }
+  .example-titles { flex: 1; min-width: 220px; }
+  .example-role {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    font-weight: 700;
+  }
+  .example-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin: 6px 0 8px;
+    line-height: 1.25;
+  }
+  .example-title a { color: #fff; text-decoration: none; }
+  .example-title a:hover { color: var(--accent-2); text-decoration: underline; }
+  .fp-tag {
+    display: inline-block;
+    padding: 3px 11px;
+    border-radius: 999px;
+    background: rgba(245, 197, 66, 0.15);
+    color: #f5c542;
+    border: 1px solid rgba(245, 197, 66, 0.35);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  .meta-block { margin-top: 16px; }
+  .meta-block .meta-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .meta-block .placeholder-pill {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(255,157,107,0.15);
+    color: #ff9d6b;
+    border: 1px solid rgba(255,157,107,0.35);
+    letter-spacing: 0.5px;
+    text-transform: none;
+  }
+  .code-box {
+    background: #0d0b0f;
+    border: 1px solid rgba(214, 30, 44, 0.22);
+    border-radius: 12px;
+    padding: 16px 18px;
+    font-family: 'Consolas', 'SF Mono', monospace;
+    font-size: 13.5px;
+    color: #d8d0d4;
+    white-space: pre-wrap;
+    line-height: 1.55;
+    overflow-x: auto;
+  }
+  .tag-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag-chip {
+    padding: 6px 13px;
+    border-radius: 999px;
+    background: rgba(214,30,44,0.10);
+    border: 1px solid rgba(214,30,44,0.28);
+    color: #f0c8cc;
+    font-size: 13px;
+  }
+  .data-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 4px;
+  }
+  .data-cell {
+    flex: 1;
+    min-width: 120px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--panel-border);
+  }
+  .data-cell .dv { font-size: 20px; font-weight: 800; color: #fff; }
+  .data-cell .dl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+  .thumb-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+  .thumb-card {
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--panel-border);
+    background: var(--panel);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+  .thumb-card:hover { transform: translateY(-5px); border-color: rgba(214,30,44,0.6); }
+  .thumb-card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+  .thumb-card .tc-cap { padding: 10px 14px; font-size: 13px; color: var(--muted); }
+  .thumb-card .tc-cap strong { color: #fff; display: block; margin-bottom: 2px; font-size: 13.5px; }
+
   /* ---------- FLOW STRIP ---------- */
   .flow {
     display: flex;
@@ -652,6 +805,246 @@
       <div class="ico">⏱️</div>
       <h4>Timestamps matter</h4>
       <p>Chapters keep viewers watching longer and help YouTube understand your content.</p>
+    </div>
+  </div>
+
+  <!-- GOLDEN META — REAL EXAMPLES -->
+  <div class="section-head">
+    <div class="kicker">Golden Meta</div>
+    <h2>Real examples that hit front page</h2>
+    <p>Templates are theory. These are the real videos that worked. Study the pattern, then remix it for your own content.</p>
+  </div>
+
+  <p class="frontpage-note">
+    These three AION 2 Templar videos from <strong>Ashura Whole Heavens</strong> all reached the game's front page.
+    Each one plays a different role in the channel:
+    <span class="fp-badge">TOP META</span>
+    <span class="fp-badge">GUIDE</span>
+    <span class="fp-badge">INTERACTIVE</span>
+  </p>
+
+  <!-- Thumbnail gallery for VidIQ reference -->
+  <div class="section-head" style="margin:20px 0 24px;">
+    <div class="kicker">🖼️ Thumbnail Examples</div>
+    <h2 style="font-size:clamp(22px,4vw,32px);">Feed these to VidIQ</h2>
+    <p>Front-page thumbnails from the channel. Use them as style references when generating your own in VidIQ — note the bold subject, high contrast, and consistent branding.</p>
+  </div>
+  <div class="thumb-gallery">
+    <div class="thumb-card">
+      <a href="https://youtu.be/1ebgmpl1YxQ" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/1ebgmpl1YxQ/hqdefault.jpg" alt="Templar Macros thumbnail" loading="lazy">
+      </a>
+      <div class="tc-cap"><strong>Top Meta</strong>Punchy, curiosity-driven hook</div>
+    </div>
+    <div class="thumb-card">
+      <a href="https://youtu.be/e8xxp9XuqZM" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/e8xxp9XuqZM/hqdefault.jpg" alt="Templar Ultimate Guide thumbnail" loading="lazy">
+      </a>
+      <div class="tc-cap"><strong>Guide</strong>Clear "ultimate guide" framing</div>
+    </div>
+    <div class="thumb-card">
+      <a href="https://youtu.be/Nro6Eh5drsc" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/Nro6Eh5drsc/hqdefault.jpg" alt="1 Million AP Farm thumbnail" loading="lazy">
+      </a>
+      <div class="tc-cap"><strong>Interactive</strong>Big-number result = big clicks</div>
+    </div>
+  </div>
+
+  <!-- VIDEO 1 — TOP META -->
+  <div class="example">
+    <div class="example-head">
+      <img class="example-thumb" src="https://i.ytimg.com/vi/1ebgmpl1YxQ/hqdefault.jpg" alt="Templar Macros" loading="lazy">
+      <div class="example-titles">
+        <div class="example-role">Video 1 · The Top Meta</div>
+        <div class="example-title">
+          <a href="https://youtu.be/1ebgmpl1YxQ" target="_blank" rel="noopener">You're Using the WRONG Templar Macros</a>
+        </div>
+        <span class="fp-tag">🏆 FRONT PAGE — AION 2</span>
+      </div>
+    </div>
+
+    <p style="color:var(--muted);">Why it works: a <strong>callout hook</strong> ("You're using the WRONG…") triggers curiosity and doubt. Short, punchy, and speaks directly to Templar players. This is the pattern to reach for when you want maximum reach.</p>
+
+    <div class="meta-block">
+      <div class="meta-label">🏷️ Tags <span class="placeholder-pill">example — swap in your real tags</span></div>
+      <div class="tag-chips">
+        <span class="tag-chip">aion 2</span>
+        <span class="tag-chip">aion 2 templar</span>
+        <span class="tag-chip">templar macros</span>
+        <span class="tag-chip">aion 2 templar build</span>
+        <span class="tag-chip">aion 2 pvp</span>
+        <span class="tag-chip">templar guide</span>
+        <span class="tag-chip">aion 2 guide</span>
+        <span class="tag-chip">mmorpg 2026</span>
+      </div>
+    </div>
+
+    <div class="meta-block">
+      <div class="meta-label">📝 Description <span class="placeholder-pill">example — paste your real one from Studio</span></div>
+      <div class="code-box">Most Templars set their macros wrong and lose fights they should win. In this video I break down the exact macro setup I use to top the charts in AION 2.
+
+⏱️ Timestamps
+0:00 The mistake everyone makes
+0:48 My macro layout
+2:15 PvP rotation demo
+4:30 Copy my settings
+
+▶️ Subscribe for more AION 2 Templar content.
+🔗 Discord: (your link)
+
+#aion2 #templar #mmorpg</div>
+    </div>
+
+    <div class="meta-block">
+      <div class="meta-label">📊 Video Data <span class="placeholder-pill">fill in your real numbers</span></div>
+      <div class="data-row">
+        <div class="data-cell"><div class="dv">—</div><div class="dl">Views</div></div>
+        <div class="data-cell"><div class="dv">—</div><div class="dl">CTR %</div></div>
+        <div class="data-cell"><div class="dv">—</div><div class="dl">Avg View Dur.</div></div>
+        <div class="data-cell"><div class="dv">Short / Long</div><div class="dl">Format</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDEO 2 — GUIDE -->
+  <div class="example">
+    <div class="example-head">
+      <img class="example-thumb" src="https://i.ytimg.com/vi/e8xxp9XuqZM/hqdefault.jpg" alt="Templar Ultimate Guide" loading="lazy">
+      <div class="example-titles">
+        <div class="example-role">Video 2 · The Informational Guide</div>
+        <div class="example-title">
+          <a href="https://youtu.be/e8xxp9XuqZM" target="_blank" rel="noopener">AION 2 TEMPLAR ULTIMATE GUIDE! PvP &amp; PvE BUILD // BERSERK TEMPLAR BUILD</a>
+        </div>
+        <span class="fp-tag">🏆 FRONT PAGE — AION 2</span>
+      </div>
+    </div>
+
+    <p style="color:var(--muted);">Why it works: the <strong>"ULTIMATE GUIDE"</strong> framing plus specific build names (PvP, PvE, Berserk) captures search intent. This is your evergreen pillar content that keeps pulling views over time.</p>
+
+    <div class="meta-block">
+      <div class="meta-label">🏷️ Tags <span class="placeholder-pill">example — swap in your real tags</span></div>
+      <div class="tag-chips">
+        <span class="tag-chip">aion 2 templar build</span>
+        <span class="tag-chip">templar pve build</span>
+        <span class="tag-chip">templar pvp build</span>
+        <span class="tag-chip">berserk templar</span>
+        <span class="tag-chip">aion 2 ultimate guide</span>
+        <span class="tag-chip">aion 2 templar guide</span>
+        <span class="tag-chip">best templar build</span>
+        <span class="tag-chip">aion 2 classes</span>
+      </div>
+    </div>
+
+    <div class="meta-block">
+      <div class="meta-label">📝 Description <span class="placeholder-pill">example — paste your real one from Studio</span></div>
+      <div class="code-box">The complete Templar guide for AION 2 — everything you need for both PvP and PvE, including the Berserk build that carries.
+
+⏱️ Timestamps
+0:00 Intro
+1:10 Stat priority
+3:40 PvE Berserk build
+7:20 PvP build
+11:00 Skill rotation
+
+▶️ Subscribe for more AION 2 guides.
+🔗 Discord: (your link)
+
+#aion2 #templar #build #mmorpg</div>
+    </div>
+
+    <div class="meta-block">
+      <div class="meta-label">📊 Video Data <span class="placeholder-pill">fill in your real numbers</span></div>
+      <div class="data-row">
+        <div class="data-cell"><div class="dv">—</div><div class="dl">Views</div></div>
+        <div class="data-cell"><div class="dv">—</div><div class="dl">CTR %</div></div>
+        <div class="data-cell"><div class="dv">—</div><div class="dl">Avg View Dur.</div></div>
+        <div class="data-cell"><div class="dv">Long-form</div><div class="dl">Format</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDEO 3 — INTERACTIVE -->
+  <div class="example">
+    <div class="example-head">
+      <img class="example-thumb" src="https://i.ytimg.com/vi/Nro6Eh5drsc/hqdefault.jpg" alt="1 Million AP Farm" loading="lazy">
+      <div class="example-titles">
+        <div class="example-role">Video 3 · Fun &amp; Interactive Mechanics</div>
+        <div class="example-title">
+          <a href="https://youtu.be/Nro6Eh5drsc" target="_blank" rel="noopener">I Farmed 1 Million AP in 2 Hours (Aion 2)</a>
+        </div>
+        <span class="fp-tag">🏆 FRONT PAGE — AION 2</span>
+      </div>
+    </div>
+
+    <p style="color:var(--muted);">Why it works: a <strong>big, concrete result</strong> ("1 Million AP in 2 Hours") is an irresistible click. First-person "I did X" framing feels like a story, not a lecture. Great for showcasing mechanics in an entertaining way.</p>
+
+    <div class="meta-block">
+      <div class="meta-label">🏷️ Tags <span class="placeholder-pill">example — swap in your real tags</span></div>
+      <div class="tag-chips">
+        <span class="tag-chip">aion 2</span>
+        <span class="tag-chip">aion 2 ap farm</span>
+        <span class="tag-chip">aion 2 abyss points</span>
+        <span class="tag-chip">ap farming guide</span>
+        <span class="tag-chip">aion 2 fast ap</span>
+        <span class="tag-chip">aion 2 tips</span>
+        <span class="tag-chip">aion 2 mechanics</span>
+        <span class="tag-chip">mmorpg farming</span>
+      </div>
+    </div>
+
+    <div class="meta-block">
+      <div class="meta-label">📝 Description <span class="placeholder-pill">example — paste your real one from Studio</span></div>
+      <div class="code-box">I set out to farm 1 million AP as fast as possible in AION 2 — here's the exact route and method that got me there in 2 hours.
+
+⏱️ Timestamps
+0:00 The challenge
+0:35 Best farming route
+3:10 The method
+6:45 Final AP count
+
+▶️ Subscribe for more AION 2 content.
+🔗 Discord: (your link)
+
+#aion2 #apfarm #mmorpg</div>
+    </div>
+
+    <div class="meta-block">
+      <div class="meta-label">📊 Video Data <span class="placeholder-pill">fill in your real numbers</span></div>
+      <div class="data-row">
+        <div class="data-cell"><div class="dv">—</div><div class="dl">Views</div></div>
+        <div class="data-cell"><div class="dv">—</div><div class="dl">CTR %</div></div>
+        <div class="data-cell"><div class="dv">—</div><div class="dl">Avg View Dur.</div></div>
+        <div class="data-cell"><div class="dv">Short / Long</div><div class="dl">Format</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDEO IDEAS -->
+  <div class="section-head" style="margin:50px 0 24px;">
+    <div class="kicker">💡 Idea Bank</div>
+    <h2 style="font-size:clamp(22px,4vw,32px);">Video ideas that follow the meta</h2>
+    <p>The three winning patterns above, turned into a repeatable idea generator.</p>
+  </div>
+  <div class="tips-grid">
+    <div class="tip">
+      <div class="ico">⚔️</div>
+      <h4>The Callout</h4>
+      <p>"You're Using the WRONG ___" — challenge a common habit. High curiosity, high reach.</p>
+    </div>
+    <div class="tip">
+      <div class="ico">📚</div>
+      <h4>The Ultimate Guide</h4>
+      <p>"___ ULTIMATE GUIDE // Best Build" — evergreen, search-friendly pillar content.</p>
+    </div>
+    <div class="tip">
+      <div class="ico">🚀</div>
+      <h4>The Big Result</h4>
+      <p>"I Did ___ in ___ Time" — a concrete, impressive outcome makes the click irresistible.</p>
+    </div>
+    <div class="tip">
+      <div class="ico">🔥</div>
+      <h4>The Tier List</h4>
+      <p>"Best ___ Ranked" — rankings spark debate and comments, which boost the algorithm.</p>
     </div>
   </div>
 
