@@ -7,18 +7,18 @@ print-friendly layout.
 
 ## 🔗 Live site
 
-Once GitHub Pages is enabled, this lives at:
-
-```
-https://<your-username>.github.io/content-creation-playbook/
-```
+**[https://bryancourtneywhite.github.io/content-creation-playbook/](https://bryancourtneywhite.github.io/content-creation-playbook/)**
 
 ## What's inside
 
 - The 7-step content workflow (SteelSeries → CapCut → YouTube → vidIQ)
+- **Golden Meta** — real front-page AION 2 videos with thumbnails, tags,
+  descriptions, and analytics (12.4K views / 7.5% CTR case study)
+- An Idea Bank of proven title patterns
 - Pro tips for ranking
 - A toolkit section with download links and current pricing
-- Interactive 3D background, mobile-friendly, and "Save as PDF" ready
+- Interactive 3D background (Akatsuki clouds + shuriken), mobile-friendly,
+  and "Save as PDF" ready
 
 ## Tech
 
