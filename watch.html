@@ -37,7 +37,7 @@
 
   <!-- YouTube pane -->
   <div id="pane-youtube" class="watch-pane">
-    <div class="embed-label"><span class="pf-dot yt"></span> YouTube — Featured</div>
+    <div class="embed-label"><span class="pf-dot yt"></span> YouTube — Live or Latest</div>
     <div class="embed-wrap">
       <!-- Featured video (reliable). For true auto-live embedding, see the note
            below and set YT_CHANNEL_ID in the script. -->
@@ -53,8 +53,8 @@
       <a class="big-btn ghost" href="https://www.youtube.com/@SolAshur/videos" target="_blank" rel="noopener">📺 All Videos</a>
     </div>
     <p style="color:var(--muted);font-size:13px;margin-top:10px;">
-      Showing a featured video. To auto-embed the live stream when you go live,
-      set your channel ID (<code>UC…</code>) in <code>watch.html</code> — see the code comment.
+      Auto-shows the live stream when I'm live, otherwise a "no live stream" notice —
+      use the buttons above for streams and the full library.
     </p>
   </div>
 
@@ -91,9 +91,9 @@
       <div>
         <div class="embed-label"><span class="pf-dot yt"></span> YouTube</div>
         <div class="embed-wrap">
-          <iframe
+          <iframe id="yt-frame-2"
             src="https://www.youtube.com/embed/1ebgmpl1YxQ"
-            title="YouTube featured video"
+            title="YouTube live or featured"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen></iframe>
         </div>
@@ -154,10 +154,13 @@
   // https://www.youtube.com/account_advanced , then set it here and swap the
   // #yt-frame iframe src to:
   //   'https://www.youtube.com/embed/live_stream?channel=' + YT_CHANNEL_ID
-  var YT_CHANNEL_ID = '';   // e.g. 'UCxxxxxxxxxxxxxxxxxxxxxx'
+  var YT_CHANNEL_ID = 'UCXfA4M5_bHzLAoRkj-7Kz_A';   // Ashura Whole Heavens
   if (YT_CHANNEL_ID) {
+    var live = 'https://www.youtube.com/embed/live_stream?channel=' + YT_CHANNEL_ID;
     var f = document.getElementById('yt-frame');
-    if (f) f.src = 'https://www.youtube.com/embed/live_stream?channel=' + YT_CHANNEL_ID;
+    if (f) f.src = live;
+    var f2 = document.getElementById('yt-frame-2');
+    if (f2) f2.src = live;
   }
 
   // Twitch embeds REQUIRE the parent domain(s) where they are hosted.
