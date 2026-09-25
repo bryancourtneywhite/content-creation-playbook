@@ -20,6 +20,7 @@
     <a href="optimize.html">Sponsors</a>
     <a href="playbook.html">Playbook</a>
     <a href="https://www.youtube.com/@SolAshur" class="ext" target="_blank" rel="noopener">YouTube</a>
+    <a href="https://www.twitch.tv/solashur" class="ext" target="_blank" rel="noopener">Twitch</a>
   </div>
 </nav>
 
@@ -112,34 +113,33 @@
 
   <!-- Featured recent videos -->
   <div class="section-head">
-    <div class="kicker">🔥 Featured</div>
-    <h2>Recent front-page hits</h2>
-    <p>Missed the streams? These AION 2 videos hit the game's front page.</p>
+    <div class="kicker">📺 Video Library</div>
+    <h2>Watch without leaving</h2>
+    <p>Search the library and click any video — it plays right here on the page. No leaving for YouTube.</p>
   </div>
-  <div class="thumb-gallery">
-    <div class="thumb-card">
-      <a href="https://youtu.be/1ebgmpl1YxQ" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/1ebgmpl1YxQ/hqdefault.jpg" alt="Templar Macros" loading="lazy">
-      </a>
-      <div class="tc-cap"><strong>You're Using the WRONG Templar Macros</strong>Top meta · 12.4K views</div>
-    </div>
-    <div class="thumb-card">
-      <a href="https://youtu.be/e8xxp9XuqZM" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/e8xxp9XuqZM/hqdefault.jpg" alt="Templar Ultimate Guide" loading="lazy">
-      </a>
-      <div class="tc-cap"><strong>AION 2 Templar Ultimate Guide</strong>PvP &amp; PvE build</div>
-    </div>
-    <div class="thumb-card">
-      <a href="https://youtu.be/Nro6Eh5drsc" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/Nro6Eh5drsc/hqdefault.jpg" alt="1 Million AP Farm" loading="lazy">
-      </a>
-      <div class="tc-cap"><strong>I Farmed 1 Million AP in 2 Hours</strong>Mechanics showcase</div>
-    </div>
+
+  <!-- Inline player (loads the selected video) -->
+  <div class="embed-wrap" id="lib-player-wrap" style="margin-bottom:20px;display:none;">
+    <iframe id="lib-player" src="about:blank" title="Video player"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
   </div>
+
+  <!-- Search -->
+  <div style="max-width:640px;margin:0 auto 24px;">
+    <input id="vid-search" type="text" placeholder="🔍 Search videos (templar, macros, farming, pvp…)"
+      style="width:100%;padding:13px 18px;border-radius:14px;background:var(--panel);border:1px solid var(--panel-border);color:var(--text);font-size:15px;backdrop-filter:blur(10px);outline:none;">
+  </div>
+
+  <!-- Video grid (rendered from data/videos.json) -->
+  <div class="thumb-gallery" id="vid-grid">
+    <p style="color:var(--muted);text-align:center;grid-column:1/-1;">Loading videos…</p>
+  </div>
+  <p id="vid-none" style="display:none;text-align:center;color:var(--muted);margin-top:20px;">No videos match that search.</p>
 
   <footer>
     <div class="big">Drop a follow. Catch the next stream. 🔴</div>
-    <p>Ashura Whole Heavens 🌀</p>
+    <p>Ashura Whole Heavens 🌀 · <a href="https://www.twitch.tv/solashur" target="_blank" rel="noopener" style="color:#b98cff;">Twitch</a></p>
   </footer>
 
 </div>
@@ -206,6 +206,69 @@
       if (target === 'pane-twitch' || target === 'pane-both') loadTwitch();
     });
   });
+})();
+</script>
+
+<!-- Searchable inline video library -->
+<script>
+(function () {
+  var grid = document.getElementById('vid-grid');
+  var search = document.getElementById('vid-search');
+  var none = document.getElementById('vid-none');
+  var playerWrap = document.getElementById('lib-player-wrap');
+  var player = document.getElementById('lib-player');
+  var all = [];
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  function play(id, title) {
+    player.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1';
+    playerWrap.style.display = '';
+    playerWrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function cardHTML(v) {
+    return '<div class="thumb-card vid-card" data-id="' + esc(v.id) + '" ' +
+      'data-search="' + esc((v.title + ' ' + (v.tags || []).join(' ')).toLowerCase()) + '" ' +
+      'style="cursor:pointer;">' +
+      '<img src="https://i.ytimg.com/vi/' + esc(v.id) + '/hqdefault.jpg" alt="' + esc(v.title) + '" loading="lazy">' +
+      '<div class="tc-cap"><strong>' + esc(v.title) + '</strong>▶ Play here</div>' +
+      '</div>';
+  }
+
+  function render(list) {
+    grid.innerHTML = list.map(cardHTML).join('');
+    none.style.display = list.length ? 'none' : 'block';
+    grid.querySelectorAll('.vid-card').forEach(function (card) {
+      card.addEventListener('click', function () {
+        play(card.getAttribute('data-id'));
+      });
+    });
+  }
+
+  function apply() {
+    var q = search.value.trim().toLowerCase();
+    render(!q ? all : all.filter(function (v) {
+      return (v.title + ' ' + (v.tags || []).join(' ')).toLowerCase().indexOf(q) !== -1;
+    }));
+  }
+
+  var FALLBACK = [
+    { id: '1ebgmpl1YxQ', title: "You're Using the WRONG Templar Macros", tags: ['templar','macros'] },
+    { id: 'e8xxp9XuqZM', title: 'AION 2 Templar Ultimate Guide', tags: ['templar','build'] },
+    { id: 'Nro6Eh5drsc', title: 'I Farmed 1 Million AP in 2 Hours', tags: ['farming','ap'] }
+  ];
+
+  fetch('data/videos.json', { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+    .then(function (d) { all = d.videos || []; render(all); })
+    .catch(function () { all = FALLBACK; render(all); });
+
+  search.addEventListener('input', apply);
 })();
 </script>
 

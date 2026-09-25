@@ -1,0 +1,6 @@
+{
+  "_comment": "Flip 'live' to true when you go live, false when you stop. Set 'platform' to 'twitch' or 'youtube' and optionally a 'title'. The home page shows a LIVE banner when live:true. Commit + push to update the site (or edit via GitHub web UI from your phone).",
+  "live": false,
+  "platform": "twitch",
+  "title": "AION 2 Templar ranked climb"
+}

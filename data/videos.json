@@ -1,0 +1,20 @@
+{
+  "_comment": "Your video library. Add a new video: copy an entry, set the YouTube id (the part after youtu.be/ or watch?v=), title, and tags. The Watch page shows these in a searchable grid; clicking one plays it in the embedded player. Newest first is nice.",
+  "videos": [
+    {
+      "id": "1ebgmpl1YxQ",
+      "title": "You're Using the WRONG Templar Macros",
+      "tags": ["templar", "macros", "pvp", "guide", "aion 2"]
+    },
+    {
+      "id": "e8xxp9XuqZM",
+      "title": "AION 2 TEMPLAR ULTIMATE GUIDE! PvP & PvE Build // Berserk Templar Build",
+      "tags": ["templar", "build", "pvp", "pve", "berserk", "guide", "aion 2"]
+    },
+    {
+      "id": "Nro6Eh5drsc",
+      "title": "I Farmed 1 Million AP in 2 Hours (Aion 2)",
+      "tags": ["farming", "ap", "mechanics", "aion 2"]
+    }
+  ]
+}
