@@ -5,11 +5,36 @@
    Three.js loaded before this script.
    ------------------------------------------------------------------ */
 (function () {
+  // Theme palettes for the 3D background. Read from <html data-theme>.
+  var THEMES = {
+    dark: {
+      cloudGlow: 'rgba(214, 30, 44, 0.95)', cloudStroke: '#d61e2c',
+      cloudFill: '#0d0b0d', cloudLine: '#f5f5f5',
+      shuriGlow: 'rgba(214,30,44,0.85)', shuriFill: '#2b2226',
+      shuriEdge: '#f5f5f5', shuriHoleFill: '#0d0b0d', shuriHoleRing: '#d61e2c',
+      fog: 0x08070a, particle: 0xff6b78,
+      lights: [0xd61e2c, 0xff5563, 0x8a1018],
+      fallback: 'radial-gradient(1200px 800px at 70% 10%, #2a0c10 0%, #08070a 60%)'
+    },
+    light: {
+      cloudGlow: 'rgba(31, 111, 214, 0.85)', cloudStroke: '#1f6fd6',
+      cloudFill: '#3fa9ff', cloudLine: '#ffffff',
+      shuriGlow: 'rgba(31,111,214,0.8)', shuriFill: '#0a1a2e',
+      shuriEdge: '#3fa9ff', shuriHoleFill: '#0a1a2e', shuriHoleRing: '#3fa9ff',
+      fog: 0xeaf3ff, particle: 0x2f8fe6,
+      lights: [0x1f6fd6, 0x3fa9ff, 0x0a1a2e],
+      fallback: 'radial-gradient(1200px 800px at 70% 10%, #dcecff 0%, #f4f8fd 60%)'
+    }
+  };
+  function currentTheme() {
+    return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+  }
+  var pal = THEMES[currentTheme()];
+
   // ---- Guard: if Three.js failed to load, keep the page usable ----
   if (typeof THREE === 'undefined') {
     console.warn('Three.js not loaded; showing static gradient background.');
-    document.body.style.background =
-      'radial-gradient(1200px 800px at 70% 10%, #2a0c10 0%, #08070a 60%)';
+    document.body.style.background = pal.fallback;
     return;
   }
 
@@ -21,7 +46,7 @@
   renderer.setSize(window.innerWidth, window.innerHeight);
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x08070a, 0.03);
+  scene.fog = new THREE.FogExp2(pal.fog, 0.03);
 
   const camera = new THREE.PerspectiveCamera(
     60, window.innerWidth / window.innerHeight, 0.1, 100
@@ -30,9 +55,9 @@
 
   // ---- Lights ----
   scene.add(new THREE.AmbientLight(0x404060, 1.2));
-  const p1 = new THREE.PointLight(0xd61e2c, 2.2, 60); p1.position.set(-15, 10, 20); scene.add(p1);
-  const p2 = new THREE.PointLight(0xff5563, 2, 60); p2.position.set(15, -10, 15); scene.add(p2);
-  const p3 = new THREE.PointLight(0x8a1018, 1.5, 60); p3.position.set(0, 12, -10); scene.add(p3);
+  const p1 = new THREE.PointLight(pal.lights[0], 2.2, 60); p1.position.set(-15, 10, 20); scene.add(p1);
+  const p2 = new THREE.PointLight(pal.lights[1], 2, 60); p2.position.set(15, -10, 15); scene.add(p2);
+  const p3 = new THREE.PointLight(pal.lights[2], 1.5, 60); p3.position.set(0, 12, -10); scene.add(p3);
 
   // ---- Symbol textures (hand-drawn on canvas) ----
   function makeSymbolTexture(drawFn) {
@@ -72,18 +97,18 @@
     ctx.save();
     ctx.scale(0.92, 0.92);
     const path = buildCloudPath();
-    ctx.shadowColor = 'rgba(214, 30, 44, 0.95)';
+    ctx.shadowColor = pal.cloudGlow;
     ctx.shadowBlur = 26;
     ctx.lineJoin = 'round';
-    ctx.strokeStyle = '#d61e2c';
+    ctx.strokeStyle = pal.cloudStroke;
     ctx.lineWidth = 14;
     ctx.stroke(path);
     ctx.shadowBlur = 12;
     ctx.stroke(path);
     ctx.shadowBlur = 0;
-    ctx.fillStyle = '#0d0b0d';
+    ctx.fillStyle = pal.cloudFill;
     ctx.fill(path);
-    ctx.strokeStyle = '#f5f5f5';
+    ctx.strokeStyle = pal.cloudLine;
     ctx.lineWidth = 4.5;
     ctx.stroke(path);
     ctx.restore();
@@ -99,19 +124,19 @@
       blade.lineTo(Math.cos(a2) * 34, Math.sin(a2) * 34);
     }
     blade.closePath();
-    ctx.fillStyle = '#2b2226';
-    ctx.shadowColor = 'rgba(214,30,44,0.85)';
+    ctx.fillStyle = pal.shuriFill;
+    ctx.shadowColor = pal.shuriGlow;
     ctx.shadowBlur = 18;
     ctx.fill(blade);
     ctx.shadowBlur = 0;
-    ctx.strokeStyle = '#f5f5f5';
+    ctx.strokeStyle = pal.shuriEdge;
     ctx.lineWidth = 5;
     ctx.stroke(blade);
     ctx.beginPath();
     ctx.arc(0, 0, 15, 0, Math.PI * 2);
-    ctx.fillStyle = '#0d0b0d';
+    ctx.fillStyle = pal.shuriHoleFill;
     ctx.fill();
-    ctx.strokeStyle = '#d61e2c';
+    ctx.strokeStyle = pal.shuriHoleRing;
     ctx.lineWidth = 5;
     ctx.stroke();
   }
@@ -156,9 +181,32 @@
   const pGeo = new THREE.BufferGeometry();
   pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({
-    color: 0xff6b78, size: 0.08, transparent: true, opacity: 0.5
+    color: pal.particle, size: 0.08, transparent: true, opacity: 0.5
   }));
   scene.add(particles);
+
+  // ---- Live re-theme (called when the user toggles light/dark) ----
+  function retheme() {
+    pal = THEMES[currentTheme()];
+    // Rebuild sprite textures with the new palette.
+    var newTex = [
+      makeSymbolTexture(drawAkatsukiCloud),
+      makeSymbolTexture(drawAkatsukiCloud),
+      makeSymbolTexture(drawShuriken)
+    ];
+    shapes.forEach(function (sprite, i) {
+      var t = newTex[i % newTex.length];
+      if (sprite.material.map) sprite.material.map.dispose();
+      sprite.material.map = t;
+      sprite.material.needsUpdate = true;
+    });
+    scene.fog.color.setHex(pal.fog);
+    p1.color.setHex(pal.lights[0]);
+    p2.color.setHex(pal.lights[1]);
+    p3.color.setHex(pal.lights[2]);
+    particles.material.color.setHex(pal.particle);
+  }
+  window.addEventListener('themechange', retheme);
 
   // ---- Mouse parallax + scroll influence ----
   let mouseX = 0, mouseY = 0, scrollY = 0;

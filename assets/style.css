@@ -8,7 +8,68 @@
   --accent-3: #1a0e10;      /* ink black-red */
   --text: #f6eef0;
   --muted: #c2aab0;
+  --nav-bg: rgba(12, 8, 10, 0.82);
+  --fallback-grad: radial-gradient(1200px 800px at 70% 10%, #2a0c10 0%, #08070a 60%);
 }
+
+/* ---------- LIGHT THEME: white + blue primary, black tones ---------- */
+[data-theme="light"] {
+  --bg: #f4f8fd;
+  --panel: rgba(255, 255, 255, 0.82);
+  --panel-border: rgba(37, 99, 165, 0.28);
+  --accent: #1f6fd6;        /* primary blue */
+  --accent-2: #3fa9ff;      /* bright sky blue */
+  --accent-3: #0a1a2e;      /* deep black-blue */
+  --text: #0e1b2b;
+  --muted: #4a5f78;
+  --nav-bg: rgba(255, 255, 255, 0.86);
+  --fallback-grad: radial-gradient(1200px 800px at 70% 10%, #dcecff 0%, #f4f8fd 60%);
+}
+
+/* Theme toggle button (fixed, top-right, above content) */
+.theme-toggle {
+  position: fixed;
+  top: 14px;
+  right: 18px;
+  z-index: 60;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--panel-border);
+  background: var(--panel);
+  backdrop-filter: blur(10px);
+  color: var(--text);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.3s ease;
+}
+.theme-toggle:hover { transform: scale(1.1); border-color: var(--accent); }
+
+/* Light-theme fixes for elements that hardcode white/dark text */
+[data-theme="light"] h1 {
+  background: linear-gradient(120deg, var(--accent-3) 10%, var(--accent) 50%, var(--accent-2) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+[data-theme="light"] .pill-stat .num,
+[data-theme="light"] .tool h4,
+[data-theme="light"] .build-card h3,
+[data-theme="light"] .example-title a,
+[data-theme="light"] .data-cell .dv,
+[data-theme="light"] .stat-box .sv,
+[data-theme="light"] .cost-summary strong,
+[data-theme="light"] .tool-price-note strong,
+[data-theme="light"] footer .big,
+[data-theme="light"] .callout strong,
+[data-theme="light"] .article-body h2 { color: var(--accent-3); }
+[data-theme="light"] .step-body li { color: #23405f; }
+[data-theme="light"] .tool-use { color: #23405f; }
+[data-theme="light"] .code-box { background: #eef4fb; color: #1b2c40; border-color: rgba(37,99,165,0.25); }
+[data-theme="light"] .tag-chip { background: rgba(37,99,165,0.08); border-color: rgba(37,99,165,0.28); color: #1f4c7a; }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -20,6 +81,7 @@ body {
   color: var(--text);
   overflow-x: hidden;
   line-height: 1.6;
+  transition: background 0.4s ease, color 0.4s ease;
 }
 
 /* 3D canvas sits behind everything */
@@ -49,7 +111,7 @@ body {
   justify-content: space-between;
   gap: 16px;
   padding: 14px 24px;
-  background: rgba(12, 8, 10, 0.82);
+  background: var(--nav-bg);
   border-bottom: 1px solid var(--panel-border);
   backdrop-filter: blur(12px);
   flex-wrap: wrap;
