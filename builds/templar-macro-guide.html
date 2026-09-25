@@ -70,8 +70,22 @@
       <div class="callout" id="viewer-note">
         Numbers here are placeholders for the interactive viewer — swap in your
         real build values in <code>builds/data/templar-macro.json</code> and the
-        layout updates automatically. The <strong>Questlog</strong> link above
-        always has the live, complete build.
+        layout updates automatically. The <strong>Questlog</strong> link always
+        has the live, complete build.
+      </div>
+
+      <h2>🧬 Full Character Builder</h2>
+      <p>The complete, interactive Templar build on Questlog. It loads below if the
+        site allows embedding — if not, open it in a new tab.</p>
+      <div id="ql-embed-wrap" class="embed-wrap" style="aspect-ratio:16/10;">
+        <iframe id="ql-embed" title="Questlog Templar Build"
+          referrerpolicy="no-referrer-when-downgrade"
+          loading="lazy"></iframe>
+      </div>
+      <div id="ql-embed-fallback" style="display:none;" class="callout">
+        Questlog doesn't allow embedding its builder on other sites, so it can't
+        load in-page. No problem —
+        <a href="https://questlog.gg/aion-2/en/character-builder/QuickCobraLifeBanish" target="_blank" rel="noopener"><strong>open the full interactive build on Questlog →</strong></a>
       </div>
 
       <h2>🎬 Chapters</h2>
@@ -187,6 +201,34 @@
       }
     })
     .catch(function () { render(FALLBACK); });
+})();
+</script>
+
+<!-- Attempt to embed the Questlog builder; fall back to a link if blocked -->
+<script>
+(function () {
+  var URL = 'https://questlog.gg/aion-2/en/character-builder/QuickCobraLifeBanish';
+  var wrap = document.getElementById('ql-embed-wrap');
+  var frame = document.getElementById('ql-embed');
+  var fallback = document.getElementById('ql-embed-fallback');
+  if (!frame) return;
+
+  var loaded = false;
+  frame.addEventListener('load', function () {
+    // Some blocked frames still fire load with an error page; we can't read
+    // cross-origin content, so we treat a load within the timeout as success.
+    loaded = true;
+  });
+
+  // If the frame hasn't loaded shortly (blocked by X-Frame-Options/CSP),
+  // hide the broken box and show the link fallback instead.
+  frame.src = URL;
+  setTimeout(function () {
+    if (!loaded) {
+      wrap.style.display = 'none';
+      fallback.style.display = 'block';
+    }
+  }, 3500);
 })();
 </script>
 
