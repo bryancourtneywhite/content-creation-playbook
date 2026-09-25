@@ -1,0 +1,29 @@
+{
+  "id": "templar-macro-guide",
+  "class": "Templar",
+  "title": "Templar Macro Guide",
+  "roles": ["PvP", "PvE"],
+  "videoId": "1ebgmpl1YxQ",
+  "questlogUrl": "https://questlog.gg/aion-2/en/character-builder/QuickCobraLifeBanish",
+  "summary": "Macro setup, skill layout, and hotkeys that push Templar DPS to the top, including manual animation-canceling and a 5.5M DPS rotation.",
+  "note": "Build values below are placeholders for the interactive viewer. Replace with your real numbers — the layout renders whatever is in this JSON.",
+  "stats": [
+    { "label": "Role", "value": "Hybrid" },
+    { "label": "Peak Rotation", "value": "5.5M DPS" },
+    { "label": "Difficulty", "value": "Medium" },
+    { "label": "Playstyle", "value": "Macro + AC" }
+  ],
+  "skills": [
+    { "key": "1", "name": "Core Strike" },
+    { "key": "2", "name": "Punish" },
+    { "key": "3", "name": "Execution" },
+    { "key": "4", "name": "Shield Bash" },
+    { "key": "R", "name": "Animation Cancel" },
+    { "key": "Q", "name": "Macro Trigger" }
+  ],
+  "macroHotkeys": [
+    { "key": "Mouse 4", "action": "PVX Macro chain" },
+    { "key": "Mouse 5", "action": "PvP burst combo" },
+    { "key": "Shift+1", "action": "PvE rotation loop" }
+  ]
+}

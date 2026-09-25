@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watch — Ashura Whole Heavens</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<nav class="site-nav">
+  <a class="brand" href="index.html"><span class="sp">🌀</span> Ashura Whole Heavens</a>
+  <div class="links">
+    <a href="index.html">Playbook</a>
+    <a href="watch.html" class="active">Watch</a>
+    <a href="builds/index.html">AION 2 Builds</a>
+    <a href="https://www.youtube.com/@SolAshur" class="ext" target="_blank" rel="noopener">YouTube</a>
+  </div>
+</nav>
+
+<div class="content">
+
+  <div class="section-head" style="margin-top:40px;">
+    <div class="kicker">📺 Live &amp; On Demand</div>
+    <h2>Watch the Stream</h2>
+    <p>Catch me live on Twitch and YouTube, or dive into the latest AION 2 content. Pick your platform.</p>
+  </div>
+
+  <!-- Platform toggle -->
+  <div class="platform-tabs">
+    <div class="platform-tab active" data-target="pane-youtube">▶️ YouTube</div>
+    <div class="platform-tab twitch" data-target="pane-twitch">🎮 Twitch</div>
+    <div class="platform-tab" data-target="pane-both">🔀 Show Both</div>
+  </div>
+
+  <!-- YouTube pane -->
+  <div id="pane-youtube" class="watch-pane">
+    <div class="embed-label"><span class="pf-dot yt"></span> YouTube — Featured</div>
+    <div class="embed-wrap">
+      <!-- Featured video (reliable). For true auto-live embedding, see the note
+           below and set YT_CHANNEL_ID in the script. -->
+      <iframe id="yt-frame"
+        src="https://www.youtube.com/embed/1ebgmpl1YxQ"
+        title="YouTube featured video"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen></iframe>
+    </div>
+    <div class="btn-row" style="margin-top:14px;">
+      <a class="big-btn" href="https://www.youtube.com/@SolAshur/streams" target="_blank" rel="noopener">🔴 Watch Live on YouTube</a>
+      <a class="big-btn ghost" href="https://www.youtube.com/@SolAshur/videos" target="_blank" rel="noopener">📺 All Videos</a>
+    </div>
+    <p style="color:var(--muted);font-size:13px;margin-top:10px;">
+      Showing a featured video. To auto-embed the live stream when you go live,
+      set your channel ID (<code>UC…</code>) in <code>watch.html</code> — see the code comment.
+    </p>
+  </div>
+
+  <!-- Twitch pane -->
+  <div id="pane-twitch" class="watch-pane" style="display:none;">
+    <div class="watch-grid" style="grid-template-columns: 2fr 1fr;">
+      <div>
+        <div class="embed-label"><span class="pf-dot tw"></span> Twitch — Live</div>
+        <div class="embed-wrap">
+          <iframe id="tw-video"
+            src="about:blank"
+            allowfullscreen
+            title="Twitch stream"></iframe>
+        </div>
+      </div>
+      <div>
+        <div class="embed-label"><span class="pf-dot tw"></span> Twitch Chat</div>
+        <div class="embed-wrap" style="aspect-ratio:auto; height:100%; min-height:420px;">
+          <iframe id="tw-chat"
+            src="about:blank"
+            title="Twitch chat"></iframe>
+        </div>
+      </div>
+    </div>
+    <p style="color:var(--muted);font-size:13.5px;margin-top:12px;">
+      When offline, Twitch shows a "channel offline" screen. Follow on
+      <a href="https://www.twitch.tv/SolAshur" target="_blank" rel="noopener" style="color:#b98cff;">Twitch ↗</a>.
+    </p>
+  </div>
+
+  <!-- Both pane -->
+  <div id="pane-both" class="watch-pane" style="display:none;">
+    <div class="watch-grid" style="grid-template-columns:1fr 1fr;">
+      <div>
+        <div class="embed-label"><span class="pf-dot yt"></span> YouTube</div>
+        <div class="embed-wrap">
+          <iframe
+            src="https://www.youtube.com/embed/1ebgmpl1YxQ"
+            title="YouTube featured video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen></iframe>
+        </div>
+      </div>
+      <div>
+        <div class="embed-label"><span class="pf-dot tw"></span> Twitch</div>
+        <div class="embed-wrap">
+          <iframe id="tw-video-2" src="about:blank" allowfullscreen title="Twitch stream"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Featured recent videos -->
+  <div class="section-head">
+    <div class="kicker">🔥 Featured</div>
+    <h2>Recent front-page hits</h2>
+    <p>Missed the streams? These AION 2 videos hit the game's front page.</p>
+  </div>
+  <div class="thumb-gallery">
+    <div class="thumb-card">
+      <a href="https://youtu.be/1ebgmpl1YxQ" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/1ebgmpl1YxQ/hqdefault.jpg" alt="Templar Macros" loading="lazy">
+      </a>
+      <div class="tc-cap"><strong>You're Using the WRONG Templar Macros</strong>Top meta · 12.4K views</div>
+    </div>
+    <div class="thumb-card">
+      <a href="https://youtu.be/e8xxp9XuqZM" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/e8xxp9XuqZM/hqdefault.jpg" alt="Templar Ultimate Guide" loading="lazy">
+      </a>
+      <div class="tc-cap"><strong>AION 2 Templar Ultimate Guide</strong>PvP &amp; PvE build</div>
+    </div>
+    <div class="thumb-card">
+      <a href="https://youtu.be/Nro6Eh5drsc" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/Nro6Eh5drsc/hqdefault.jpg" alt="1 Million AP Farm" loading="lazy">
+      </a>
+      <div class="tc-cap"><strong>I Farmed 1 Million AP in 2 Hours</strong>Mechanics showcase</div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="big">Drop a follow. Catch the next stream. 🔴</div>
+    <p>Ashura Whole Heavens 🌀</p>
+  </footer>
+
+</div>
+
+<!-- Shared 3D background -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="assets/background.js"></script>
+
+<!-- Watch page: platform toggle + Twitch parent domain wiring -->
+<script>
+(function () {
+  // --- OPTIONAL: true auto-live YouTube embed ---------------------------
+  // To show your LIVE stream automatically (instead of a featured video),
+  // find your channel ID (starts with "UC...") at
+  // https://www.youtube.com/account_advanced , then set it here and swap the
+  // #yt-frame iframe src to:
+  //   'https://www.youtube.com/embed/live_stream?channel=' + YT_CHANNEL_ID
+  var YT_CHANNEL_ID = '';   // e.g. 'UCxxxxxxxxxxxxxxxxxxxxxx'
+  if (YT_CHANNEL_ID) {
+    var f = document.getElementById('yt-frame');
+    if (f) f.src = 'https://www.youtube.com/embed/live_stream?channel=' + YT_CHANNEL_ID;
+  }
+
+  // Twitch embeds REQUIRE the parent domain(s) where they are hosted.
+  // Include the live GitHub Pages host + localhost for testing.
+  var TWITCH_CHANNEL = 'solashur';           // <-- change if your Twitch handle differs
+  var parents = ['bryancourtneywhite.github.io', 'localhost', '127.0.0.1'];
+  var parentQS = parents.map(function (p) { return 'parent=' + p; }).join('&');
+
+  function twitchVideoSrc() {
+    return 'https://player.twitch.tv/?channel=' + TWITCH_CHANNEL + '&' + parentQS + '&muted=true';
+  }
+  function twitchChatSrc() {
+    return 'https://www.twitch.tv/embed/' + TWITCH_CHANNEL + '/chat?darkpopout&' + parentQS;
+  }
+
+  // Lazily set Twitch iframe sources (only when their pane is first shown)
+  var twitchLoaded = false;
+  function loadTwitch() {
+    if (twitchLoaded) return;
+    var v = document.getElementById('tw-video');
+    var c = document.getElementById('tw-chat');
+    var v2 = document.getElementById('tw-video-2');
+    if (v) v.src = twitchVideoSrc();
+    if (c) c.src = twitchChatSrc();
+    if (v2) v2.src = twitchVideoSrc();
+    twitchLoaded = true;
+  }
+
+  // Platform tab switching
+  var tabs = document.querySelectorAll('.platform-tab');
+  var panes = document.querySelectorAll('.watch-pane');
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      tabs.forEach(function (t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      var target = tab.getAttribute('data-target');
+      panes.forEach(function (p) {
+        p.style.display = (p.id === target) ? 'block' : 'none';
+      });
+      if (target === 'pane-twitch' || target === 'pane-both') loadTwitch();
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
