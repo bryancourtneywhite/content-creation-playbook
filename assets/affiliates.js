@@ -18,10 +18,16 @@ window.AFFILIATES = {
   amazonDomain: 'www.amazon.com'
 };
 
-/* Amazon link builder (exact product via ASIN preferred, else search). */
+/* Amazon link builder. Priority:
+   1. amazonUrl  — a ready SiteStripe/amzn.to link (tag already baked in)
+   2. asin       — exact product, tag appended
+   3. q          — search fallback, tag appended */
 window.amazonLink = function (opts) {
   var A = window.AFFILIATES || {};
   var domain = A.amazonDomain || 'www.amazon.com';
+  // 1) Ready-made tracked link — use as-is (already has the tag).
+  if (opts.amazonUrl) return opts.amazonUrl;
+  // 2/3) Build from ASIN or search, then append the tag.
   var base = opts.asin
     ? 'https://' + domain + '/dp/' + encodeURIComponent(opts.asin) + '/'
     : 'https://' + domain + '/s?k=' + encodeURIComponent(opts.q || '');
@@ -103,6 +109,7 @@ window.bestBuyLink = function (opts) {
         e.preventDefault();
         openModal({
           name: btn.getAttribute('data-name') || '',
+          amazonUrl: btn.getAttribute('data-amazon-url') || '',
           asin: btn.getAttribute('data-asin') || '',
           q: btn.getAttribute('data-q') || '',
           bestbuy: btn.getAttribute('data-bestbuy') || ''

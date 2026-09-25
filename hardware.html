@@ -93,6 +93,7 @@
     } else {
       btn = '<a class="tool-btn buy-btn" href="#"' +
             ' data-name="' + esc(p.name) + '"' +
+            (p.amazonUrl ? ' data-amazon-url="' + esc(p.amazonUrl) + '"' : '') +
             (p.asin ? ' data-asin="' + esc(p.asin) + '"' : '') +
             (p.amazonQ ? ' data-q="' + esc(p.amazonQ) + '"' : '') +
             (p.bestbuy ? ' data-bestbuy="' + esc(p.bestbuy) + '"' : '') +

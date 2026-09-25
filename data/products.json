@@ -10,7 +10,7 @@
       "name": "AMD Ryzen 9 5900X",
       "blurb": "12 cores / 24 threads — handles gaming + streaming without breaking a sweat.",
       "image": "",
-      "asin": "",
+      "amazonUrl": "https://amzn.to/3VfxcJd",
       "amazonQ": "AMD Ryzen 9 5900X",
       "bestbuy": ""
     },
@@ -23,7 +23,7 @@
       "name": "AMD Radeon RX 7800 XT",
       "blurb": "16GB — crushes AION 2 at high settings and captures clean 1080p.",
       "image": "",
-      "asin": "",
+      "amazonUrl": "https://amzn.to/47j9MVU",
       "amazonQ": "AMD Radeon RX 7800 XT",
       "bestbuy": ""
     },
@@ -36,7 +36,7 @@
       "name": "64GB DDR4",
       "blurb": "Game, stream, and edit at once with room to spare.",
       "image": "",
-      "asin": "",
+      "amazonUrl": "https://amzn.to/4hO5MCU",
       "amazonQ": "64GB DDR4 3600 kit",
       "bestbuy": ""
     },
@@ -49,7 +49,7 @@
       "name": "NZXT Kraken AIO",
       "blurb": "Liquid cooling keeps the 5900X cool over long stream sessions.",
       "image": "",
-      "asin": "",
+      "amazonUrl": "https://amzn.to/4ykenTU",
       "amazonQ": "NZXT Kraken AIO liquid cooler",
       "bestbuy": ""
     },
@@ -62,7 +62,7 @@
       "name": "NVMe SSD + 1TB SATA SSD",
       "blurb": "WD Blue SN570 NVMe boot drive + Samsung 860 EVO for games.",
       "image": "",
-      "asin": "",
+      "amazonUrl": "https://amzn.to/4iOCwx1",
       "amazonQ": "Samsung 860 EVO 1TB SSD",
       "bestbuy": ""
     },
@@ -75,6 +75,7 @@
       "name": "Glorious GMMK 2 (96%)",
       "blurb": "The board I run my Templar macros on — hot-swappable and compact.",
       "image": "",
+      "amazonUrl": "https://amzn.to/4rGKUkr",
       "asin": "B09YZ3BNYP",
       "amazonQ": "Glorious GMMK 2 96",
       "bestbuy": ""
@@ -88,7 +89,7 @@
       "name": "Razer Basilisk V3 X HyperSpeed",
       "blurb": "Extra side buttons mapped to my macro triggers. Wireless HyperSpeed.",
       "image": "",
-      "asin": "",
+      "amazonUrl": "https://amzn.to/46Kc7Jq",
       "amazonQ": "Razer Basilisk V3 X HyperSpeed",
       "bestbuy": ""
     },
@@ -101,7 +102,7 @@
       "name": "SteelSeries Arctis Nova 7 Gen 2",
       "blurb": "Positional audio for PvP awareness, run through SteelSeries Sonar.",
       "image": "",
-      "asin": "",
+      "amazonUrl": "https://amzn.to/4hn0mxj",
       "amazonQ": "SteelSeries Arctis Nova 7 Gen 2",
       "bestbuy": ""
     },
@@ -127,7 +128,7 @@
       "name": "Arctis Nova 7 Mic + Sonar",
       "blurb": "Headset mic cleaned up through SteelSeries Sonar for clear voice on guides and streams.",
       "image": "",
-      "asin": "",
+      "amazonUrl": "https://amzn.to/4hn0mxj",
       "amazonQ": "SteelSeries Arctis Nova 7 Gen 2",
       "bestbuy": ""
     },
@@ -140,7 +141,7 @@
       "name": "Logitech C930e",
       "blurb": "Wide-angle 1080p facecam for the stream overlay.",
       "image": "",
-      "asin": "",
+      "amazonUrl": "https://amzn.to/4d6Mp5u",
       "amazonQ": "Logitech C930e webcam",
       "bestbuy": ""
     },

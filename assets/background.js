@@ -7,14 +7,15 @@
 (function () {
   // Theme palettes for the 3D background. Read from <html data-theme>.
   var THEMES = {
+    // Dark = Hueco Mundo: black night sky, pale reishi particles, crescent moon.
     dark: {
       cloudGlow: 'rgba(214, 30, 44, 0.95)', cloudStroke: '#d61e2c',
       cloudFill: '#0d0b0d', cloudLine: '#f5f5f5',
       shuriGlow: 'rgba(214,30,44,0.85)', shuriFill: '#2b2226',
       shuriEdge: '#f5f5f5', shuriHoleFill: '#0d0b0d', shuriHoleRing: '#d61e2c',
-      fog: 0x08070a, particle: 0xff6b78,
+      fog: 0x05050a, particle: 0xdfe6ff,
       lights: [0xd61e2c, 0xff5563, 0x8a1018],
-      fallback: 'radial-gradient(1200px 800px at 70% 10%, #2a0c10 0%, #08070a 60%)'
+      fallback: 'radial-gradient(1000px 700px at 78% 12%, #1a1c2e 0%, #05050a 55%)'
     },
     light: {
       cloudGlow: 'rgba(31, 111, 214, 0.85)', cloudStroke: '#1f6fd6',
@@ -185,6 +186,42 @@
   }));
   scene.add(particles);
 
+  // ---- Hueco Mundo crescent moon (Bleach / Arrancar vibe) ----
+  // A large pale crescent fixed high in the background, behind everything.
+  function makeMoonTexture() {
+    var size = 512;
+    var c = document.createElement('canvas');
+    c.width = c.height = size;
+    var ctx = c.getContext('2d');
+    var cx = size / 2, cy = size / 2, r = 150;
+    // Soft outer glow
+    var glow = ctx.createRadialGradient(cx, cy, r * 0.6, cx, cy, r * 1.6);
+    glow.addColorStop(0, 'rgba(230,235,255,0.35)');
+    glow.addColorStop(1, 'rgba(230,235,255,0)');
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, size, size);
+    // Full disc, then carve a crescent by subtracting an offset circle.
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = '#eef2ff';
+    ctx.shadowColor = 'rgba(220,230,255,0.8)';
+    ctx.shadowBlur = 40;
+    ctx.fill();
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.arc(cx + r * 0.55, cy - r * 0.25, r * 0.98, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    return new THREE.CanvasTexture(c);
+  }
+  var moon = new THREE.Sprite(new THREE.SpriteMaterial({
+    map: makeMoonTexture(), transparent: true, opacity: 0.85, depthWrite: false
+  }));
+  moon.scale.set(14, 14, 14);
+  moon.position.set(16, 11, -14);   // upper-right, far back
+  scene.add(moon);
+
   // ---- Live re-theme (called when the user toggles light/dark) ----
   function retheme() {
     pal = THEMES[currentTheme()];
@@ -200,6 +237,8 @@
       sprite.material.map = t;
       sprite.material.needsUpdate = true;
     });
+    // Crescent moon belongs to Hueco Mundo (dark). Fade it in light mode.
+    moon.material.opacity = (currentTheme() === 'light') ? 0.2 : 0.85;
     scene.fog.color.setHex(pal.fog);
     p1.color.setHex(pal.lights[0]);
     p2.color.setHex(pal.lights[1]);
