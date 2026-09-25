@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ashura Whole Heavens — Content Creation Playbook</title>
+<title>Ashura Whole Heavens — AION 2 Builds &amp; Guides</title>
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
@@ -13,9 +13,10 @@
 <nav class="site-nav">
   <a class="brand" href="index.html"><span class="sp">🌀</span> Ashura Whole Heavens</a>
   <div class="links">
-    <a href="index.html" class="active">Playbook</a>
+    <a href="index.html" class="active">Home</a>
     <a href="watch.html">Watch</a>
-    <a href="builds/index.html">AION 2 Builds</a>
+    <a href="optimize.html">Optimize</a>
+    <a href="playbook.html">Playbook</a>
     <a href="https://www.youtube.com/@SolAshur" class="ext" target="_blank" rel="noopener">YouTube</a>
   </div>
 </nav>
@@ -23,438 +24,156 @@
 <div class="content">
 
   <!-- HERO -->
-  <header class="hero">
+  <header class="hero" style="min-height:78vh;">
     <div class="logo-mark">
       <div class="logo-spiral">🌀</div>
       <div class="logo-name">Ashura Whole Heavens</div>
     </div>
-    <div class="badge"><span class="dot"></span> Content Creator Playbook</div>
-    <h1>From Clip<br>to Front Page</h1>
-    <p class="sub">The exact 7-step system behind <strong>Ashura Whole Heavens</strong> — taking raw gameplay footage and turning it into YouTube videos and Shorts that rank. Capture, edit, publish, optimize.</p>
+    <div class="badge"><span class="dot"></span> AION 2 Builds &amp; Guides</div>
+    <h1>Top-Tier<br>AION 2 Builds</h1>
+    <p class="sub">Front-page Templar builds, macros, and mechanics — the exact setups I use to top the charts. Watch the streams, copy the builds, dominate.</p>
     <div class="cta-row">
-      <div class="pill-stat"><div class="num">1080p</div><div class="lbl">Capture Quality</div></div>
-      <div class="pill-stat"><div class="num">9:16 + 16:9</div><div class="lbl">Shorts + Long-form</div></div>
-      <div class="pill-stat"><div class="num">7 Steps</div><div class="lbl">Repeatable System</div></div>
+      <a class="tool-btn" style="padding:14px 28px;" href="#builds">⚔️ Browse Builds</a>
+      <a class="tool-btn" style="padding:14px 28px;background:linear-gradient(120deg,#9146ff,#6a4bd6);" href="watch.html">📺 Watch Live</a>
     </div>
-    <div class="scroll-hint">↓ Scroll the workflow ↓</div>
+    <div class="scroll-hint">↓ Latest builds below ↓</div>
   </header>
 
-  <!-- WORKFLOW -->
+  <!-- BUILDS -->
+  <div class="section-head" id="builds">
+    <div class="kicker">⚔️ AION 2</div>
+    <h2>Builds &amp; Guides</h2>
+    <p>In-depth Templar builds, macros, and mechanics — the same setups that hit the AION 2 front page. Search and filter to find what you need.</p>
+  </div>
+
+  <!-- Search + filters -->
+  <div style="max-width:720px;margin:0 auto 30px;">
+    <input id="build-search" type="text" placeholder="🔍 Search builds and guides..."
+      style="width:100%;padding:14px 18px;border-radius:14px;background:var(--panel);border:1px solid var(--panel-border);color:var(--text);font-size:15px;backdrop-filter:blur(10px);outline:none;">
+    <div class="platform-tabs" style="margin-top:16px;">
+      <div class="platform-tab active" data-filter="all">All</div>
+      <div class="platform-tab" data-filter="pvp">PvP</div>
+      <div class="platform-tab" data-filter="pve">PvE</div>
+      <div class="platform-tab" data-filter="templar">Templar</div>
+      <div class="platform-tab" data-filter="macro">Macros</div>
+    </div>
+  </div>
+
+  <!-- Build cards -->
+  <div class="build-grid" id="build-grid">
+
+    <div class="build-card reveal" data-tags="templar macro pvp pve">
+      <div class="bc-top">
+        <div class="bc-tags">
+          <span class="bc-pill">Templar</span>
+          <span class="bc-pill pvp">PvP</span>
+          <span class="bc-pill pve">PvE</span>
+        </div>
+        <h3>Templar Macro Guide</h3>
+        <p>The complete macro setup, skill layout, and hotkeys that push Templar DPS to the top. Includes animation-canceling and a 5.5M DPS rotation. Backed by a 12.4K-view front-page video.</p>
+        <a class="bc-btn" href="builds/templar-macro-guide.html">Read the guide →</a>
+      </div>
+    </div>
+
+    <div class="build-card reveal" data-tags="templar pve pvp berserk build">
+      <div class="bc-top">
+        <div class="bc-tags">
+          <span class="bc-pill">Templar</span>
+          <span class="bc-pill pve">PvE</span>
+          <span class="bc-pill pvp">PvP</span>
+        </div>
+        <h3>Berserk Templar Build (PvP &amp; PvE)</h3>
+        <p>The full Berserk Templar build breakdown for both PvP and PvE — stat priority, skills, and rotation. Coming soon as a full write-up.</p>
+        <a class="bc-btn" href="https://youtu.be/e8xxp9XuqZM" target="_blank" rel="noopener">Watch on YouTube →</a>
+      </div>
+    </div>
+
+    <div class="build-card reveal" data-tags="farming ap mechanics guide">
+      <div class="bc-top">
+        <div class="bc-tags">
+          <span class="bc-pill">Farming</span>
+          <span class="bc-pill">Mechanics</span>
+        </div>
+        <h3>1 Million AP in 2 Hours</h3>
+        <p>The fastest AP farming route and method in AION 2. A fun, interactive mechanics showcase. Full write-up coming soon.</p>
+        <a class="bc-btn" href="https://youtu.be/Nro6Eh5drsc" target="_blank" rel="noopener">Watch on YouTube →</a>
+      </div>
+    </div>
+
+  </div>
+
+  <p id="no-results" style="display:none;text-align:center;color:var(--muted);margin-top:30px;">No builds match your search. Try a different term.</p>
+
+  <!-- FEATURED VIDEOS -->
   <div class="section-head">
-    <div class="kicker">The Workflow</div>
-    <h2>Every video, start to finish</h2>
-    <p>Follow these in order. Each step feeds the next, so the whole thing becomes muscle memory.</p>
-  </div>
-
-  <div class="steps">
-
-    <div class="step">
-      <div class="num-badge">1<span class="emoji">🎥</span></div>
-      <div class="step-body">
-        <h3>Capture Footage <span class="tag-tool">SteelSeries</span> <span class="tag-format">1080p</span></h3>
-        <p>Record all gameplay at full 1080p using SteelSeries. This is the raw material for both long-form videos and Shorts.</p>
-        <ul>
-          <li>Record in 1080p for crisp, upload-ready quality</li>
-          <li>Grab your best moments, clutch plays, and highlights</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="step">
-      <div class="num-badge">2<span class="emoji">✂️</span></div>
-      <div class="step-body">
-        <h3>Edit the Video <span class="tag-tool">CapCut</span> <span class="tag-format">9:16 + 16:9</span></h3>
-        <p>Build the video in CapCut. Shorts are cut to 1080p in vertical 9:16 format; long-form videos stay in 1080p widescreen.</p>
-        <ul>
-          <li>Shorts: 1080p, 9:16 vertical</li>
-          <li>Long-form: 1080p widescreen</li>
-          <li>Turn on auto-captions and export the transcript for later timestamps</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="step">
-      <div class="num-badge">3<span class="emoji">⬆️</span></div>
-      <div class="step-body">
-        <h3>Upload to YouTube <span class="tag-tool">YouTube</span></h3>
-        <p>Upload the finished Short or long-form video to the channel. This is where the optimization work begins.</p>
-        <ul>
-          <li>Shorts uploaded to YouTube Shorts</li>
-          <li>Long-form uploaded as standard videos</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="step">
-      <div class="num-badge">4<span class="emoji">🧪</span></div>
-      <div class="step-body">
-        <h3>A/B Test the Title <span class="tag-tool">YouTube Studio</span></h3>
-        <p>Set up an A/B test on the video title using YouTube's Test &amp; Compare. Let the data pick the title that pulls the most views.</p>
-        <ul>
-          <li>Write 2-3 title variations</li>
-          <li>Let YouTube rotate them and crown the winner</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="step">
-      <div class="num-badge">5<span class="emoji">📝</span></div>
-      <div class="step-body">
-        <h3>Write the Description <span class="tag-format">+ Timestamps</span></h3>
-        <p>Craft a description that matches the video summary. Add chapter timestamps whenever the video is long enough to have distinct sections.</p>
-        <ul>
-          <li>Summarize what the video is about</li>
-          <li>Add timestamps / chapters when applicable</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="step">
-      <div class="num-badge">6<span class="emoji">🖼️</span></div>
-      <div class="step-body">
-        <h3>Design the Thumbnail <span class="tag-tool">VidIQ</span></h3>
-        <p>Create a thumbnail in VidIQ that matches the channel's theme and the video's subject. Consistency builds a recognizable brand.</p>
-        <ul>
-          <li>On-brand colors, fonts, and layout every time</li>
-          <li>Reflect the specific subject of the video</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="step">
-      <div class="num-badge">7<span class="emoji">🏷️</span></div>
-      <div class="step-body">
-        <h3>Tags &amp; Category <span class="tag-tool">YouTube</span></h3>
-        <p>Add relevant tags and file the video under the Gaming category so it reaches the right audience and surfaces in the right places.</p>
-        <ul>
-          <li>Add targeted, relevant tags</li>
-          <li>Set category to Gaming</li>
-        </ul>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- FLOW STRIP -->
-  <div class="section-head">
-    <div class="kicker">At a Glance</div>
-    <h2>The pipeline in one line</h2>
-  </div>
-  <div class="flow">
-    <div class="node">🎥 Capture</div><span class="arrow">→</span>
-    <div class="node">✂️ Edit</div><span class="arrow">→</span>
-    <div class="node">⬆️ Upload</div><span class="arrow">→</span>
-    <div class="node">🧪 A/B Title</div><span class="arrow">→</span>
-    <div class="node">📝 Describe</div><span class="arrow">→</span>
-    <div class="node">🖼️ Thumbnail</div><span class="arrow">→</span>
-    <div class="node">🏷️ Tag</div><span class="arrow">→</span>
-    <div class="node">🚀 Front Page</div>
-  </div>
-
-  <!-- PRO TIPS -->
-  <div class="section-head">
-    <div class="kicker">Level Up</div>
-    <h2>Habits that get you to the front page</h2>
-    <p>The workflow gets the video out. These habits get it seen.</p>
-  </div>
-  <div class="tips-grid">
-    <div class="tip">
-      <div class="ico">🎯</div>
-      <h4>Reuse templates</h4>
-      <p>Keep a saved CapCut template for Shorts and one for long-form so editing is fill-in-the-blank, not from scratch.</p>
-    </div>
-    <div class="tip">
-      <div class="ico">🔁</div>
-      <h4>Always A/B test</h4>
-      <p>Never settle on a single title. Let the Test &amp; Compare data decide which one earns the click.</p>
-    </div>
-    <div class="tip">
-      <div class="ico">🎨</div>
-      <h4>Brand consistency</h4>
-      <p>Same thumbnail style every time. Viewers should recognize your video before they read the title.</p>
-    </div>
-    <div class="tip">
-      <div class="ico">⏱️</div>
-      <h4>Timestamps matter</h4>
-      <p>Chapters keep viewers watching longer and help YouTube understand your content.</p>
-    </div>
-  </div>
-
-  <!-- GOLDEN META — REAL EXAMPLES -->
-  <div class="section-head">
-    <div class="kicker">Golden Meta</div>
-    <h2>Real examples that hit front page</h2>
-    <p>Templates are theory. These are the real videos that worked. Study the pattern, then remix it for your own content.</p>
-  </div>
-
-  <p class="frontpage-note">
-    These three AION 2 Templar videos from <strong>Ashura Whole Heavens</strong> all reached the game's front page.
-    Each one plays a different role in the channel:
-    <span class="fp-badge">TOP META</span>
-    <span class="fp-badge">GUIDE</span>
-    <span class="fp-badge">INTERACTIVE</span>
-  </p>
-
-  <!-- Thumbnail gallery for VidIQ reference -->
-  <div class="section-head" style="margin:20px 0 24px;">
-    <div class="kicker">🖼️ Thumbnail Examples</div>
-    <h2 style="font-size:clamp(22px,4vw,32px);">Feed these to VidIQ</h2>
-    <p>Front-page thumbnails from the channel. Use them as style references when generating your own in VidIQ — note the bold subject, high contrast, and consistent branding.</p>
+    <div class="kicker">🔥 Front Page</div>
+    <h2>Latest videos</h2>
+    <p>The AION 2 videos pulling the most views right now.</p>
   </div>
   <div class="thumb-gallery">
     <div class="thumb-card">
       <a href="https://youtu.be/1ebgmpl1YxQ" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/1ebgmpl1YxQ/hqdefault.jpg" alt="Templar Macros thumbnail" loading="lazy">
+        <img src="https://i.ytimg.com/vi/1ebgmpl1YxQ/hqdefault.jpg" alt="Templar Macros" loading="lazy">
       </a>
-      <div class="tc-cap"><strong>Top Meta</strong>Punchy, curiosity-driven hook</div>
+      <div class="tc-cap"><strong>You're Using the WRONG Templar Macros</strong>12.4K views · 7.5% CTR</div>
     </div>
     <div class="thumb-card">
       <a href="https://youtu.be/e8xxp9XuqZM" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/e8xxp9XuqZM/hqdefault.jpg" alt="Templar Ultimate Guide thumbnail" loading="lazy">
+        <img src="https://i.ytimg.com/vi/e8xxp9XuqZM/hqdefault.jpg" alt="Templar Ultimate Guide" loading="lazy">
       </a>
-      <div class="tc-cap"><strong>Guide</strong>Clear "ultimate guide" framing</div>
+      <div class="tc-cap"><strong>AION 2 Templar Ultimate Guide</strong>PvP &amp; PvE build</div>
     </div>
     <div class="thumb-card">
       <a href="https://youtu.be/Nro6Eh5drsc" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/Nro6Eh5drsc/hqdefault.jpg" alt="1 Million AP Farm thumbnail" loading="lazy">
+        <img src="https://i.ytimg.com/vi/Nro6Eh5drsc/hqdefault.jpg" alt="1 Million AP Farm" loading="lazy">
       </a>
-      <div class="tc-cap"><strong>Interactive</strong>Big-number result = big clicks</div>
+      <div class="tc-cap"><strong>I Farmed 1 Million AP in 2 Hours</strong>Mechanics showcase</div>
     </div>
   </div>
-
-  <!-- VIDEO 1 — TOP META -->
-  <div class="example">
-    <div class="example-head">
-      <img class="example-thumb" src="https://i.ytimg.com/vi/1ebgmpl1YxQ/hqdefault.jpg" alt="Templar Macros" loading="lazy">
-      <div class="example-titles">
-        <div class="example-role">Video 1 · The Top Meta</div>
-        <div class="example-title">
-          <a href="https://youtu.be/1ebgmpl1YxQ" target="_blank" rel="noopener">You're Using the WRONG Templar Macros</a>
-        </div>
-        <span class="fp-tag">🏆 FRONT PAGE — AION 2</span>
-      </div>
-    </div>
-
-    <p style="color:var(--muted);">Why it works: a <strong>callout hook</strong> ("You're using the WRONG…") triggers curiosity and doubt. Short, punchy, and speaks directly to Templar players. This is the pattern to reach for when you want maximum reach.</p>
-
-    <div class="meta-block">
-      <div class="meta-label">🏷️ Tags <span class="real-pill">✓ real tags from this video</span></div>
-      <div class="tag-chips">
-        <span class="tag-chip">aion 2</span>
-        <span class="tag-chip">macro guide</span>
-        <span class="tag-chip">aion 2 templar guide</span>
-        <span class="tag-chip">templar guide</span>
-        <span class="tag-chip">aion 2 templar</span>
-        <span class="tag-chip">aion 2 templar build</span>
-        <span class="tag-chip">aion 2 templar macro guide</span>
-        <span class="tag-chip">how to macro</span>
-        <span class="tag-chip">macro settings</span>
-        <span class="tag-chip">aion 2 dps guide</span>
-        <span class="tag-chip">aion 2 gladiator</span>
-        <span class="tag-chip">aion 2 pvp</span>
-        <span class="tag-chip">aion 2 guide</span>
-        <span class="tag-chip">aion 2 global</span>
-        <span class="tag-chip">aion 2 templar pvp</span>
-        <span class="tag-chip">world of warcraft</span>
-        <span class="tag-chip">aion2 templar build</span>
-      </div>
-      <p style="color:var(--muted);font-size:12.5px;margin-top:8px;">💡 Note: <em>world of warcraft</em> is a broad-reach tag. Tagging unrelated games can bend YouTube's tag guidelines — use with intent.</p>
-    </div>
-
-    <div class="meta-block">
-      <div class="meta-label">📝 Description <span class="real-pill">✓ real description</span></div>
-      <div class="code-box">Aion 2 Templar Macro Guide
-Skill setup for Macros
-Macro Hotkeys
-----
-Razer macro Program:
-https://www.razer.com/synapse-4
-
-Previous Video - https://www.youtube.com/watch?v=lSeRM7foIhE
-Aion 2 Templar Abyss Pvp
-Templar Execution Punishment Combo
-
-Exitlag AFFILIATE SPONSOR Link -
-https://www.exitlag.com/refer/SOLASHUR
-----
-Templar Build  (WORK IN PROGRESS)
-https://questlog.gg/aion-2/en/character-builder/QuickCobraLifeBanish
----
-Timestamps:
-00:00 - 01:00 Intro
-01:01 - 04:20 PVX Macro Showcase
-04:21 - 06:53 Macro vs Non Macro
-06:54 - 09:25 DAMAGE COMPARISON PVX / PVP
-09:26 - 12:45 PVE MACRO + SKILL SET
-12:46 - 13:34 MANUAL ANIMATION CANCEL
-13:35 - 14:20 5.5MILLION DPS 1 ROTATION
-14:21 - 15:35 NO MACRO DPS SHOWCASE
-16:30 - 20:14 MACRO SETUP TUTORIAL
-20:15 - 21:55 ANIMATION CANCELING
-21:56 - 23:00 MACRO HOTKEYS INGAME
-23:01 - 25:09 OUTRO + ANIMATION CANCELING TIPS
----
-Master your Aion Templar macros with this step-by-step setup guide. Learn how to optimize your skill rotation and hotkeys for better gameplay efficiency.
-
-This video provides a detailed breakdown of Templar macros designed to streamline your combat effectiveness in Aion. Whether you are struggling with complex skill management or simply looking to refine your current character progression, this guide covers the essential adjustments needed to make your Templar more responsive in battle.
-
-I created this walkthrough in response to requests for a more specific focus on macro configuration after my general build video. We examine the in-game menus, skill selection, and the practical application of macro hotkeys during active gameplay.
-
-Subscribe for weekly Aion class guides and character optimization tips, and let me know in the comments which class you want me to cover next.</div>
-      <p style="color:var(--muted);font-size:12.5px;margin-top:8px;">📐 Notice the structure: <strong>resources &amp; affiliate links up top</strong>, then <strong>detailed timestamps</strong>, then a <strong>keyword-rich summary</strong> for search. That's the winning description formula.</p>
-    </div>
-
-    <div class="meta-block">
-      <div class="meta-label">📊 Video Data <span class="real-pill">✓ real analytics</span></div>
-      <div class="data-row">
-        <div class="data-cell"><div class="dv">12.4K</div><div class="dl">Views</div></div>
-        <div class="data-cell"><div class="dv">7.5%</div><div class="dl">Thumbnail CTR</div></div>
-        <div class="data-cell"><div class="dv">27.9K</div><div class="dl">Impressions</div></div>
-        <div class="data-cell"><div class="dv">231.1h</div><div class="dl">Watch Time</div></div>
-      </div>
-      <div class="data-row" style="margin-top:12px;">
-        <div class="data-cell"><div class="dv">2.3K</div><div class="dl">Unique Viewers</div></div>
-        <div class="data-cell"><div class="dv">+18</div><div class="dl">Subscribers</div></div>
-        <div class="data-cell"><div class="dv">84.8%</div><div class="dl">From Recommendations</div></div>
-        <div class="data-cell"><div class="dv">Long-form</div><div class="dl">Format</div></div>
-      </div>
-      <p style="color:var(--muted);font-size:12.5px;margin-top:10px;">🚀 The front-page signal: <strong>84.8% of views came from YouTube recommendations</strong> (Browse + Home), with a strong <strong>7.5% CTR</strong> pulling clicks from 27.9K impressions. The A/B title test finished without a clear winner, so Variant 1 was kept.</p>
-    </div>
-  </div>
-
-  <!-- VIDEO 2 — GUIDE -->
-  <div class="example">
-    <div class="example-head">
-      <img class="example-thumb" src="https://i.ytimg.com/vi/e8xxp9XuqZM/hqdefault.jpg" alt="Templar Ultimate Guide" loading="lazy">
-      <div class="example-titles">
-        <div class="example-role">Video 2 · The Informational Guide</div>
-        <div class="example-title">
-          <a href="https://youtu.be/e8xxp9XuqZM" target="_blank" rel="noopener">AION 2 TEMPLAR ULTIMATE GUIDE! PvP &amp; PvE BUILD // BERSERK TEMPLAR BUILD</a>
-        </div>
-        <span class="fp-tag">🏆 FRONT PAGE — AION 2</span>
-      </div>
-    </div>
-
-    <p style="color:var(--muted);">Why it works: the <strong>"ULTIMATE GUIDE"</strong> framing plus specific build names (PvP, PvE, Berserk) captures search intent. This is evergreen pillar content that keeps pulling views over time. Title in ALL CAPS with a <strong>//</strong> separator packs two keyword phrases into one line.</p>
-    <p class="use-formula">📋 Apply the full tag + description + analytics formula from <strong>Video 1</strong> above to build this one out.</p>
-  </div>
-
-  <!-- VIDEO 3 — INTERACTIVE -->
-  <div class="example">
-    <div class="example-head">
-      <img class="example-thumb" src="https://i.ytimg.com/vi/Nro6Eh5drsc/hqdefault.jpg" alt="1 Million AP Farm" loading="lazy">
-      <div class="example-titles">
-        <div class="example-role">Video 3 · Fun &amp; Interactive Mechanics</div>
-        <div class="example-title">
-          <a href="https://youtu.be/Nro6Eh5drsc" target="_blank" rel="noopener">I Farmed 1 Million AP in 2 Hours (Aion 2)</a>
-        </div>
-        <span class="fp-tag">🏆 FRONT PAGE — AION 2</span>
-      </div>
-    </div>
-
-    <p style="color:var(--muted);">Why it works: a <strong>big, concrete result</strong> ("1 Million AP in 2 Hours") is an irresistible click. First-person "I did X" framing feels like a story, not a lecture. Great for showcasing mechanics in an entertaining way.</p>
-    <p class="use-formula">📋 Apply the full tag + description + analytics formula from <strong>Video 1</strong> above to build this one out.</p>
-  </div>
-
-  <!-- VIDEO IDEAS -->
-  <div class="section-head" style="margin:50px 0 24px;">
-    <div class="kicker">💡 Idea Bank</div>
-    <h2 style="font-size:clamp(22px,4vw,32px);">Video ideas that follow the meta</h2>
-    <p>The three winning patterns above, turned into a repeatable idea generator.</p>
-  </div>
-  <div class="tips-grid">
-    <div class="tip">
-      <div class="ico">⚔️</div>
-      <h4>The Callout</h4>
-      <p>"You're Using the WRONG ___" — challenge a common habit. High curiosity, high reach.</p>
-    </div>
-    <div class="tip">
-      <div class="ico">📚</div>
-      <h4>The Ultimate Guide</h4>
-      <p>"___ ULTIMATE GUIDE // Best Build" — evergreen, search-friendly pillar content.</p>
-    </div>
-    <div class="tip">
-      <div class="ico">🚀</div>
-      <h4>The Big Result</h4>
-      <p>"I Did ___ in ___ Time" — a concrete, impressive outcome makes the click irresistible.</p>
-    </div>
-    <div class="tip">
-      <div class="ico">🔥</div>
-      <h4>The Tier List</h4>
-      <p>"Best ___ Ranked" — rankings spark debate and comments, which boost the algorithm.</p>
-    </div>
-  </div>
-
-  <!-- TOOLKIT / DOWNLOADS + PRICING -->
-  <div class="section-head">
-    <div class="kicker">The Toolkit</div>
-    <h2>Get the gear</h2>
-    <p>Every app in the workflow, where to download it, and what it costs. Prices in USD, accurate as of early 2026 — always check the site for the latest.</p>
-  </div>
-
-  <div class="tools-grid">
-
-    <div class="tool">
-      <div class="tool-top">
-        <div class="tool-ico">🎥</div>
-        <span class="price price-free">Free</span>
-      </div>
-      <h4>SteelSeries GG</h4>
-      <p class="tool-use">Capture &amp; auto-clip your 1080p gameplay (Moments).</p>
-      <p class="tool-price-note">Free with SteelSeries GG software.</p>
-      <a class="tool-btn" href="https://steelseries.com/gg" target="_blank" rel="noopener">Download →</a>
-    </div>
-
-    <div class="tool">
-      <div class="tool-top">
-        <div class="tool-ico">✂️</div>
-        <span class="price price-paid">Free / $19.99&nbsp;mo</span>
-      </div>
-      <h4>CapCut</h4>
-      <p class="tool-use">Edit Shorts (9:16) and long-form (16:9) in 1080p.</p>
-      <p class="tool-price-note">Free tier available. Pro: <strong>$19.99/mo</strong> or <strong>$179.99/yr</strong>. <span class="warn">Note: prices rose sharply in early 2026.</span></p>
-      <a class="tool-btn" href="https://www.capcut.com/" target="_blank" rel="noopener">Download →</a>
-    </div>
-
-    <div class="tool">
-      <div class="tool-top">
-        <div class="tool-ico">▶️</div>
-        <span class="price price-free">Free</span>
-      </div>
-      <h4>YouTube Studio</h4>
-      <p class="tool-use">Upload, A/B test titles (Test &amp; Compare), tags, category.</p>
-      <p class="tool-price-note">Free with any YouTube account.</p>
-      <a class="tool-btn" href="https://studio.youtube.com/" target="_blank" rel="noopener">Open Studio →</a>
-    </div>
-
-    <div class="tool">
-      <div class="tool-top">
-        <div class="tool-ico">🖼️</div>
-        <span class="price price-paid">Free / $19&nbsp;mo</span>
-      </div>
-      <h4>vidIQ</h4>
-      <p class="tool-use">Thumbnails, keyword research, and optimization.</p>
-      <p class="tool-price-note">Free tier available. Boost: <strong>$19/mo</strong> (~$16.58/mo billed yearly, $199/yr). Max: <strong>$49/mo</strong>.</p>
-      <a class="tool-btn" href="https://vidiq.com/pricing" target="_blank" rel="noopener">Get vidIQ →</a>
-    </div>
-
-  </div>
-
-  <p class="cost-summary">
-    💡 <strong>Budget snapshot:</strong> You can run this entire workflow on <strong>$0</strong> using free tiers of every tool. Going all-in with CapCut Pro + vidIQ Boost runs roughly <strong>~$39/month</strong>.
-  </p>
 
   <footer>
-    <div class="big">Rinse. Repeat. Rank.</div>
-    <p>The Ashura Whole Heavens content system — built to share. 🌀</p>
+    <div class="big">Copy the build. Top the charts. 🌀</div>
+    <p>Ashura Whole Heavens — AION 2 · <a href="playbook.html" style="color:var(--accent-2);">Content Playbook</a></p>
   </footer>
 
 </div>
 
-<!-- Shared 3D background (Three.js) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="assets/background.js"></script>
+<script>
+(function () {
+  var search = document.getElementById('build-search');
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.build-card'));
+  var tabs = document.querySelectorAll('.platform-tab');
+  var noResults = document.getElementById('no-results');
+  var activeFilter = 'all';
 
+  function apply() {
+    var q = search.value.trim().toLowerCase();
+    var shown = 0;
+    cards.forEach(function (card) {
+      var tags = card.getAttribute('data-tags');
+      var text = card.textContent.toLowerCase();
+      var matchesText = !q || text.indexOf(q) !== -1 || tags.indexOf(q) !== -1;
+      var matchesFilter = activeFilter === 'all' || tags.indexOf(activeFilter) !== -1;
+      var show = matchesText && matchesFilter;
+      card.style.display = show ? 'flex' : 'none';
+      if (show) shown++;
+    });
+    noResults.style.display = shown === 0 ? 'block' : 'none';
+  }
+
+  search.addEventListener('input', apply);
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      tabs.forEach(function (t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      activeFilter = tab.getAttribute('data-filter');
+      apply();
+    });
+  });
+})();
+</script>
 
 </body>
 </html>
