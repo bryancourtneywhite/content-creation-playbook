@@ -519,6 +519,9 @@ h1 {
 [data-theme="light"] .buy-opt.bestbuy .buy-store { color: #b39500; }
 .buy-opt.amazon { background: linear-gradient(120deg, rgba(255,153,0,0.14), rgba(255,153,0,0.04)); border-color: rgba(255,153,0,0.5); }
 .buy-opt.amazon .buy-store { color: #ff9900; }
+.buy-opt.brand { background: linear-gradient(120deg, rgba(68,214,44,0.16), rgba(68,214,44,0.05)); border-color: rgba(68,214,44,0.55); }
+.buy-opt.brand .buy-store { color: #44d62c; }
+[data-theme="light"] .buy-opt.brand .buy-store { color: #2a9e1a; }
 .buy-disc { margin-top: 16px; font-size: 11px; color: var(--muted); text-align: center; }
 .price {
   font-size: 12px;

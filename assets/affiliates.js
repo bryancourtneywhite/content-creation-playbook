@@ -46,7 +46,7 @@ window.bestBuyLink = function (opts) {
 
 /* ---------- Purchase modal (pick your store) ---------- */
 (function () {
-  var modal, titleEl, bbEl, amzEl;
+  var modal, titleEl, bbEl, amzEl, brandEl, brandNameEl;
 
   function buildModal() {
     modal = document.createElement('div');
@@ -59,6 +59,9 @@ window.bestBuyLink = function (opts) {
         '<div class="buy-title">Where would you like to buy?</div>' +
         '<div class="buy-name" id="buy-name"></div>' +
         '<div class="buy-options">' +
+          '<a class="buy-opt brand" id="buy-brand" target="_blank" rel="sponsored nofollow noopener" hidden>' +
+            '<span class="buy-store" id="buy-brand-name">Brand Store</span>' +
+            '<span class="buy-sub">Official store · best price for the creator</span></a>' +
           '<a class="buy-opt bestbuy" id="buy-bb" target="_blank" rel="sponsored nofollow noopener">' +
             '<span class="buy-store">Best Buy</span>' +
             '<span class="buy-sub">Ships or in-store pickup</span></a>' +
@@ -72,6 +75,8 @@ window.bestBuyLink = function (opts) {
     titleEl = modal.querySelector('#buy-name');
     bbEl = modal.querySelector('#buy-bb');
     amzEl = modal.querySelector('#buy-amz');
+    brandEl = modal.querySelector('#buy-brand');
+    brandNameEl = modal.querySelector('#buy-brand-name');
 
     modal.addEventListener('click', function (e) {
       if (e.target.hasAttribute('data-close')) closeModal();
@@ -86,7 +91,14 @@ window.bestBuyLink = function (opts) {
     titleEl.textContent = data.name || '';
     bbEl.href = window.bestBuyLink(data);
     amzEl.href = window.amazonLink(data);
-    // If Amazon isn't approved yet, still works as a search link.
+    // Brand-direct option (e.g. Razer) — highest payout, shown first when present.
+    if (data.brandUrl) {
+      brandEl.href = data.brandUrl;
+      brandNameEl.textContent = (data.brandLabel || 'Official Store');
+      brandEl.removeAttribute('hidden');
+    } else {
+      brandEl.setAttribute('hidden', '');
+    }
     modal.removeAttribute('hidden');
     document.body.style.overflow = 'hidden';
   }
@@ -112,7 +124,9 @@ window.bestBuyLink = function (opts) {
           amazonUrl: btn.getAttribute('data-amazon-url') || '',
           asin: btn.getAttribute('data-asin') || '',
           q: btn.getAttribute('data-q') || '',
-          bestbuy: btn.getAttribute('data-bestbuy') || ''
+          bestbuy: btn.getAttribute('data-bestbuy') || '',
+          brandUrl: btn.getAttribute('data-brand-url') || '',
+          brandLabel: btn.getAttribute('data-brand-label') || ''
         });
       });
     });
