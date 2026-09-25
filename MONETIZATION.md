@@ -1,6 +1,6 @@
 # 💰 Monetization & Affiliate Setup
 
-How every product/link on ashura.gg earns residual income, and exactly
+How every product/link on solashur.com earns residual income, and exactly
 what to sign up for. Do these once; the site is already wired to use them.
 
 ## How the affiliate system works
@@ -19,7 +19,7 @@ tracked link. **Set your tag once, the whole site updates.**
 
 ### 1. Amazon Associates  ← do this first, covers everything
 - Apply: https://affiliate-program.amazon.com/
-- You need a live site (ashura.gg qualifies) and must make ~3 qualifying
+- You need a live site (solashur.com qualifies) and must make ~3 qualifying
   sales within 180 days to stay approved.
 - After approval you get a tag like `ashura-20`.
 - **Set it:** open `assets/affiliates.js`, set `amazonTag: 'ashura-20'`.
