@@ -13,8 +13,8 @@ window.AFFILIATES = {
   // Best Buy (via Impact) — ALREADY APPROVED. Main tracked link:
   bestBuyMain: 'https://bestbuycreators.7tiv.net/X4x4xX',
 
-  // Amazon Associates tag, e.g. 'ashura-20'. Leave '' until approved.
-  amazonTag: '',
+  // Amazon Associates tag — approved.
+  amazonTag: 'solashur0f-20',
   amazonDomain: 'www.amazon.com'
 };
 
