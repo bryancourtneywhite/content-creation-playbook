@@ -31,15 +31,13 @@
     <p>Everything in my battle station — the exact PC, peripherals, and capture gear I use to hit the AION 2 front page. Buy from Best Buy or Amazon.</p>
   </div>
 
-  <!-- Affiliate disclosure (required) -->
   <div class="callout" style="max-width:820px;margin:0 auto 34px;text-align:center;">
     🛒 <strong style="color:#fff;">Affiliate links.</strong> As a Best Buy Creator and Amazon Associate,
     I may earn from qualifying purchases — at no extra cost to you. Thanks for the support!
   </div>
 
-  <!-- Category filter -->
   <div style="max-width:720px;margin:0 auto 30px;">
-    <div class="platform-tabs">
+    <div class="platform-tabs" id="cat-tabs">
       <div class="platform-tab active" data-filter="all">All Gear</div>
       <div class="platform-tab" data-filter="pc">PC Build</div>
       <div class="platform-tab" data-filter="peripherals">Peripherals</div>
@@ -47,142 +45,13 @@
     </div>
   </div>
 
-  <!--
-    ADD A REAL PRODUCT PHOTO (industry standard):
-    1. Get the official image from Best Buy's product page or Amazon SiteStripe
-       (or the brand's press kit). Do NOT use fake/AI renders.
-    2. In a card's .product-shot: add class "has-photo" and set the <img src>:
-         <div class="product-shot has-photo"><span class="brand-chip">AMD</span>
-           <img src="IMAGE_URL" alt="AMD Ryzen 9 5900X"></div>
-    Until then, the branded icon tile shows.
-  -->
-
-  <!-- PC BUILD -->
-  <div class="section-head" style="margin:20px 0 24px;" data-cat="pc">
-    <div class="kicker">⚙️ PC Build</div>
-    <h2 style="font-size:clamp(22px,4vw,32px);">The Rig</h2>
-  </div>
-  <div class="tools-grid gear-group" data-cat="pc">
-
-    <div class="tool reveal" data-filter="pc">
-      <div class="product-shot"><span class="brand-chip">AMD</span>🧠</div>
-      <div class="tool-top"><div class="tool-ico">🧠</div><span class="price price-paid">CPU</span></div>
-      <h4>AMD Ryzen 9 5900X</h4>
-      <p class="tool-use">12 cores / 24 threads — handles gaming + streaming without breaking a sweat.</p>
-      <a class="tool-btn buy-btn" href="#" data-name="AMD Ryzen 9 5900X" data-q="AMD Ryzen 9 5900X">Purchase →</a>
-    </div>
-
-    <div class="tool reveal" data-filter="pc">
-      <div class="product-shot"><span class="brand-chip">AMD</span>🎮</div>
-      <div class="tool-top"><div class="tool-ico">🎮</div><span class="price price-paid">GPU</span></div>
-      <h4>AMD Radeon RX 7800 XT</h4>
-      <p class="tool-use">16GB — crushes AION 2 at high settings and captures clean 1080p.</p>
-      <a class="tool-btn buy-btn" href="#" data-name="AMD Radeon RX 7800 XT" data-q="AMD Radeon RX 7800 XT">Purchase →</a>
-    </div>
-
-    <div class="tool reveal" data-filter="pc">
-      <div class="product-shot"><span class="brand-chip">64GB</span>🧩</div>
-      <div class="tool-top"><div class="tool-ico">🧩</div><span class="price price-paid">RAM</span></div>
-      <h4>64GB DDR4</h4>
-      <p class="tool-use">Game, stream, and edit at once with room to spare.</p>
-      <a class="tool-btn buy-btn" href="#" data-name="64GB DDR4 3600 Kit" data-q="64GB DDR4 3600 kit">Purchase →</a>
-    </div>
-
-    <div class="tool reveal" data-filter="pc">
-      <div class="product-shot"><span class="brand-chip">NZXT</span>🧊</div>
-      <div class="tool-top"><div class="tool-ico">🧊</div><span class="price price-paid">Cooling</span></div>
-      <h4>NZXT Kraken AIO</h4>
-      <p class="tool-use">Liquid cooling keeps the 5900X cool over long stream sessions.</p>
-      <a class="tool-btn buy-btn" href="#" data-name="NZXT Kraken AIO Cooler" data-q="NZXT Kraken AIO liquid cooler">Purchase →</a>
-    </div>
-
-    <div class="tool reveal" data-filter="pc">
-      <div class="product-shot"><span class="brand-chip">SSD</span>💾</div>
-      <div class="tool-top"><div class="tool-ico">💾</div><span class="price price-paid">Storage</span></div>
-      <h4>NVMe SSD + 1TB SATA SSD</h4>
-      <p class="tool-use">WD Blue SN570 NVMe boot drive + Samsung 860 EVO for games.</p>
-      <a class="tool-btn buy-btn" href="#" data-name="Samsung 860 EVO 1TB SSD" data-q="Samsung 860 EVO 1TB SSD">Purchase →</a>
-    </div>
-
-  </div>
-
-  <!-- PERIPHERALS -->
-  <div class="section-head" style="margin:40px 0 24px;" data-cat="peripherals">
-    <div class="kicker">⌨️ Peripherals</div>
-    <h2 style="font-size:clamp(22px,4vw,32px);">Battle Station</h2>
-  </div>
-  <div class="tools-grid gear-group" data-cat="peripherals">
-
-    <div class="tool reveal" data-filter="peripherals">
-      <div class="product-shot"><span class="brand-chip">Glorious</span>⌨️</div>
-      <div class="tool-top"><div class="tool-ico">⌨️</div><span class="price price-paid">Keyboard</span></div>
-      <h4>Glorious GMMK 2 (96%)</h4>
-      <p class="tool-use">The board I run my Templar macros on — hot-swappable and compact.</p>
-      <a class="tool-btn buy-btn" href="#" data-name="Glorious GMMK 2 (96%)" data-asin="B09YZ3BNYP" data-q="Glorious GMMK 2 96">Purchase →</a>
-    </div>
-
-    <div class="tool reveal" data-filter="peripherals">
-      <div class="product-shot"><span class="brand-chip">Razer</span>🖱️</div>
-      <div class="tool-top"><div class="tool-ico">🖱️</div><span class="price price-paid">Mouse</span></div>
-      <h4>Razer Basilisk V3 X HyperSpeed</h4>
-      <p class="tool-use">Extra side buttons mapped to my macro triggers. Wireless HyperSpeed.</p>
-      <a class="tool-btn buy-btn" href="#" data-name="Razer Basilisk V3 X HyperSpeed" data-q="Razer Basilisk V3 X HyperSpeed">Purchase →</a>
-    </div>
-
-    <div class="tool reveal" data-filter="peripherals">
-      <div class="product-shot"><span class="brand-chip">SteelSeries</span>🎧</div>
-      <div class="tool-top"><div class="tool-ico">🎧</div><span class="price price-paid">Headset</span></div>
-      <h4>SteelSeries Arctis Nova 7 Gen 2</h4>
-      <p class="tool-use">Positional audio for PvP awareness, run through SteelSeries Sonar.</p>
-      <a class="tool-btn buy-btn" href="#" data-name="SteelSeries Arctis Nova 7 Gen 2" data-q="SteelSeries Arctis Nova 7 Gen 2">Purchase →</a>
-    </div>
-
-    <div class="tool reveal" data-filter="peripherals">
-      <div class="product-shot"><span class="brand-chip">MSI</span>🖥️</div>
-      <div class="tool-top"><div class="tool-ico">🖥️</div><span class="price price-paid">Monitor</span></div>
-      <h4>MSI MAG271VCR</h4>
-      <p class="tool-use">Curved gaming monitor — smooth, high-refresh combat. Paired with a second ASUS display.</p>
-      <a class="tool-btn buy-btn" href="#" data-name="MSI MAG271VCR Monitor" data-q="MSI MAG271VCR curved gaming monitor">Purchase →</a>
-    </div>
-
-  </div>
-
-  <!-- STREAMING -->
-  <div class="section-head" style="margin:40px 0 24px;" data-cat="stream">
-    <div class="kicker">🎥 Streaming &amp; Capture</div>
-    <h2 style="font-size:clamp(22px,4vw,32px);">Content Gear</h2>
-  </div>
-  <div class="tools-grid gear-group" data-cat="stream">
-
-    <div class="tool reveal" data-filter="stream">
-      <div class="product-shot"><span class="brand-chip">SteelSeries</span>🎙️</div>
-      <div class="tool-top"><div class="tool-ico">🎙️</div><span class="price price-paid">Mic</span></div>
-      <h4>Arctis Nova 7 Mic + Sonar</h4>
-      <p class="tool-use">Headset mic cleaned up through SteelSeries Sonar for clear voice on guides and streams.</p>
-      <a class="tool-btn buy-btn" href="#" data-name="SteelSeries Arctis Nova 7 Gen 2" data-q="SteelSeries Arctis Nova 7 Gen 2">Purchase →</a>
-    </div>
-
-    <div class="tool reveal" data-filter="stream">
-      <div class="product-shot"><span class="brand-chip">Logitech</span>📷</div>
-      <div class="tool-top"><div class="tool-ico">📷</div><span class="price price-paid">Webcam</span></div>
-      <h4>Logitech C930e</h4>
-      <p class="tool-use">Wide-angle 1080p facecam for the stream overlay.</p>
-      <a class="tool-btn buy-btn" href="#" data-name="Logitech C930e Webcam" data-q="Logitech C930e webcam">Purchase →</a>
-    </div>
-
-    <div class="tool reveal" data-filter="stream">
-      <div class="product-shot"><span class="brand-chip">Free</span>🎥</div>
-      <div class="tool-top"><div class="tool-ico">🎥</div><span class="price price-free">Free</span></div>
-      <h4>SteelSeries GG + OBS</h4>
-      <p class="tool-use">SteelSeries for clip capture, OBS for streaming.</p>
-      <a class="tool-btn" href="https://obsproject.com/" target="_blank" rel="noopener">Get OBS (free) →</a>
-    </div>
-
+  <!-- Sections rendered from data/products.json -->
+  <div id="gear-root">
+    <p style="text-align:center;color:var(--muted);">Loading gear…</p>
   </div>
 
   <p style="text-align:center;color:var(--muted);font-size:13px;margin-top:40px;max-width:720px;margin-left:auto;margin-right:auto;">
-    Prices and availability are shown at checkout on the retailer's site.
-    Links are affiliate links where available.
+    Prices and availability are shown at checkout on the retailer's site. Links are affiliate links where available.
   </p>
 
   <footer>
@@ -197,19 +66,98 @@
 <script src="assets/affiliates.js"></script>
 <script>
 (function () {
-  var tabs = document.querySelectorAll('.platform-tab');
-  var groups = document.querySelectorAll('.gear-group');
-  var heads = document.querySelectorAll('.section-head[data-cat]');
-  tabs.forEach(function (tab) {
-    tab.addEventListener('click', function () {
-      tabs.forEach(function (t) { t.classList.remove('active'); });
-      tab.classList.add('active');
-      var f = tab.getAttribute('data-filter');
-      function show(el, on) { el.style.display = on ? '' : 'none'; }
-      groups.forEach(function (g) { show(g, f === 'all' || g.getAttribute('data-cat') === f); });
-      heads.forEach(function (h) { show(h, f === 'all' || h.getAttribute('data-cat') === f); });
+  var SECTIONS = [
+    { cat: 'pc', kicker: '⚙️ PC Build', title: 'The Rig' },
+    { cat: 'peripherals', kicker: '⌨️ Peripherals', title: 'Battle Station' },
+    { cat: 'stream', kicker: '🎥 Streaming & Capture', title: 'Content Gear' }
+  ];
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
     });
-  });
+  }
+
+  function priceClass(p) { return p.free ? 'price-free' : 'price-paid'; }
+
+  function cardHTML(p) {
+    var shot = p.image
+      ? '<div class="product-shot has-photo"><span class="brand-chip">' + esc(p.brand) + '</span>' +
+        '<img src="' + esc(p.image) + '" alt="' + esc(p.name) + '"></div>'
+      : '<div class="product-shot"><span class="brand-chip">' + esc(p.brand) + '</span>' + esc(p.icon) + '</div>';
+
+    var btn;
+    if (p.free) {
+      btn = '<a class="tool-btn" href="' + esc(p.freeUrl || '#') + '" target="_blank" rel="noopener">' +
+            esc(p.freeLabel || 'Get it →') + '</a>';
+    } else {
+      btn = '<a class="tool-btn buy-btn" href="#"' +
+            ' data-name="' + esc(p.name) + '"' +
+            (p.asin ? ' data-asin="' + esc(p.asin) + '"' : '') +
+            (p.amazonQ ? ' data-q="' + esc(p.amazonQ) + '"' : '') +
+            (p.bestbuy ? ' data-bestbuy="' + esc(p.bestbuy) + '"' : '') +
+            '>Purchase →</a>';
+    }
+
+    return '<div class="tool reveal" data-filter="' + esc(p.category) + '">' +
+      shot +
+      '<div class="tool-top"><div class="tool-ico">' + esc(p.icon) + '</div>' +
+        '<span class="price ' + priceClass(p) + '">' + esc(p.badge) + '</span></div>' +
+      '<h4>' + esc(p.name) + '</h4>' +
+      '<p class="tool-use">' + esc(p.blurb) + '</p>' +
+      btn +
+    '</div>';
+  }
+
+  function render(products) {
+    var root = document.getElementById('gear-root');
+    var html = '';
+    SECTIONS.forEach(function (sec) {
+      var items = products.filter(function (p) { return p.category === sec.cat; });
+      if (!items.length) return;
+      html += '<div class="section-head" style="margin:20px 0 24px;" data-cat="' + sec.cat + '">' +
+                '<div class="kicker">' + esc(sec.kicker) + '</div>' +
+                '<h2 style="font-size:clamp(22px,4vw,32px);">' + esc(sec.title) + '</h2>' +
+              '</div>' +
+              '<div class="tools-grid gear-group" data-cat="' + sec.cat + '">' +
+                items.map(cardHTML).join('') +
+              '</div>';
+    });
+    root.innerHTML = html;
+
+    // Re-wire affiliate buy buttons + scroll reveal for the new cards.
+    if (window.wireBuyButtons) window.wireBuyButtons();
+    document.querySelectorAll('#gear-root .reveal').forEach(function (el) { el.classList.add('visible'); });
+    initFilter();
+  }
+
+  function initFilter() {
+    var tabs = document.querySelectorAll('#cat-tabs .platform-tab');
+    var groups = document.querySelectorAll('.gear-group');
+    var heads = document.querySelectorAll('.section-head[data-cat]');
+    tabs.forEach(function (tab) {
+      tab.onclick = function () {
+        tabs.forEach(function (t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        var f = tab.getAttribute('data-filter');
+        function show(el, on) { el.style.display = on ? '' : 'none'; }
+        groups.forEach(function (g) { show(g, f === 'all' || g.getAttribute('data-cat') === f); });
+        heads.forEach(function (h) { show(h, f === 'all' || h.getAttribute('data-cat') === f); });
+      };
+    });
+  }
+
+  // Fallback data so the page still renders when opened via file:// (fetch blocked).
+  var FALLBACK = { products: [
+    { id:'cpu-5900x', category:'pc', icon:'🧠', brand:'AMD', badge:'CPU', name:'AMD Ryzen 9 5900X', blurb:'12 cores / 24 threads.', amazonQ:'AMD Ryzen 9 5900X' },
+    { id:'kb-gmmk2', category:'peripherals', icon:'⌨️', brand:'Glorious', badge:'Keyboard', name:'Glorious GMMK 2 (96%)', blurb:'Macro board.', asin:'B09YZ3BNYP' },
+    { id:'capture-obs', category:'stream', icon:'🎥', brand:'Free', badge:'Free', name:'SteelSeries GG + OBS', blurb:'Capture + stream.', free:true, freeUrl:'https://obsproject.com/', freeLabel:'Get OBS (free) →' }
+  ]};
+
+  fetch('data/products.json')
+    .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+    .then(function (data) { render(data.products || []); })
+    .catch(function () { render(FALLBACK.products); });
 })();
 </script>
 

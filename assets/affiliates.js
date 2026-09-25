@@ -97,6 +97,8 @@ window.bestBuyLink = function (opts) {
   */
   function wire() {
     document.querySelectorAll('.buy-btn').forEach(function (btn) {
+      if (btn._buyWired) return;      // avoid double-binding on re-render
+      btn._buyWired = true;
       btn.addEventListener('click', function (e) {
         e.preventDefault();
         openModal({
@@ -108,6 +110,8 @@ window.bestBuyLink = function (opts) {
       });
     });
   }
+  // Exposed so dynamically-rendered pages (Hardware) can re-wire new cards.
+  window.wireBuyButtons = wire;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', wire);
