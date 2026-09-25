@@ -40,11 +40,13 @@
   }
 
   // Build the toggle button once the DOM is ready.
+  // Preferred placement: as the last item inside the nav's .links
+  // (industry standard — GitHub, Vercel, docs sites). Falls back to a
+  // floating button only if there is no nav on the page.
   function initButton() {
     if (document.getElementById('theme-toggle')) return;
     var btn = document.createElement('button');
     btn.id = 'theme-toggle';
-    btn.className = 'theme-toggle';
     btn.type = 'button';
     var t = current();
     btn.textContent = t === 'light' ? '🌙' : '☀️';
@@ -52,7 +54,15 @@
     btn.addEventListener('click', function () {
       setTheme(current() === 'light' ? 'dark' : 'light');
     });
-    document.body.appendChild(btn);
+
+    var navLinks = document.querySelector('.site-nav .links');
+    if (navLinks) {
+      btn.className = 'theme-toggle nav-toggle';
+      navLinks.appendChild(btn);
+    } else {
+      btn.className = 'theme-toggle';   // floating fallback
+      document.body.appendChild(btn);
+    }
   }
 
   if (document.readyState === 'loading') {

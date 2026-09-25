@@ -1,74 +1,117 @@
 /* ------------------------------------------------------------------
    Central affiliate config for Ashura Whole Heavens.
-   Put ALL your affiliate IDs here in ONE place. Every product link on
-   the site is generated from this, so when you get approved for a
-   program you paste the tag here once and the whole site updates.
+   ALL affiliate IDs live here. Products declare intent via data-attrs;
+   this builds the real Best Buy + Amazon links and powers the
+   "Purchase" modal (pick your store).
 
-   IMPORTANT (compliance):
-   - Only add a tag AFTER you're approved for that program. Using an
-     unapproved Amazon tag violates the Associates agreement.
-   - Product images: don't scrape Amazon images. Use SiteStripe image
-     links or official brand press assets. See hardware.html image slots.
+   Compliance:
+   - Only add an Amazon tag AFTER approval.
+   - Product images: use official retailer/brand images (Best Buy product
+     images, Amazon SiteStripe, or brand press kits). Never fake renders.
    ------------------------------------------------------------------ */
 window.AFFILIATES = {
-  // Amazon Associates: your tracking tag, e.g. 'ashura-20'. Leave '' until approved.
-  amazonTag: '',
-  // Amazon marketplace domain (US default).
-  amazonDomain: 'www.amazon.com',
+  // Best Buy (via Impact) — ALREADY APPROVED. Main tracked link:
+  bestBuyMain: 'https://bestbuycreators.7tiv.net/X4x4xX',
 
-  // Optional brand-direct affiliate base URLs (fill when approved).
-  // If set, a product can opt to use these instead of Amazon.
-  brand: {
-    razer: '',        // e.g. your Razer/Impact tracking URL prefix
-    steelseries: '',
-    corsair: '',
-    logitech: ''
-  }
+  // Amazon Associates tag, e.g. 'ashura-20'. Leave '' until approved.
+  amazonTag: '',
+  amazonDomain: 'www.amazon.com'
 };
 
-/* Build an Amazon link. If a tag exists, append it (real earning link);
-   otherwise fall back to a plain search so the link still works. */
+/* Amazon link builder (exact product via ASIN preferred, else search). */
 window.amazonLink = function (opts) {
   var A = window.AFFILIATES || {};
   var domain = A.amazonDomain || 'www.amazon.com';
-  var base;
-  if (opts.asin) {
-    base = 'https://' + domain + '/dp/' + encodeURIComponent(opts.asin) + '/';
-  } else {
-    base = 'https://' + domain + '/s?k=' + encodeURIComponent(opts.q || '');
-  }
+  var base = opts.asin
+    ? 'https://' + domain + '/dp/' + encodeURIComponent(opts.asin) + '/'
+    : 'https://' + domain + '/s?k=' + encodeURIComponent(opts.q || '');
   if (A.amazonTag) {
     base += (base.indexOf('?') === -1 ? '?' : '&') + 'tag=' + encodeURIComponent(A.amazonTag);
   }
   return base;
 };
 
-/* Apply affiliate tags to every element that declares its product intent
-   via data-attributes. Called on DOMContentLoaded by pages that opt in.
-   Usage on an <a>:
-     data-aff="amazon" data-asin="B09YZ3BNYP"   (preferred: exact product)
-     data-aff="amazon" data-q="Razer Basilisk V3 X"  (fallback: search)
-*/
-window.applyAffiliateLinks = function () {
-  var links = document.querySelectorAll('a[data-aff]');
-  links.forEach(function (a) {
-    var kind = a.getAttribute('data-aff');
-    if (kind === 'amazon') {
-      a.href = window.amazonLink({
-        asin: a.getAttribute('data-asin') || '',
-        q: a.getAttribute('data-q') || ''
-      });
-      // Compliance: mark paid links.
-      var rel = (a.getAttribute('rel') || '');
-      if (rel.indexOf('sponsored') === -1) rel = (rel + ' sponsored nofollow noopener').trim();
-      a.setAttribute('rel', rel);
-      a.setAttribute('target', '_blank');
-    }
-  });
+/* Best Buy link: use a product-specific Impact link if provided,
+   otherwise fall back to the main tracked link. */
+window.bestBuyLink = function (opts) {
+  var A = window.AFFILIATES || {};
+  return (opts && opts.bestbuy) ? opts.bestbuy : (A.bestBuyMain || '#');
 };
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', window.applyAffiliateLinks);
-} else {
-  window.applyAffiliateLinks();
-}
+/* ---------- Purchase modal (pick your store) ---------- */
+(function () {
+  var modal, titleEl, bbEl, amzEl;
+
+  function buildModal() {
+    modal = document.createElement('div');
+    modal.className = 'buy-modal';
+    modal.setAttribute('hidden', '');
+    modal.innerHTML =
+      '<div class="buy-backdrop" data-close></div>' +
+      '<div class="buy-dialog" role="dialog" aria-modal="true" aria-label="Choose where to buy">' +
+        '<button class="buy-x" data-close aria-label="Close">✕</button>' +
+        '<div class="buy-title">Where would you like to buy?</div>' +
+        '<div class="buy-name" id="buy-name"></div>' +
+        '<div class="buy-options">' +
+          '<a class="buy-opt bestbuy" id="buy-bb" target="_blank" rel="sponsored nofollow noopener">' +
+            '<span class="buy-store">Best Buy</span>' +
+            '<span class="buy-sub">Ships or in-store pickup</span></a>' +
+          '<a class="buy-opt amazon" id="buy-amz" target="_blank" rel="sponsored nofollow noopener">' +
+            '<span class="buy-store">Amazon</span>' +
+            '<span class="buy-sub">Fast Prime delivery</span></a>' +
+        '</div>' +
+        '<p class="buy-disc">Affiliate links — buying through them supports the channel at no extra cost.</p>' +
+      '</div>';
+    document.body.appendChild(modal);
+    titleEl = modal.querySelector('#buy-name');
+    bbEl = modal.querySelector('#buy-bb');
+    amzEl = modal.querySelector('#buy-amz');
+
+    modal.addEventListener('click', function (e) {
+      if (e.target.hasAttribute('data-close')) closeModal();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeModal();
+    });
+  }
+
+  function openModal(data) {
+    if (!modal) buildModal();
+    titleEl.textContent = data.name || '';
+    bbEl.href = window.bestBuyLink(data);
+    amzEl.href = window.amazonLink(data);
+    // If Amazon isn't approved yet, still works as a search link.
+    modal.removeAttribute('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    if (modal) { modal.setAttribute('hidden', ''); document.body.style.overflow = ''; }
+  }
+  window.openBuyModal = openModal;
+
+  /* Wire up every .buy-btn on the page. Data-attrs on the button:
+       data-name="AMD Ryzen 9 5900X"
+       data-asin="B08..."   (optional, Amazon exact)
+       data-q="AMD Ryzen 9 5900X"  (Amazon search fallback)
+       data-bestbuy="https://bestbuycreators.7tiv.net/XXXX"  (optional per-product)
+  */
+  function wire() {
+    document.querySelectorAll('.buy-btn').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        openModal({
+          name: btn.getAttribute('data-name') || '',
+          asin: btn.getAttribute('data-asin') || '',
+          q: btn.getAttribute('data-q') || '',
+          bestbuy: btn.getAttribute('data-bestbuy') || ''
+        });
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', wire);
+  } else {
+    wire();
+  }
+})();

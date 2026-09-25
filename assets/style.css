@@ -48,6 +48,16 @@
 }
 .theme-toggle:hover { transform: scale(1.1); border-color: var(--accent); }
 
+/* When placed inside the nav, it sits inline as the last link item. */
+.theme-toggle.nav-toggle {
+  position: static;
+  width: 38px;
+  height: 38px;
+  font-size: 17px;
+  margin-left: 4px;
+}
+.theme-toggle.nav-toggle:hover { transform: scale(1.08); }
+
 /* Light-theme fixes for elements that hardcode white/dark text */
 [data-theme="light"] h1 {
   background: linear-gradient(120deg, var(--accent-3) 10%, var(--accent) 50%, var(--accent-2) 90%);
@@ -412,7 +422,19 @@ h1 {
     radial-gradient(120% 120% at 30% 20%, rgba(31,111,214,0.20), transparent 60%),
     linear-gradient(160deg, #e8f1fc, #ffffff);
 }
-.product-shot img { width: 100%; height: 100%; object-fit: contain; display: block; }
+/* Real product image: when a card has one, it fills the tile on a clean
+   near-white backing (retail standard). Add class "has-photo" to
+   .product-shot and set the <img src>. Without it, the emoji tile shows. */
+.product-shot img { display: none; }
+.product-shot.has-photo { background: #ffffff; font-size: 0; }
+.product-shot.has-photo .brand-chip { background: rgba(0,0,0,0.06); color: #333; }
+.product-shot.has-photo img {
+  display: block;
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  padding: 12px;
+}
 .product-shot .brand-chip {
   position: absolute; top: 8px; left: 10px;
   font-size: 10px; font-weight: 800; letter-spacing: 1px;
@@ -420,6 +442,48 @@ h1 {
   background: rgba(0,0,0,0.4); color: #fff; text-transform: uppercase;
 }
 [data-theme="light"] .product-shot .brand-chip { background: rgba(255,255,255,0.75); color: #0e1b2b; }
+
+/* ---------- PURCHASE MODAL ---------- */
+.buy-modal { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; }
+.buy-modal[hidden] { display: none; }
+.buy-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); }
+.buy-dialog {
+  position: relative;
+  width: min(460px, 92vw);
+  padding: 30px 26px 22px;
+  border-radius: 20px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  backdrop-filter: blur(20px);
+  animation: buyIn 0.25s ease both;
+}
+[data-theme="light"] .buy-dialog { background: rgba(255,255,255,0.96); }
+@keyframes buyIn { from { opacity: 0; transform: translateY(20px) scale(0.97); } to { opacity: 1; transform: none; } }
+.buy-x {
+  position: absolute; top: 12px; right: 14px;
+  background: none; border: none; color: var(--muted);
+  font-size: 18px; cursor: pointer; line-height: 1;
+}
+.buy-x:hover { color: var(--text); }
+.buy-title { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+.buy-name { font-size: 14px; color: var(--accent-2); font-weight: 700; margin-bottom: 20px; }
+.buy-options { display: flex; flex-direction: column; gap: 12px; }
+.buy-opt {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 16px 20px; border-radius: 14px; text-decoration: none;
+  border: 1px solid var(--panel-border);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.buy-opt:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.35); }
+.buy-opt .buy-store { font-size: 17px; font-weight: 800; }
+.buy-opt .buy-sub { font-size: 12px; color: var(--muted); }
+.buy-opt.bestbuy { background: linear-gradient(120deg, rgba(255,225,0,0.14), rgba(255,225,0,0.04)); border-color: rgba(255,225,0,0.5); }
+.buy-opt.bestbuy .buy-store { color: #ffe000; }
+[data-theme="light"] .buy-opt.bestbuy .buy-store { color: #b39500; }
+.buy-opt.amazon { background: linear-gradient(120deg, rgba(255,153,0,0.14), rgba(255,153,0,0.04)); border-color: rgba(255,153,0,0.5); }
+.buy-opt.amazon .buy-store { color: #ff9900; }
+.buy-disc { margin-top: 16px; font-size: 11px; color: var(--muted); text-align: center; }
 .price {
   font-size: 12px;
   font-weight: 700;
