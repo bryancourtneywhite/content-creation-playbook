@@ -1441,3 +1441,41 @@ footer .big {
   .tier-rank { flex-basis: 56px; font-size: 24px; }
   .tier-chip { padding: 8px 12px; font-size: 13.5px; }
 }
+
+/* ---------- AMBIENT AUDIO TOGGLE ---------- */
+.audio-toggle {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  z-index: 120;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--panel-border);
+  background: var(--panel);
+  backdrop-filter: blur(10px);
+  color: var(--text);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.3s ease;
+}
+.audio-toggle:hover { transform: scale(1.1); border-color: var(--accent); }
+.audio-toggle.is-muted { opacity: 0.72; }
+/* Subtle pulse ring while playing to hint it's live */
+.audio-toggle:not(.is-muted)::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  opacity: 0;
+  animation: audioPulse 2.4s ease-out infinite;
+}
+@keyframes audioPulse {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(1.5); opacity: 0; }
+}

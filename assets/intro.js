@@ -116,14 +116,18 @@
     document.body.style.overflow = 'hidden';
     var stop = runScene(document.getElementById('intro-canvas'), reveal);
 
-    function close() {
+    function close(startAudio) {
       markSeen();
       ov.classList.add('done');
       document.body.style.overflow = '';
+      // "Enter" is a user gesture — the moment browsers allow audio to start.
+      if (startAudio === true) {
+        window.dispatchEvent(new Event('aws-enter'));
+      }
       setTimeout(function () { stop(); ov.remove(); }, 900);
     }
-    document.getElementById('intro-skip').addEventListener('click', close);
-    document.getElementById('i-enter').addEventListener('click', close);
+    document.getElementById('intro-skip').addEventListener('click', function () { close(false); });
+    document.getElementById('i-enter').addEventListener('click', function () { close(true); });
   }
 
   // Replay button always available on the page.
