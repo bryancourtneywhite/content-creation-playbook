@@ -2054,7 +2054,7 @@ footer .big {
 /* Dropdown panel */
 .site-nav .nav-drop {
   position: absolute; top: calc(100% + 8px); left: 0;
-  min-width: 210px; z-index: 70;
+  min-width: 210px; z-index: 80;
   display: flex; flex-direction: column;
   padding: 8px; gap: 2px;
   background: var(--nav-bg); border: 1px solid var(--panel-border);
@@ -2063,6 +2063,10 @@ footer .big {
   opacity: 0; transform: translateY(-8px); pointer-events: none;
   transition: opacity 0.18s ease, transform 0.18s ease;
 }
+/* The last menu group (MISC) sits at the right edge, next to the theme
+   toggle. Open its dropdown RIGHT-aligned so it drops down-left instead of
+   running off-screen / tucking under the toggle. */
+.site-nav .nav-group:last-of-type > .nav-drop { left: auto; right: 0; }
 /* Invisible "bridge" that fills the 8px gap between the top item and the
    dropdown, so moving the cursor down into the menu never crosses dead space
    (which would drop :hover and snap the menu shut). Industry-standard fix. */
