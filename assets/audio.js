@@ -1,111 +1,111 @@
 /* ------------------------------------------------------------------
    Ambient soundtrack + UI sound effects for Ashura Whole Heavens.
 
-   MUSIC — near-continuous across page navigations (Option A):
-     A multi-page site does a full reload on every navigation, which
-     kills any playing audio. We can't prevent that, but we make it
-     seamless: the track's playback position + playing state are saved
-     to localStorage continuously, and the next page RESUMES from that
-     exact timestamp the moment it loads (autoplay allowed once the user
-     has interacted). Result: the music appears to continue rather than
-     restart, with only a sub-second load gap.
+   MUSIC — hosted by YouTube (not this domain) to minimize legal risk.
+     The background track is a hidden YouTube IFrame player. YouTube hosts
+     the audio, so any copyright enforcement lands on YouTube (the video
+     breaks on their side) rather than triggering a DMCA takedown of
+     solashur.com. Swap the track by changing YT_VIDEO_ID below.
 
-   - Starts on a USER GESTURE (intro "Enter" event, or first click/tap).
-   - Floating 🔊 / 🔇 toggle mutes BOTH music and SFX; choice persists.
+   - Starts on a USER GESTURE (intro "Enter" event, or first click/tap) —
+     browsers block autoplay-with-sound until then.
+   - Floating 🔊 / 🔇 toggle mutes BOTH music and SFX; choice persists via
+     localStorage so it never nags across pages.
+   - Note: because YouTube reinitializes on each page load, cross-page
+     resume is approximate (it restarts the loop) — an accepted trade for
+     moving hosting liability off this domain.
 
-   SFX — PlayStation-style click on interactive elements:
-     A short assets/click.mp3 plays on nav links, buttons, and cards.
-     Uses a tiny pool of cloned audio nodes so rapid clicks overlap
-     cleanly. Respects the same mute toggle.
-
-   Swap tracks any time: replace assets/intro-theme.mp3 / assets/click.mp3.
+   SFX — PlayStation-style click + intro warp are ORIGINAL synthesized
+     sounds hosted here (assets/click.mp3, assets/warp.mp3). No copyright
+     risk, so they stay self-hosted for instant, reliable playback.
    ------------------------------------------------------------------ */
 (function () {
   var inBuilds = location.pathname.indexOf('/builds/') !== -1;
   var BASE = inBuilds ? '../assets/' : 'assets/';
-  var TRACK = BASE + 'intro-theme.mp3';
   var CLICK = BASE + 'click.mp3';
 
-  var MUTE_KEY  = 'aws-audio-muted';
-  var POS_KEY   = 'aws-audio-pos';     // last playback time (seconds)
-  var PLAY_KEY  = 'aws-audio-playing'; // was it playing when we left?
-  var TS_KEY    = 'aws-audio-ts';      // wall-clock timestamp of last save
-  var VOLUME = 0.30;        // ~15% lower than before, to balance with menu SFX
+  // ▼ Background track — a YouTube video ID (YouTube hosts it, not us).
+  var YT_VIDEO_ID = 'mvhqe_eLLh0';   // "Bleach Battle Music / OST Mix - V2"
+  var YT_START = 0;                   // start seconds into the track
+  var VOLUME = 22;                    // YouTube volume is 0–100 (gentle bg level)
   var SFX_VOLUME = 0.5;
 
-  function getNum(k) { try { return parseFloat(localStorage.getItem(k)); } catch (e) { return NaN; } }
+  var MUTE_KEY = 'aws-audio-muted';
   function setItem(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
   function isMuted() { try { return localStorage.getItem(MUTE_KEY) === '1'; } catch (e) { return false; } }
   function setMutedPref(m) { setItem(MUTE_KEY, m ? '1' : '0'); }
-  function wasPlaying() { try { return localStorage.getItem(PLAY_KEY) === '1'; } catch (e) { return false; } }
 
-  /* ---------------- MUSIC ---------------- */
-  var audio = new Audio(TRACK);
-  audio.loop = true;
-  audio.preload = 'auto';
-  audio.volume = VOLUME;
+  /* ---------------- MUSIC (hidden YouTube player) ---------------- */
+  var player = null, playerReady = false, started = false, wantPlay = false;
+  var btnRef = null;
 
-  var LOOP_LEN = 180; // seconds (matches the 3-min clip); refined once metadata loads
-  audio.addEventListener('loadedmetadata', function () {
-    if (isFinite(audio.duration) && audio.duration > 0) LOOP_LEN = audio.duration;
-  });
-
-  // Compute where the track "should" be now, accounting for time spent
-  // navigating (so it truly feels continuous, not frozen at the cut).
-  function resumeTime() {
-    var pos = getNum(POS_KEY);
-    if (isNaN(pos)) return 0;
-    var ts = getNum(TS_KEY);
-    var elapsed = (!isNaN(ts)) ? (Date.now() - ts) / 1000 : 0;
-    // Only advance for a brief, sane navigation gap (avoid huge jumps after
-    // the user was away for minutes on another tab).
-    if (elapsed < 0 || elapsed > 8) elapsed = 0;
-    return (pos + elapsed) % LOOP_LEN;
-  }
-
-  function savePosition() {
-    if (!audio.paused && isFinite(audio.currentTime)) {
-      setItem(POS_KEY, audio.currentTime.toFixed(2));
-      setItem(TS_KEY, Date.now());
-      setItem(PLAY_KEY, '1');
+  // Inject the YouTube IFrame API script once.
+  function loadYT() {
+    if (window.YT && window.YT.Player) { onYTReady(); return; }
+    if (!document.getElementById('yt-iframe-api')) {
+      var s = document.createElement('script');
+      s.id = 'yt-iframe-api';
+      s.src = 'https://www.youtube.com/iframe_api';
+      document.head.appendChild(s);
     }
+    var prev = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = function () {
+      if (typeof prev === 'function') { try { prev(); } catch (e) {} }
+      onYTReady();
+    };
   }
 
-  // Smoothly ramp the music volume to a target over `ms` milliseconds.
-  var fadeTimer = null;
-  function fadeTo(target, ms, done) {
-    if (fadeTimer) { clearInterval(fadeTimer); fadeTimer = null; }
-    var steps = Math.max(1, Math.round(ms / 25));
-    var from = audio.volume;
-    var delta = (target - from) / steps;
-    var i = 0;
-    fadeTimer = setInterval(function () {
-      i++;
-      var v = from + delta * i;
-      audio.volume = Math.min(1, Math.max(0, v));
-      if (i >= steps) {
-        clearInterval(fadeTimer); fadeTimer = null;
-        audio.volume = Math.min(1, Math.max(0, target));
-        if (done) done();
+  function onYTReady() {
+    if (player) return;
+    var host = document.createElement('div');
+    host.id = 'yt-audio-host';
+    // Keep it in the DOM (some browsers won't play a display:none iframe),
+    // but push it far off-screen and tiny so it's invisible/inaudible-visually.
+    host.style.cssText = 'position:fixed;left:-9999px;bottom:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;';
+    var mount = document.createElement('div');
+    mount.id = 'yt-audio-player';
+    host.appendChild(mount);
+    document.body.appendChild(host);
+
+    player = new YT.Player('yt-audio-player', {
+      videoId: YT_VIDEO_ID,
+      playerVars: {
+        autoplay: 0, controls: 0, disablekb: 1, fs: 0, modestbranding: 1,
+        loop: 1, playlist: YT_VIDEO_ID, start: YT_START, playsinline: 1, rel: 0
+      },
+      events: {
+        onReady: function () {
+          playerReady = true;
+          try { player.setVolume(VOLUME); } catch (e) {}
+          if (wantPlay && !isMuted()) doPlay();
+        },
+        onStateChange: function (e) {
+          if (e.data === YT.PlayerState.PLAYING) { started = true; updateBtn(btnRef, true); }
+          else if (e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED) { updateBtn(btnRef, false); }
+        }
       }
-    }, 25);
+    });
   }
 
-  var started = false;
+  function doPlay() {
+    if (!playerReady) { wantPlay = true; return; }
+    try { player.setVolume(VOLUME); player.playVideo(); } catch (e) {}
+  }
+  function doPause() {
+    if (!playerReady) { wantPlay = false; return; }
+    try { player.pauseVideo(); } catch (e) {}
+  }
+  function isPlaying() {
+    try { return playerReady && player.getPlayerState && player.getPlayerState() === 1; } catch (e) { return false; }
+  }
+
   function startPlayback() {
-    if (started || isMuted()) return;
-    started = true;
-    try { audio.currentTime = resumeTime(); } catch (e) {}
-    audio.volume = 0;                       // start silent, fade in
-    var p = audio.play();
-    if (p && p.then) {
-      p.then(function () { fadeTo(VOLUME, 450); }).catch(function () { started = false; audio.volume = VOLUME; });
-    } else {
-      audio.volume = VOLUME;
-    }
+    if (isMuted()) return;
+    wantPlay = true;
+    doPlay();
   }
 
-  /* ---------------- Intro warp SFX ---------------- */
+  /* ---------------- Intro warp SFX (original, self-hosted) ---------------- */
   var warp = new Audio(BASE + 'warp.mp3');
   warp.preload = 'auto';
   warp.volume = 0.6;
@@ -116,7 +116,7 @@
     try { warp.currentTime = 0; warp.play().catch(function () {}); } catch (e) {}
   }
 
-  /* ---------------- SFX (click tick) ---------------- */
+  /* ---------------- SFX (click tick, original, self-hosted) ---------------- */
   var sfxPool = [], POOL = 4, poolIdx = 0, sfxReady = false;
   function initSfx() {
     for (var i = 0; i < POOL; i++) {
@@ -133,14 +133,12 @@
     poolIdx = (poolIdx + 1) % POOL;
     try { a.currentTime = 0; a.play().catch(function () {}); } catch (e) {}
   }
-
-  // Elements that should tick when clicked.
   var SFX_SELECTOR = 'a, button, .build-card, .l3d-node[data-video], .platform-tab, .tier-chip, .guide-toc a, .thumb-card, .sponsor-banner, .tool';
   function wireSfx() {
     document.addEventListener('pointerdown', function (e) {
       var t = e.target && e.target.closest ? e.target.closest(SFX_SELECTOR) : null;
       if (!t) return;
-      if (t.id === 'audio-toggle') return; // toggle has its own behavior
+      if (t.id === 'audio-toggle') return;
       playClick();
     }, true);
   }
@@ -152,7 +150,6 @@
     btn.setAttribute('aria-label', playing ? 'Mute audio' : 'Play audio');
     btn.classList.toggle('is-muted', !playing);
     btn.classList.toggle('is-playing', !!playing);
-    // Once audio is actually playing, drop the "tap for sound" prompt.
     if (playing) btn.classList.remove('needs-start');
   }
   function buildButton() {
@@ -161,19 +158,16 @@
     btn.id = 'audio-toggle';
     btn.className = 'audio-toggle';
     btn.type = 'button';
-    updateBtn(btn, !isMuted());
+    updateBtn(btn, false);
     btn.addEventListener('click', function (e) {
       e.stopPropagation();
-      if (audio.paused) {
+      if (!isPlaying()) {
         setMutedPref(false);
-        started = true;
-        try { audio.currentTime = resumeTime(); } catch (er) {}
-        audio.play().catch(function () {});
+        startPlayback();
         updateBtn(btn, true);
       } else {
-        audio.pause();
+        doPause();
         setMutedPref(true);
-        setItem(PLAY_KEY, '0');
         updateBtn(btn, false);
       }
     });
@@ -184,43 +178,33 @@
   /* ---------------- Init ---------------- */
   function init() {
     var btn = buildButton();
+    btnRef = btn;
     initSfx();
     wireSfx();
+    loadYT();
 
-    // Try to start immediately. If the user was playing on a previous page
-    // (or the browser allows it), music resumes with no click needed.
-    // Otherwise, show an obvious "tap for sound" prompt on the button.
-    function showPrompt() {
-      if (!isMuted() && audio.paused) btn.classList.add('needs-start');
-    }
+    // Show the "tap for sound" prompt until playback actually begins
+    // (browsers block autoplay-with-sound until a user gesture).
     if (!isMuted()) {
-      startPlayback();
-      // Verify shortly after whether autoplay actually took (browsers may
-      // silently reject it without a gesture) and prompt if it didn't.
+      startPlayback();   // will play the moment the player is ready IF allowed
       setTimeout(function () {
-        if (audio.paused) { started = false; showPrompt(); }
-        updateBtn(btn, !audio.paused);
-      }, 350);
+        if (!isPlaying()) btn.classList.add('needs-start');
+      }, 1200);
     }
 
-    // Intro interaction → start the soundtrack AND layer the warp SFX.
-    // 'aws-enter' fires on the first interaction with the intro overlay
-    // (see intro.js), so music + warp begin together as the fly-through runs.
+    // Intro interaction → start music + layer the warp SFX.
     var introActive = false;
     window.addEventListener('aws-intro-start', function () { introActive = true; });
     window.addEventListener('aws-enter', function () {
-      var freshStart = audio.paused && !wasPlaying();
+      var fresh = !isPlaying();
       startPlayback();
-      // Only warp during the intro sequence and only when the track is
-      // starting fresh (not when resuming mid-song from another page).
-      if (introActive && freshStart) playWarp();
-      updateBtn(btn, !audio.paused);
+      if (introActive && fresh) playWarp();
+      updateBtn(btn, true);
     });
 
     // Fallback: first interaction anywhere (pages without the intro).
     function firstGesture() {
       startPlayback();
-      updateBtn(btn, !audio.paused);
       window.removeEventListener('pointerdown', firstGesture);
       window.removeEventListener('keydown', firstGesture);
     }
@@ -228,43 +212,6 @@
       window.addEventListener('pointerdown', firstGesture);
       window.addEventListener('keydown', firstGesture);
     }
-
-    audio.addEventListener('pause', function () { updateBtn(btn, false); });
-    audio.addEventListener('play', function () { updateBtn(btn, true); });
-
-    // Persist position frequently + right before leaving the page.
-    setInterval(savePosition, 1000);
-    window.addEventListener('pagehide', savePosition);
-    window.addEventListener('beforeunload', savePosition);
-    document.addEventListener('visibilitychange', function () {
-      if (document.visibilityState === 'hidden') savePosition();
-    });
-
-    // Soft fade-out on internal navigation to avoid the abrupt clip when the
-    // page unloads. We briefly hold the click, ramp volume to 0 (~180ms),
-    // save the position, then let the browser navigate.
-    document.addEventListener('click', function (e) {
-      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
-      if (!a) return;
-      var href = a.getAttribute('href') || '';
-      var target = a.getAttribute('target');
-      // Only same-tab, same-origin, real page navigations.
-      if (target === '_blank' || href.charAt(0) === '#' || /^(mailto:|tel:|javascript:)/i.test(href)) return;
-      var url;
-      try { url = new URL(a.href, location.href); } catch (er) { return; }
-      if (url.origin !== location.origin) return;
-      if (url.pathname === location.pathname && url.search === location.search) return; // same page (anchor)
-      if (audio.paused) return;              // nothing playing → nothing to fade
-
-      e.preventDefault();
-      savePosition();
-      fadeTo(0, 180, function () {
-        window.location.href = a.href;
-      });
-      // Safety: navigate anyway if the fade callback is delayed.
-      setTimeout(function () { window.location.href = a.href; }, 260);
-    }, true);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
