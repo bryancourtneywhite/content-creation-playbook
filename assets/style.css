@@ -20,8 +20,8 @@
   --accent: #15529c;        /* darker primary blue for legibility */
   --accent-2: #1f6fd6;      /* mid sky blue */
   --accent-3: #081524;      /* near-black blue */
-  --text: #0a141f;          /* near-black body text */
-  --muted: #2c435c;         /* much darker muted text (was too light) */
+  --text: #081019;          /* near-black body text */
+  --muted: #1c3348;         /* darker muted text for contrast on the pale wallpaper */
   --nav-bg: rgba(255, 255, 255, 0.94);
   --fallback-grad: radial-gradient(1200px 800px at 70% 10%, #c3d6ec 0%, #dbe6f2 60%);
 }
@@ -147,6 +147,36 @@
 [data-theme="light"] .article-body p,
 [data-theme="light"] .article-body li,
 [data-theme="light"] .l3d-body p { color: #16304a !important; }
+
+/* Light mode: text that sits directly over the animated wallpaper (no solid
+   panel behind it) gets a soft white halo so it stays legible on the busy
+   pale-blue background. Applies to hero copy, section intros, kickers, and
+   scroll hints — NOT to text inside panels/cards (those have solid backing). */
+[data-theme="light"] .hero p.sub,
+[data-theme="light"] .hero h1,
+[data-theme="light"] .logo-name,
+[data-theme="light"] .section-head h2,
+[data-theme="light"] .section-head p,
+[data-theme="light"] .section-head .kicker,
+[data-theme="light"] .legend-section h2,
+[data-theme="light"] .legend-section .l-sub,
+[data-theme="light"] .legend-section .kicker,
+[data-theme="light"] .scroll-hint,
+[data-theme="light"] .legend-scroll-hint {
+  text-shadow:
+    0 0 6px rgba(255,255,255,0.9),
+    0 0 14px rgba(255,255,255,0.75),
+    0 1px 2px rgba(255,255,255,0.9);
+}
+/* Push the hero tagline + section subtitles to full dark for max contrast */
+[data-theme="light"] .hero p.sub,
+[data-theme="light"] .section-head p,
+[data-theme="light"] .legend-section .l-sub { color: #0f2338 !important; font-weight: 500; }
+/* h1 gradient text can't take a text-shadow cleanly; give it a drop-shadow instead */
+[data-theme="light"] .hero h1 {
+  text-shadow: none;
+  filter: drop-shadow(0 1px 6px rgba(255,255,255,0.85)) drop-shadow(0 0 2px rgba(255,255,255,0.7));
+}
 /* Body copy + section subtitles darker */
 [data-theme="light"] .step-body p,
 [data-theme="light"] .tip p,
