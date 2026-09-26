@@ -71,13 +71,38 @@
     }
   }
 
+  // Smoothly ramp the music volume to a target over `ms` milliseconds.
+  var fadeTimer = null;
+  function fadeTo(target, ms, done) {
+    if (fadeTimer) { clearInterval(fadeTimer); fadeTimer = null; }
+    var steps = Math.max(1, Math.round(ms / 25));
+    var from = audio.volume;
+    var delta = (target - from) / steps;
+    var i = 0;
+    fadeTimer = setInterval(function () {
+      i++;
+      var v = from + delta * i;
+      audio.volume = Math.min(1, Math.max(0, v));
+      if (i >= steps) {
+        clearInterval(fadeTimer); fadeTimer = null;
+        audio.volume = Math.min(1, Math.max(0, target));
+        if (done) done();
+      }
+    }, 25);
+  }
+
   var started = false;
   function startPlayback() {
     if (started || isMuted()) return;
     started = true;
     try { audio.currentTime = resumeTime(); } catch (e) {}
+    audio.volume = 0;                       // start silent, fade in
     var p = audio.play();
-    if (p && p.catch) p.catch(function () { started = false; });
+    if (p && p.then) {
+      p.then(function () { fadeTo(VOLUME, 450); }).catch(function () { started = false; audio.volume = VOLUME; });
+    } else {
+      audio.volume = VOLUME;
+    }
   }
 
   /* ---------------- Intro warp SFX ---------------- */
@@ -198,6 +223,32 @@
     document.addEventListener('visibilitychange', function () {
       if (document.visibilityState === 'hidden') savePosition();
     });
+
+    // Soft fade-out on internal navigation to avoid the abrupt clip when the
+    // page unloads. We briefly hold the click, ramp volume to 0 (~180ms),
+    // save the position, then let the browser navigate.
+    document.addEventListener('click', function (e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+      if (!a) return;
+      var href = a.getAttribute('href') || '';
+      var target = a.getAttribute('target');
+      // Only same-tab, same-origin, real page navigations.
+      if (target === '_blank' || href.charAt(0) === '#' || /^(mailto:|tel:|javascript:)/i.test(href)) return;
+      var url;
+      try { url = new URL(a.href, location.href); } catch (er) { return; }
+      if (url.origin !== location.origin) return;
+      if (url.pathname === location.pathname && url.search === location.search) return; // same page (anchor)
+      if (audio.paused) return;              // nothing playing → nothing to fade
+
+      e.preventDefault();
+      savePosition();
+      fadeTo(0, 180, function () {
+        window.location.href = a.href;
+      });
+      // Safety: navigate anyway if the fade callback is delayed.
+      setTimeout(function () { window.location.href = a.href; }, 260);
+    }, true);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
