@@ -46,7 +46,7 @@ window.bestBuyLink = function (opts) {
 
 /* ---------- Purchase modal (pick your store) ---------- */
 (function () {
-  var modal, titleEl, bbEl, amzEl, brandEl, brandNameEl;
+  var modal, titleEl, amzEl, brandEl, brandNameEl;
 
   function buildModal() {
     modal = document.createElement('div');
@@ -62,9 +62,6 @@ window.bestBuyLink = function (opts) {
           '<a class="buy-opt brand" id="buy-brand" target="_blank" rel="sponsored nofollow noopener" hidden>' +
             '<span class="buy-store" id="buy-brand-name">Brand Store</span>' +
             '<span class="buy-sub">Official store · best price for the creator</span></a>' +
-          '<a class="buy-opt bestbuy" id="buy-bb" target="_blank" rel="sponsored nofollow noopener">' +
-            '<span class="buy-store">Best Buy</span>' +
-            '<span class="buy-sub">Ships or in-store pickup</span></a>' +
           '<a class="buy-opt amazon" id="buy-amz" target="_blank" rel="sponsored nofollow noopener">' +
             '<span class="buy-store">Amazon</span>' +
             '<span class="buy-sub">Fast Prime delivery</span></a>' +
@@ -73,7 +70,6 @@ window.bestBuyLink = function (opts) {
       '</div>';
     document.body.appendChild(modal);
     titleEl = modal.querySelector('#buy-name');
-    bbEl = modal.querySelector('#buy-bb');
     amzEl = modal.querySelector('#buy-amz');
     brandEl = modal.querySelector('#buy-brand');
     brandNameEl = modal.querySelector('#buy-brand-name');
@@ -89,7 +85,6 @@ window.bestBuyLink = function (opts) {
   function openModal(data) {
     if (!modal) buildModal();
     titleEl.textContent = data.name || '';
-    bbEl.href = window.bestBuyLink(data);
     amzEl.href = window.amazonLink(data);
     // Brand-direct option (e.g. Razer) — highest payout, shown first when present.
     if (data.brandUrl) {
