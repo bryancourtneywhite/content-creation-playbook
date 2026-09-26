@@ -80,6 +80,17 @@
     if (p && p.catch) p.catch(function () { started = false; });
   }
 
+  /* ---------------- Intro warp SFX ---------------- */
+  var warp = new Audio(BASE + 'warp.mp3');
+  warp.preload = 'auto';
+  warp.volume = 0.6;
+  var warpPlayed = false;
+  function playWarp() {
+    if (warpPlayed || isMuted()) return;
+    warpPlayed = true;
+    try { warp.currentTime = 0; warp.play().catch(function () {}); } catch (e) {}
+  }
+
   /* ---------------- SFX (click tick) ---------------- */
   var sfxPool = [], POOL = 4, poolIdx = 0, sfxReady = false;
   function initSfx() {
@@ -151,9 +162,17 @@
     // immediately (they've already interacted, so autoplay is permitted).
     if (!isMuted() && wasPlaying()) startPlayback();
 
-    // Preferred trigger: the intro "Enter" gesture.
+    // Intro interaction → start the soundtrack AND layer the warp SFX.
+    // 'aws-enter' fires on the first interaction with the intro overlay
+    // (see intro.js), so music + warp begin together as the fly-through runs.
+    var introActive = false;
+    window.addEventListener('aws-intro-start', function () { introActive = true; });
     window.addEventListener('aws-enter', function () {
+      var freshStart = audio.paused && !wasPlaying();
       startPlayback();
+      // Only warp during the intro sequence and only when the track is
+      // starting fresh (not when resuming mid-song from another page).
+      if (introActive && freshStart) playWarp();
       updateBtn(btn, !audio.paused);
     });
 

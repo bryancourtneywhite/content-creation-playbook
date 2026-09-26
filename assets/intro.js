@@ -114,13 +114,35 @@
   function play() {
     var ov = buildOverlay();
     document.body.style.overflow = 'hidden';
+
+    // Signal that the intro sequence has begun. audio.js listens for this to
+    // fire the warp SFX + start the soundtrack as early as autoplay allows.
+    // (If the user already interacted earlier this session, it starts now;
+    // otherwise it starts on the first interaction with the overlay below.)
+    window.dispatchEvent(new Event('aws-intro-start'));
+
+    // Start audio on the FIRST interaction with the intro (move/click/key) —
+    // much earlier than the final "Enter" click.
+    var kicked = false;
+    function kick() {
+      if (kicked) return;
+      kicked = true;
+      window.dispatchEvent(new Event('aws-enter'));   // start music + warp
+      ov.removeEventListener('pointerdown', kick);
+      ov.removeEventListener('pointermove', kick);
+      ov.removeEventListener('keydown', kick);
+    }
+    ov.addEventListener('pointerdown', kick);
+    ov.addEventListener('pointermove', kick);
+    ov.addEventListener('keydown', kick);
+
     var stop = runScene(document.getElementById('intro-canvas'), reveal);
 
     function close(startAudio) {
       markSeen();
       ov.classList.add('done');
       document.body.style.overflow = '';
-      // "Enter" is a user gesture — the moment browsers allow audio to start.
+      // "Enter"/"Skip" are user gestures — ensure audio is running by now.
       if (startAudio === true) {
         window.dispatchEvent(new Event('aws-enter'));
       }
