@@ -1937,6 +1937,28 @@ footer .big {
 @keyframes npBar { 0%,100%{ height:4px } 50%{ height:15px } }
 @media (max-width: 560px) { .audio-info { right: 70px; } }
 
+/* ---------- Now Playing: station picker ---------- */
+.np-picker-label {
+  margin: 12px 0 6px; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); font-weight: 700;
+}
+.np-stations { display: flex; flex-wrap: wrap; gap: 6px; }
+.np-station {
+  font: inherit; font-size: 12px; line-height: 1; cursor: pointer;
+  padding: 7px 10px; border-radius: 999px;
+  border: 1px solid var(--panel-border);
+  background: rgba(255,255,255,0.04); color: var(--text);
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+}
+.np-station:hover { border-color: var(--accent); transform: translateY(-1px); }
+.np-station.active {
+  border-color: var(--accent-2);
+  background: linear-gradient(135deg, rgba(214,30,44,0.28), rgba(31,111,214,0.24));
+  color: #fff; font-weight: 700;
+  box-shadow: 0 0 12px rgba(214,30,44,0.35);
+}
+[data-theme="light"] .np-station { background: rgba(20,60,110,0.05); }
+
 /* ---------- LORE "COMIC" STYLING (original CSS art, no copyrighted images) ---------- */
 /* Cinematic scene panels for lore articles: bordered frames with a gradient
    "scene" wash, a glowing rune divider, and reveal-on-scroll. */

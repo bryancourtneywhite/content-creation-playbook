@@ -33,8 +33,31 @@
   //   (the "list=PL..." part of the URL), and paste it into YT_PLAYLIST below.
   //   The player will then stream the whole playlist, looped, starting on
   //   the Bleach OST. Set YT_SHUFFLE = true to randomize after the first track.
-  var YT_VIDEO_ID = 'mvhqe_eLLh0';   // "Bleach Battle Music / OST Mix - V2" (seed / default)
-  var YT_PLAYLIST = '';              // e.g. 'PLxxxxxxxxxxxxxxxx' — leave blank for single-track loop
+  //   MULTI-STATION: the listener picks a "station" from the Now Playing panel.
+  //   Each station is EITHER a single looping video (`video`) OR a real
+  //   YouTube playlist (`list`). All IDs verified real via YouTube oEmbed.
+  var STATIONS = [
+    { id: 'bleach',  name: 'Bleach OST',           video: 'mvhqe_eLLh0' },
+    { id: 'aion',    name: 'Classic AION OST',     list:  'PLYFEK0EdxB0rWdh06G5fFS5D-7DEQMxu2' },
+    { id: 'kh',      name: 'Kingdom Hearts',       video: '9gUZayPkXbw' },
+    { id: 'naruto',  name: 'Naruto',               video: 'WBmUZZNYxg0' },
+    { id: 'tekken',  name: 'Tekken',               video: 'Dd1jwuz4exQ' },
+    { id: 'tekken2', name: 'Tekken 2',             video: 'DgoBWMJ7SKI' },
+    { id: 'jsrf',    name: 'Jet Set Radio Future', video: 'QEdG7hiXi50' },
+    { id: 'phonk',   name: 'Viral Phonk',          video: 'XSEyhGFc8rA' }
+  ];
+  var STATION_KEY = 'aws-audio-station';   // remembers the listener's chosen station
+  function findStation(id) {
+    for (var i = 0; i < STATIONS.length; i++) { if (STATIONS[i].id === id) return STATIONS[i]; }
+    return null;
+  }
+  function savedStation() {
+    var id; try { id = localStorage.getItem(STATION_KEY); } catch (e) {}
+    return findStation(id) || STATIONS[0];   // default: Bleach OST
+  }
+  var station = savedStation();
+  var YT_VIDEO_ID = station.video || '';   // current single-track video (if any)
+  var YT_PLAYLIST = station.list  || '';   // current playlist id (if any)
   var YT_SHUFFLE  = false;           // shuffle the playlist (after the first video) if true
   var YT_START = 0;                   // start seconds into the first track
   var VOLUME = 22;                    // YouTube volume is 0–100 (gentle bg level)
@@ -194,6 +217,41 @@
     doPlay();
   }
 
+  // Switch to a different station WITHOUT reloading the page: fade out, load
+  // the new video/playlist into the existing player, then fade back in.
+  function switchStation(id) {
+    var s = findStation(id);
+    if (!s || s.id === station.id) return;
+    station = s;
+    setItem(STATION_KEY, s.id);
+    YT_VIDEO_ID = s.video || '';
+    YT_PLAYLIST = s.list  || '';
+    LOOP_LEN = 0;
+    // Changing station invalidates the saved single-track position.
+    setItem(POS_KEY, '0'); setItem(TS_KEY, Date.now());
+    updatePanelStation();   // refresh thumbnail/title/active-chip in the panel
+
+    function load() {
+      try {
+        if (YT_PLAYLIST) {
+          player.loadPlaylist({ listType: 'playlist', list: YT_PLAYLIST, index: 0, startSeconds: 0 });
+          if (YT_SHUFFLE) player.setShuffle(true);
+          player.setLoop(true);
+        } else {
+          // Single video, looped via a 2-item playlist trick (itself twice).
+          player.loadPlaylist([YT_VIDEO_ID], 0, 0);
+          player.setLoop(true);
+        }
+        player.setVolume(0); curVol = 0;
+        if (!isMuted()) fadeTo(VOLUME, 700);
+      } catch (e) {}
+    }
+
+    if (!playerReady) { wantPlay = true; return; }
+    // Fade out the current track, swap, then fade the new one in.
+    fadeTo(0, 300, function () { load(); });
+  }
+
   /* ---------------- Intro warp SFX (original, self-hosted) ---------------- */
   var warp = new Audio(BASE + 'warp.mp3');
   warp.preload = 'auto';
@@ -281,39 +339,96 @@
     for (var i = 0; i < 7; i++) h += '<span></span>';
     return '<div class="np-eq" aria-hidden="true">' + h + '</div>';
   }
+  // A YouTube link that represents the current station (video or playlist).
+  function stationWatchUrl() {
+    return YT_PLAYLIST
+      ? 'https://www.youtube.com/playlist?list=' + YT_PLAYLIST
+      : 'https://youtu.be/' + YT_VIDEO_ID;
+  }
+  // A thumbnail for the current station. Playlists don't expose a stable
+  // thumb via oEmbed, so fall back to the playlist's first known art via
+  // the video path when we have a video, else a neutral placeholder.
+  function stationThumbUrl() {
+    return YT_VIDEO_ID ? ('https://i.ytimg.com/vi/' + YT_VIDEO_ID + '/mqdefault.jpg') : '';
+  }
+  // Build the station-picker chips (one per station; active one highlighted).
+  function stationChips() {
+    var h = '<div class="np-stations" role="group" aria-label="Music stations">';
+    for (var i = 0; i < STATIONS.length; i++) {
+      var s = STATIONS[i];
+      h += '<button type="button" class="np-station' + (s.id === station.id ? ' active' : '') +
+           '" data-station="' + esc(s.id) + '">' + esc(s.name) + '</button>';
+    }
+    return h + '</div>';
+  }
+  // (Re)load the oEmbed title + channel for the CURRENT station.
+  function loadOembed() {
+    if (!panelEl) return;
+    var t = panelEl.querySelector('.np-title'); if (t) t.textContent = 'Loading…';
+    var c = panelEl.querySelector('.np-chan'); if (c) c.textContent = '';
+    fetch('https://www.youtube.com/oembed?url=' + encodeURIComponent(stationWatchUrl()) + '&format=json')
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!panelEl) return;
+        var tt = panelEl.querySelector('.np-title');
+        var cc = panelEl.querySelector('.np-chan');
+        if (!d) { if (tt) tt.textContent = station.name; return; }
+        if (tt) tt.textContent = d.title || station.name;
+        if (cc) cc.textContent = d.author_name ? ('by ' + String(d.author_name).trim()) : '';
+      })
+      .catch(function () {
+        if (!panelEl) return;
+        var tt = panelEl.querySelector('.np-title'); if (tt) tt.textContent = station.name;
+      });
+  }
+  // Refresh the panel's media (thumb + links + active chip) after a switch.
+  function updatePanelStation() {
+    if (!panelEl) return;
+    var watch = stationWatchUrl();
+    var media = panelEl.querySelector('.np-media'); if (media) media.setAttribute('href', watch);
+    var src = panelEl.querySelector('.np-source'); if (src) src.setAttribute('href', watch);
+    var img = panelEl.querySelector('.np-thumb');
+    if (img) { var th = stationThumbUrl(); if (th) { img.src = th; img.style.display = ''; } else { img.style.display = 'none'; } }
+    var chips = panelEl.querySelectorAll('.np-station');
+    for (var i = 0; i < chips.length; i++) {
+      chips[i].classList.toggle('active', chips[i].getAttribute('data-station') === station.id);
+    }
+    loadOembed();
+  }
   function buildPanel() {
     if (panelEl) return panelEl;
     panelEl = document.createElement('div');
     panelEl.id = 'now-playing';
     panelEl.className = 'now-playing';
-    var watch = 'https://youtu.be/' + YT_VIDEO_ID;
+    var watch = stationWatchUrl();
+    var thumb = stationThumbUrl();
     panelEl.innerHTML =
       '<button class="np-close" aria-label="Close">✕</button>' +
       '<div class="np-head">' + bars() + '<span class="np-status">Now Playing</span></div>' +
       '<a class="np-media" href="' + watch + '" target="_blank" rel="noopener">' +
-        '<img class="np-thumb" src="https://i.ytimg.com/vi/' + YT_VIDEO_ID + '/mqdefault.jpg" alt="" loading="lazy">' +
+        '<img class="np-thumb" src="' + thumb + '" alt="" loading="lazy"' + (thumb ? '' : ' style="display:none"') + '>' +
         '<div class="np-meta">' +
           '<div class="np-title">Loading…</div>' +
           '<div class="np-chan"></div>' +
         '</div>' +
       '</a>' +
-      '<a class="np-source" href="' + watch + '" target="_blank" rel="noopener">▶ Watch source on YouTube ↗</a>';
+      '<a class="np-source" href="' + watch + '" target="_blank" rel="noopener">▶ Watch source on YouTube ↗</a>' +
+      '<div class="np-picker-label">Stations</div>' +
+      stationChips();
     document.body.appendChild(panelEl);
     panelEl.querySelector('.np-close').addEventListener('click', function (e) { e.stopPropagation(); togglePanel(false); });
+    // Station chip clicks → switch stations in place (no page reload).
+    panelEl.addEventListener('click', function (e) {
+      var chip = e.target && e.target.closest ? e.target.closest('.np-station') : null;
+      if (!chip) return;
+      e.stopPropagation();
+      var id = chip.getAttribute('data-station');
+      setMutedPref(false);        // choosing a station implies "play"
+      if (!isPlaying() && !wantPlay) startPlayback();
+      switchStation(id);
+    });
     // Pull real title + channel from YouTube oEmbed (keyless, credits the source).
-    if (!oembedLoaded) {
-      oembedLoaded = true;
-      fetch('https://www.youtube.com/oembed?url=' + encodeURIComponent(watch) + '&format=json')
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (d) {
-          if (!d) return;
-          var t = panelEl.querySelector('.np-title'); if (t) t.textContent = d.title || 'Background Music';
-          var c = panelEl.querySelector('.np-chan'); if (c) c.textContent = d.author_name ? ('by ' + String(d.author_name).trim()) : '';
-        })
-        .catch(function () {
-          var t = panelEl.querySelector('.np-title'); if (t) t.textContent = 'Background Music';
-        });
-    }
+    loadOembed();
     return panelEl;
   }
   function refreshPanelState() {
