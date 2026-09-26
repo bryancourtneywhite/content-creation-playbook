@@ -224,31 +224,22 @@
     </a>
   </div>
 
-  <!-- FEATURED VIDEOS -->
+  <!-- FEATURED VIDEOS (rendered from data/videos.json — add videos there, not here) -->
   <div class="section-head">
     <div class="kicker">🔥 Front Page</div>
     <h2>Latest videos</h2>
-    <p>The AION 2 videos pulling the most views right now.</p>
+    <p>AION 2 builds, guides, and PvP from the channel. New drops appear here automatically.</p>
   </div>
-  <div class="thumb-gallery">
+  <div class="thumb-gallery" id="home-videos">
     <div class="thumb-card">
       <a href="https://youtu.be/1ebgmpl1YxQ" target="_blank" rel="noopener">
         <img src="https://i.ytimg.com/vi/1ebgmpl1YxQ/hqdefault.jpg" alt="Templar Macros" loading="lazy">
       </a>
       <div class="tc-cap"><strong>You're Using the WRONG Templar Macros</strong>12.4K views · 7.5% CTR</div>
     </div>
-    <div class="thumb-card">
-      <a href="https://youtu.be/e8xxp9XuqZM" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/e8xxp9XuqZM/hqdefault.jpg" alt="Templar Ultimate Guide" loading="lazy">
-      </a>
-      <div class="tc-cap"><strong>AION 2 Templar Ultimate Guide</strong>PvP &amp; PvE build</div>
-    </div>
-    <div class="thumb-card">
-      <a href="https://youtu.be/Nro6Eh5drsc" target="_blank" rel="noopener">
-        <img src="https://i.ytimg.com/vi/Nro6Eh5drsc/hqdefault.jpg" alt="1 Million AP Farm" loading="lazy">
-      </a>
-      <div class="tc-cap"><strong>I Farmed 1 Million AP in 2 Hours</strong>Mechanics showcase</div>
-    </div>
+  </div>
+  <div class="btn-row" style="justify-content:center;margin-top:18px;">
+    <a class="tool-btn" href="watch.html">📺 Watch the full library →</a>
   </div>
 
   <!-- EMAIL CAPTURE -->
@@ -268,6 +259,33 @@
 <script src="assets/live.js"></script>
 <script src="assets/cards.js"></script>
 <script src="assets/subscribe.js"></script>
+<!-- Home "Latest videos" row — rendered from data/videos.json so it never goes stale -->
+<script>
+(function () {
+  var grid = document.getElementById('home-videos');
+  if (!grid) return;
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+  fetch('data/videos.json', { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+    .then(function (d) {
+      var vids = (d.videos || []).slice(0, 6);   // show the top 6
+      if (!vids.length) return;
+      grid.innerHTML = vids.map(function (v) {
+        return '<div class="thumb-card">' +
+          '<a href="https://youtu.be/' + esc(v.id) + '" target="_blank" rel="noopener">' +
+            '<img src="https://i.ytimg.com/vi/' + esc(v.id) + '/hqdefault.jpg" alt="' + esc(v.title) + '" loading="lazy">' +
+          '</a>' +
+          '<div class="tc-cap"><strong>' + esc(v.title) + '</strong></div>' +
+        '</div>';
+      }).join('');
+    })
+    .catch(function () { /* keep the hardcoded fallback card */ });
+})();
+</script>
 <script>
 (function () {
   var search = document.getElementById('build-search');

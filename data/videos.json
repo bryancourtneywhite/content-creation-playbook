@@ -1,6 +1,51 @@
 {
-  "_comment": "Your video library. Add a new video: copy an entry, set the YouTube id (the part after youtu.be/ or watch?v=), title, and tags. The Watch page shows these in a searchable grid; clicking one plays it in the embedded player. Newest first is nice.",
+  "_comment": "Your video library. Add a new video: copy an entry, set the YouTube id (the part after youtu.be/ or watch?v=), title, and tags. The Watch page shows these in a searchable grid; the homepage 'Latest videos' row and other pages read from here too. Newest / best first is nice.",
   "videos": [
+    {
+      "id": "lSeRM7foIhE",
+      "title": "MY TEMPLAR FOUGHT 300 PLAYERS IN THE ABYSS",
+      "tags": ["templar", "pvp", "abyss", "highlight", "immortal", "aion 2"]
+    },
+    {
+      "id": "gf_hsJGqdfs",
+      "title": "Aion 2 - DPS Templar is the META for Abyss PvP (Immortal Build)",
+      "tags": ["templar", "pvp", "abyss", "dps", "immortal", "build", "meta", "aion 2"]
+    },
+    {
+      "id": "NjhgqAeMim0",
+      "title": "GRANDMASTER Gladiator 4v4 PVP (Before Crushing Wave Nerfs)",
+      "tags": ["gladiator", "pvp", "arena", "4v4", "grandmaster", "aion 2"]
+    },
+    {
+      "id": "7HiNBMkNXrc",
+      "title": "After 600+ Hours of Aion 2, Here's the TRUTH Nobody Is Saying",
+      "tags": ["review", "endgame", "opinion", "guide", "aion 2"]
+    },
+    {
+      "id": "G8rlwxV7lgA",
+      "title": "Aion 2 - Ultimate Class TIER LIST For Season 1",
+      "tags": ["tier list", "classes", "meta", "pvp", "pve", "guide", "aion 2"]
+    },
+    {
+      "id": "VJSf4lf_Gtk",
+      "title": "Aion 2 - Gladiator BERSERK PvP COMBO Guide",
+      "tags": ["gladiator", "pvp", "combo", "berserk", "guide", "aion 2"]
+    },
+    {
+      "id": "oyagVV4cYcs",
+      "title": "Aion 2: Gladiator PvE - Zikel Nightmare Guide | Build, Tips, Gear",
+      "tags": ["gladiator", "pve", "nightmare", "dungeon", "endgame", "guide", "aion 2"]
+    },
+    {
+      "id": "bNXZv4e5fcU",
+      "title": "Aion 2 - ULTIMATE Arcana Card Guide for END GAME OPTIMIZATION",
+      "tags": ["arcana", "cards", "endgame", "optimization", "guide", "aion 2"]
+    },
+    {
+      "id": "isIn5Nz3v0w",
+      "title": "How to Play Aion 2 FREE with NO LAG (Optimization Guide)",
+      "tags": ["optimization", "lag", "ping", "performance", "f2p", "guide", "aion 2"]
+    },
     {
       "id": "1ebgmpl1YxQ",
       "title": "You're Using the WRONG Templar Macros",
