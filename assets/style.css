@@ -1762,3 +1762,12 @@ footer .big {
   width: 100%; height: 78vh; min-height: 560px; border: 0; display: block; background: #0d0b12;
 }
 @media (max-width: 560px) { .ql-frame-wrap iframe { height: 70vh; min-height: 460px; } }
+
+/* ---------- DUAL CHAT note ---------- */
+.chat-note {
+  margin-top: 10px; padding: 12px 14px; border-radius: 12px;
+  font-size: 13px; color: var(--muted);
+  background: var(--panel); border: 1px solid var(--panel-border);
+}
+.chat-note a { color: var(--accent-2); text-decoration: none; }
+.chat-note a:hover { text-decoration: underline; }

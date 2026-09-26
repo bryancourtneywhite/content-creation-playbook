@@ -1,7 +1,8 @@
 {
-  "_comment": "Flip 'live' to true when you go live (shows the LIVE banner on the home page). 'schedule' fields drive the offline card on the Watch page — update the dates/text when your stream plans change.",
+  "_comment": "Flip 'live' to true when you go live (shows the LIVE banner + stream preview). 'schedule' drives the offline card on the Watch page. Set 'youtubeLiveId' to your current YouTube live video ID (the part after watch?v=) so the 'Both Chats' tab shows your YouTube chat; leave it empty when not streaming on YouTube.",
   "live": false,
   "platform": "twitch",
+  "youtubeLiveId": "",
   "title": "AION 2 Templar ranked climb",
   "schedule": {
     "headline": "Next Stream Block",

@@ -47,6 +47,7 @@
     <div class="platform-tab active" data-target="pane-youtube">▶️ YouTube</div>
     <div class="platform-tab twitch" data-target="pane-twitch">🎮 Twitch</div>
     <div class="platform-tab" data-target="pane-both">🔀 Show Both</div>
+    <div class="platform-tab" data-target="pane-chat">💬 Both Chats</div>
   </div>
 
   <!-- YouTube pane -->
@@ -112,6 +113,76 @@
           <iframe id="tw-video-2" src="about:blank" allowfullscreen title="Twitch stream"></iframe>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Dual chat pane: YouTube chat + Twitch chat side by side -->
+  <div id="pane-chat" class="watch-pane" style="display:none;">
+    <div class="watch-grid" style="grid-template-columns:1fr 1fr;">
+      <div>
+        <div class="embed-label"><span class="pf-dot yt"></span> YouTube Chat</div>
+        <div class="embed-wrap" style="aspect-ratio:auto;height:100%;min-height:520px;">
+          <iframe id="yt-chat" src="about:blank" title="YouTube live chat"></iframe>
+        </div>
+        <div id="yt-chat-note" class="chat-note" style="display:none;">
+          YouTube chat appears here when I'm live on YouTube. Until then,
+          <a href="https://www.youtube.com/@SolAshur/streams" target="_blank" rel="noopener">see YouTube streams ↗</a>.
+        </div>
+      </div>
+      <div>
+        <div class="embed-label"><span class="pf-dot tw"></span> Twitch Chat</div>
+        <div class="embed-wrap" style="aspect-ratio:auto;height:100%;min-height:520px;">
+          <iframe id="tw-chat-2" src="about:blank" title="Twitch chat"></iframe>
+        </div>
+      </div>
+    </div>
+    <p style="color:var(--muted);font-size:13.5px;margin-top:12px;text-align:center;">
+      💬 Both chats in one place — jump into whichever platform you're on while I stream.
+    </p>
+  </div>
+
+  <!-- Popular past livestreams (VODs) -->
+  <div class="section-head">
+    <div class="kicker">🔥 Past Streams</div>
+    <h2>Popular Livestream Replays</h2>
+    <p>Missed a stream? Catch the marathons, rank pushes, and world-firsts. Click to watch on YouTube.</p>
+  </div>
+  <div class="thumb-gallery" id="vod-gallery">
+    <div class="thumb-card">
+      <a href="https://youtu.be/kBwfsEZY5JI" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/kBwfsEZY5JI/hqdefault.jpg" alt="Best Gladiator NA Livestream" loading="lazy">
+      </a>
+      <div class="tc-cap"><strong>GLADIATOR ► Best Gladiator NA</strong>Launch day · early PvP</div>
+    </div>
+    <div class="thumb-card">
+      <a href="https://youtu.be/1YmQi5hmER4" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/1YmQi5hmER4/hqdefault.jpg" alt="24-Hour Gladiator Livestream" loading="lazy">
+      </a>
+      <div class="tc-cap"><strong>24-Hour Livestream (WORLD'S FIRST)</strong>PvP · leveling · endgame</div>
+    </div>
+    <div class="thumb-card">
+      <a href="https://youtu.be/zzCCuZ-Ynr4" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/zzCCuZ-Ynr4/hqdefault.jpg" alt="Rank 1 Gladiator Subscriber Marathon" loading="lazy">
+      </a>
+      <div class="tc-cap"><strong>Rank 1 Gladiator — Subscriber Marathon</strong>Arena rank push</div>
+    </div>
+    <div class="thumb-card">
+      <a href="https://youtu.be/NIMzCZqkhyI" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/NIMzCZqkhyI/hqdefault.jpg" alt="Buffs Incoming & New PvE Guide" loading="lazy">
+      </a>
+      <div class="tc-cap"><strong>BUFFS INCOMING &amp; New PvE Guide</strong>Balance patch · PvE</div>
+    </div>
+    <div class="thumb-card">
+      <a href="https://youtu.be/U_H_-_ECpv8" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/U_H_-_ECpv8/hqdefault.jpg" alt="Unlocking Hidden Potential" loading="lazy">
+      </a>
+      <div class="tc-cap"><strong>Unlocking Hidden Potential</strong>Stigma &amp; endgame min-max</div>
+    </div>
+    <div class="thumb-card">
+      <a href="https://youtu.be/L9gSOgGgTF4" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/L9gSOgGgTF4/hqdefault.jpg" alt="Unlocking All My Power" loading="lazy">
+      </a>
+      <div class="tc-cap"><strong>Unlocking All My Power</strong>Awakening · arena queues</div>
     </div>
   </div>
 
@@ -245,6 +316,37 @@
     twitchLoaded = true;
   }
 
+  // Dual-chat pane: Twitch chat always; YouTube chat when a live YT id is set
+  // in data/live.json (field "youtubeLiveId"). YouTube live chat embeds need
+  // the video id + embed_domain of the host site.
+  var dualLoaded = false;
+  function loadDualChat() {
+    if (dualLoaded) return;
+    dualLoaded = true;
+    var twc = document.getElementById('tw-chat-2');
+    if (twc) twc.src = twitchChatSrc();
+    var host = location.hostname || 'solashur.com';
+    fetch('data/live.json', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        var ytId = d && d.youtubeLiveId;
+        var frame = document.getElementById('yt-chat');
+        var note = document.getElementById('yt-chat-note');
+        if (ytId && frame) {
+          frame.src = 'https://www.youtube.com/live_chat?v=' + encodeURIComponent(ytId) + '&embed_domain=' + host;
+        } else {
+          if (frame) frame.style.display = 'none';
+          if (note) note.style.display = 'block';
+        }
+      })
+      .catch(function () {
+        var frame = document.getElementById('yt-chat');
+        var note = document.getElementById('yt-chat-note');
+        if (frame) frame.style.display = 'none';
+        if (note) note.style.display = 'block';
+      });
+  }
+
   // Platform tab switching
   var tabs = document.querySelectorAll('.platform-tab');
   var panes = document.querySelectorAll('.watch-pane');
@@ -257,6 +359,7 @@
         p.style.display = (p.id === target) ? 'block' : 'none';
       });
       if (target === 'pane-twitch' || target === 'pane-both') loadTwitch();
+      if (target === 'pane-chat') loadDualChat();
     });
   });
 })();
