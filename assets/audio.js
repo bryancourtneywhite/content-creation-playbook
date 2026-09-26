@@ -2,10 +2,11 @@
    Ambient soundtrack + UI sound effects for Ashura Whole Heavens.
 
    MUSIC — hosted by YouTube (not this domain) to minimize legal risk.
-     The background track is a hidden YouTube IFrame player. YouTube hosts
-     the audio, so any copyright enforcement lands on YouTube (the video
-     breaks on their side) rather than triggering a DMCA takedown of
-     solashur.com. Swap the track by changing YT_VIDEO_ID below.
+     A hidden YouTube IFrame player streams either a single looping track
+     (default: the Bleach OST) OR a full YouTube playlist that starts on the
+     Bleach OST — set YT_PLAYLIST to a "PL..." id to enable playlist mode.
+     Either way YouTube hosts the audio, so copyright enforcement lands on
+     YouTube, not solashur.com.
 
    - Starts on a USER GESTURE (intro "Enter" event, or first click/tap) —
      browsers block autoplay-with-sound until then.
@@ -25,9 +26,17 @@
   var BASE = inBuilds ? '../assets/' : 'assets/';
   var CLICK = BASE + 'click.mp3';
 
-  // ▼ Background track — a YouTube video ID (YouTube hosts it, not us).
-  var YT_VIDEO_ID = 'mvhqe_eLLh0';   // "Bleach Battle Music / OST Mix - V2"
-  var YT_START = 0;                   // start seconds into the track
+  // ▼ Background music — hosted by YouTube (liability stays with YouTube).
+  //   Default: loop the single Bleach OST video.
+  //   To make it a STREAMABLE PLAYLIST: create a public YouTube playlist
+  //   (Add the Bleach OST first so it plays first), copy its playlist ID
+  //   (the "list=PL..." part of the URL), and paste it into YT_PLAYLIST below.
+  //   The player will then stream the whole playlist, looped, starting on
+  //   the Bleach OST. Set YT_SHUFFLE = true to randomize after the first track.
+  var YT_VIDEO_ID = 'mvhqe_eLLh0';   // "Bleach Battle Music / OST Mix - V2" (seed / default)
+  var YT_PLAYLIST = '';              // e.g. 'PLxxxxxxxxxxxxxxxx' — leave blank for single-track loop
+  var YT_SHUFFLE  = false;           // shuffle the playlist (after the first video) if true
+  var YT_START = 0;                   // start seconds into the first track
   var VOLUME = 22;                    // YouTube volume is 0–100 (gentle bg level)
   var SFX_VOLUME = 0.5;
 
@@ -60,6 +69,7 @@
   }
 
   function savePosition() {
+    if (YT_PLAYLIST) return;   // timestamp resume is meaningless across playlist tracks
     try {
       if (playerReady && isPlaying()) {
         var t = player.getCurrentTime();
@@ -119,20 +129,36 @@
     document.body.appendChild(host);
 
     player = new YT.Player('yt-audio-player', {
-      videoId: YT_VIDEO_ID,
+      videoId: YT_PLAYLIST ? '' : YT_VIDEO_ID,   // blank if playlist (loaded after ready)
       playerVars: {
         autoplay: 0, controls: 0, disablekb: 1, fs: 0, modestbranding: 1,
-        loop: 1, playlist: YT_VIDEO_ID, start: YT_START, playsinline: 1, rel: 0
+        loop: 1,
+        playlist: YT_PLAYLIST ? undefined : YT_VIDEO_ID,
+        start: YT_PLAYLIST ? undefined : YT_START,
+        playsinline: 1, rel: 0
       },
       events: {
         onReady: function () {
           playerReady = true;
-          try {
-            var dur = player.getDuration();
-            if (isFinite(dur) && dur > 0) LOOP_LEN = dur;
-          } catch (e) {}
-          // Resume from where we left off on the previous page.
-          try { player.seekTo(resumeTime(), true); } catch (e) {}
+          // If a playlist is configured, load it via the API (most reliable).
+          if (YT_PLAYLIST) {
+            try {
+              player.loadPlaylist({
+                listType: 'playlist', list: YT_PLAYLIST,
+                index: 0, startSeconds: YT_START
+              });
+              player.pauseVideo();                        // don't autoplay until gesture
+              if (YT_SHUFFLE) player.setShuffle(true);
+              player.setLoop(true);
+            } catch (e) {}
+          } else {
+            try {
+              var dur = player.getDuration();
+              if (isFinite(dur) && dur > 0) LOOP_LEN = dur;
+            } catch (e) {}
+            // Resume from where we left off on the previous page (single-track only).
+            try { player.seekTo(resumeTime(), true); } catch (e) {}
+          }
           curVol = 0;
           try { player.setVolume(0); } catch (e) {}   // start silent, fade in
           if (wantPlay && !isMuted()) doPlay();
