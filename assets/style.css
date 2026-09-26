@@ -91,6 +91,25 @@
 /* Force-override inline white on callout strongs so they stay readable in light mode */
 [data-theme="light"] .callout strong,
 [data-theme="light"] .callout strong[style] { color: var(--accent-3) !important; }
+
+/* Light mode = black text everywhere on light surfaces.
+   Catch any element hardcoding white via inline style, plus the
+   article/callout/panel text elements. Buttons keep white text
+   because they sit on solid colored backgrounds (handled below). */
+[data-theme="light"] [style*="color:#fff"],
+[data-theme="light"] [style*="color: #fff"],
+[data-theme="light"] [style*="color:#ffffff"],
+[data-theme="light"] [style*="color: #ffffff"],
+[data-theme="light"] [style*="color:white"],
+[data-theme="light"] [style*="color: white"] { color: #0a141f !important; }
+
+/* But keep white text on solid colored buttons/pills where it belongs */
+[data-theme="light"] .big-btn,
+[data-theme="light"] .tool-btn,
+[data-theme="light"] .oc-btn,
+[data-theme="light"] .cta-row a.tool-btn,
+[data-theme="light"] a.big-btn { color: #ffffff !important; }
+[data-theme="light"] .big-btn.ghost { color: var(--accent-3) !important; }
 /* Body copy + section subtitles darker */
 [data-theme="light"] .step-body p,
 [data-theme="light"] .tip p,

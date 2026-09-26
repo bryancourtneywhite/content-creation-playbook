@@ -78,7 +78,6 @@
 
   <!-- HERO — THE LEGEND OF SOLASHUR -->
   <header class="hero" style="min-height:88vh;">
-    <div class="solashur-portrait" id="solashur-portrait"></div>
     <div class="logo-mark">
       <div class="logo-spiral">🌀</div>
       <div class="logo-name">Ashura Whole Heavens</div>
@@ -298,19 +297,6 @@
     var fn = window.BRAND_LOGOS && window.BRAND_LOGOS[el.getAttribute('data-brand')];
     if (fn) el.innerHTML = fn();
   });
-})();
-</script>
-
-<!-- Faded Solashur portrait: only show if assets/solashur.jpg exists -->
-<script>
-(function () {
-  var el = document.getElementById('solashur-portrait');
-  if (!el) return;
-  var img = new Image();
-  img.onload = function () { el.style.display = 'block'; };
-  img.onerror = function () { el.style.display = 'none'; };
-  el.style.display = 'none';
-  img.src = 'assets/standing%20profile%20pic.jpg';
 })();
 </script>
 
