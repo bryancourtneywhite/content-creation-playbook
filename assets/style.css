@@ -560,11 +560,13 @@ h1 {
 .tool-use { color: #d4dcf0; font-size: 14px; margin-bottom: 10px; }
 .tool-brandlogo {
   display: flex; align-items: center; justify-content: center;
-  height: 48px; margin: 4px 0 12px;
-  border-radius: 10px; background: rgba(255,255,255,0.03);
+  height: 54px; margin: 4px 0 12px;
+  border-radius: 10px;
+  /* Dark backing in both themes so brand wordmarks (white/light fills) always read */
+  background: linear-gradient(150deg, #141018, #0b0a0c);
   border: 1px solid var(--panel-border);
 }
-.tool-brandlogo svg { max-width: 80%; max-height: 40px; }
+.tool-brandlogo svg { max-width: 82%; max-height: 44px; }
 .tool-price-note { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
 .tool-price-note .warn { color: #ff9d6b; display: block; margin-top: 4px; font-size: 12px; }
 .tool-price-note strong { color: #fff; }
@@ -798,8 +800,10 @@ h1 {
   padding: 2px 7px; border-radius: 999px;
   background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8);
 }
-[data-theme="light"] .sponsor-banner { color: #0e1b2b; background: linear-gradient(150deg, #ffffff, #eef3fb); }
-[data-theme="light"] .sponsor-banner .sp-badge { background: rgba(0,0,0,0.08); color: #4a5f78; }
+/* Sponsor banners stay dark in light mode too — trackside boards read best
+   dark/vivid, and brand wordmarks (white/light fills) need a dark backing. */
+[data-theme="light"] .sponsor-banner { color: #fff; }
+[data-theme="light"] .sponsor-banner .sp-tag { color: rgba(255,255,255,0.8); }
 
 /* ---------- FLOW STRIP ---------- */
 .flow { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center; margin-top: 20px; }

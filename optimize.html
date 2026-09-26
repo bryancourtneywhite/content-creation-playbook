@@ -107,6 +107,7 @@
   <div class="tools-grid" style="max-width:900px;margin:0 auto;">
     <div class="tool reveal">
       <div class="tool-top"><div class="tool-ico">🌐</div><span class="price price-paid">Active Sponsor</span></div>
+      <div class="tool-brandlogo" data-brand="exitlag"></div>
       <h4>ExitLag</h4>
       <p class="tool-use">Route optimization I run live on stream.</p>
       <p class="tool-price-note">Featured across the channel and this site.</p>
@@ -114,6 +115,7 @@
     </div>
     <div class="tool reveal">
       <div class="tool-top"><div class="tool-ico">🖱️</div><span class="price price-paid">Active Partner</span></div>
+      <div class="tool-brandlogo" data-brand="razer"></div>
       <h4>Razer</h4>
       <p class="tool-use">My daily-driver Basilisk mouse and macro setup for competitive PvP.</p>
       <p class="tool-price-note">Official Razer partner — shop my gear.</p>
@@ -121,6 +123,7 @@
     </div>
     <div class="tool reveal">
       <div class="tool-top"><div class="tool-ico">📦</div><span class="price price-paid">Active Partner</span></div>
+      <div class="tool-brandlogo" data-brand="amazon"></div>
       <h4>Amazon</h4>
       <p class="tool-use">My full PC build, peripherals, and streaming gear — one click away.</p>
       <p class="tool-price-note">Amazon Associate. See it all on my <a href="hardware.html" style="color:var(--accent-2);">Hardware page</a>.</p>
@@ -159,6 +162,15 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="assets/background.js"></script>
+<script src="assets/brand-logos.js"></script>
+<script>
+(function () {
+  document.querySelectorAll('.tool-brandlogo[data-brand]').forEach(function (el) {
+    var fn = window.BRAND_LOGOS && window.BRAND_LOGOS[el.getAttribute('data-brand')];
+    if (fn) el.innerHTML = fn();
+  });
+})();
+</script>
 
 </body>
 </html>
