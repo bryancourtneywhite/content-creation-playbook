@@ -61,19 +61,20 @@
 
     <div class="article-body">
 
-      <p>Most Templars set their macros wrong and lose fights they should win. This guide breaks down the exact macro setup, skill layout, and hotkeys I use to top the DPS charts in AION 2 — for both PvP and PvE.</p>
+      <p>Macros are class-specific — the setup that carries a Templar won't fit another class. This guide breaks down the exact Templar macro system I run in AION 2 across <strong>three setups</strong>: PvX (rifts/abyss), PvP (arenas), and PvE. Everything is built around one core idea: animation-canceling Judgment into Pummel for maximum sustained DPS.</p>
 
       <!-- INTERACTIVE BUILD VIEWER -->
       <h2>⚡ Interactive Build</h2>
-      <p>The build at a glance. For the full skill tree and to copy it into your own account, open it in Questlog.</p>
+      <p>The macro system at a glance. For the full skill tree and to copy it into your own account, open it in Questlog.</p>
       <div class="build-viewer" id="build-viewer">
         <!-- rendered by JS from data/templar-macro.json (with fallback) -->
       </div>
       <div class="callout" id="viewer-note">
-        Numbers here are placeholders for the interactive viewer — swap in your
-        real build values in <code>builds/data/templar-macro.json</code> and the
-        layout updates automatically. The <strong>Questlog</strong> link always
-        has the live, complete build.
+        ⚙️ <strong style="color:#fff;">How the in-game macro works:</strong> it activates off the
+        <em>first</em> skill and runs the chain by priority (0 → 1 → 2 → 3), only firing a skill
+        if it's available or procced. So a PvX macro that reads Doom Shield → Annihilate →
+        Debilitating Smash → Pummel becomes a <em>Pummel spam</em> when nothing's procced, and
+        auto-weaves Annihilate (on knockdown) and Debilitating Smash (on proc) when they light up.
       </div>
 
       <h2>🧬 Full Character Builder</h2>
@@ -107,19 +108,40 @@
         <li><strong>23:01</strong> — Outro + Animation Canceling Tips</li>
       </ul>
 
-      <h2>🧩 What You'll Learn</h2>
-      <p>Master your Templar macros with this step-by-step setup. Learn how to optimize your skill rotation and hotkeys for better combat efficiency. This walkthrough covers the in-game menus, skill selection, and the practical application of macro hotkeys during active gameplay.</p>
-
-      <h3>Why macros matter for Templar</h3>
+      <h2>🖱️ The Two-Button System</h2>
+      <p>Everything runs off two inputs I alternate constantly:</p>
       <ul>
-        <li>Tighter skill chaining = fewer dropped inputs mid-fight</li>
-        <li>Consistent animation-canceling for higher sustained DPS</li>
-        <li>One-press burst combos free your focus for positioning</li>
+        <li><strong>Right click</strong> = the in-game macro (my skill chain, e.g. Doom Shield / Annihilate / Pummel)</li>
+        <li><strong>Thumb button (Razer HyperSpeed)</strong> = the Judgment macro, mapped to the <strong>R</strong> key at ~10 presses/second</li>
       </ul>
+      <p>Alternating the thumb button with right click is what produces the seamless Warding Strike → Judgment → Pummel animation-cancel loop. I run it on a <strong>Razer Basilisk V3 X HyperSpeed</strong>.</p>
 
+      <h2>🧩 The Three Setups</h2>
+      <h3>PvX (rifts / abyss)</h3>
+      <p>Right-click macro: <strong>Doom Shield → Annihilate → Debilitating Smash → Pummel</strong>. Built for going pack-to-pack and farming efficiently — every mob killed resets Doom Shield and Poach, so you get near-infinite resets, can dash in/out, and knock down groups when outnumbered.</p>
+      <h3>PvP (arenas)</h3>
+      <p>A tighter variant with more manual control over Executing Blade and Doom Shield, while keeping the Pummel / Annihilate / Debilitating Smash macro available. Easier left-click → right-click → animation cancel for precise fights.</p>
+      <h3>PvE</h3>
+      <p>Right-click macro: <strong>Annihilate → Debilitating Smash → Flash Rampage → Pummel</strong> (all in front of Pummel for the defense shred). The thumb (R) macro runs <strong>Judgment → Shield Smite (+2s Judgment) → Warding Strike (+2s Judgment) → Doom Shield (+3s reset)</strong> — about 4 seconds of Judgment uptime, and Doom Shield brings Shield Smite back off cooldown for a full rotation. Open with Punishment.</p>
+
+      <h2>👤 Animation Canceling</h2>
+      <p>The one visual indicator you're canceling correctly: a <strong>shadow after-image</strong> pops over your character on a clean cancel. Spam right click with no cancel and you won't see it. Lower ping = more consistent cancels — I'm on ~200 ping (Taiwan server), so even I don't hit it every time, but consistency is the edge.</p>
       <div class="callout">
-        💡 Pair the macro setup with <strong>manual animation-canceling</strong> (chapter 12:46). Macros get you consistent; manual AC gets you the ceiling — that 5.5M DPS rotation.
+        📊 <strong style="color:#fff;">Real numbers (full PvE rotation):</strong> with animation-canceling
+        macros I averaged roughly <strong>~5.5M</strong> per rotation (Judgment ~2.2M, Punishing Strike ~1M).
+        Without animation-canceling it dropped to ~4.9M — a <strong>500–700K DPS loss</strong>. Macros
+        beat manual presses every time I tested it.
       </div>
+      <p>💡 Bonus tech: you can <strong>animation-cancel buffs too</strong>. Cast a skill, weave a buff, then
+        immediately cast again (skill → buff → skill) to keep buffs up mid-combo without losing DPS — handy in
+        PvP where pre-buffing telegraphs your engage.</p>
+
+      <h2>⚙️ How to Replicate It</h2>
+      <ul>
+        <li><strong>In-game macros:</strong> the Annihilate right-click macro fires its skills on a fast delay (~10–30ms) — only increase the delay if you know when to cancel off it. Keep right click as fast as possible so it takes priority and cancels your Judgment.</li>
+        <li><strong>Razer Synapse:</strong> assign a keyboard function to the mouse thumb button — the <strong>R</strong> key at 10 presses/second. Tune the speed to your ping (no point overloading past what a 200-ping connection can use).</li>
+        <li><strong>Hotkeys:</strong> Quick Slot 1 = left click, Quick Slot 2 = C, and the movement/macro key is bound to right click + Z, so right click drives Quick Slot 4.</li>
+      </ul>
 
       <h2>🔗 Resources</h2>
       <ul>
@@ -145,23 +167,22 @@
   // copy so it still renders when opened via file:// (where fetch is blocked).
   var FALLBACK = {
     stats: [
-      { label: "Role", value: "Hybrid" },
-      { label: "Peak Rotation", value: "5.5M DPS" },
-      { label: "Difficulty", value: "Medium" },
-      { label: "Playstyle", value: "Macro + AC" }
+      { label: "Setups", value: "PvX / PvP / PvE" },
+      { label: "Peak Rotation", value: "~5.5M DPS" },
+      { label: "Core Tech", value: "Animation Cancel" },
+      { label: "Mouse", value: "Basilisk V3 X" }
     ],
     skills: [
-      { key: "1", name: "Core Strike" },
-      { key: "2", name: "Punish" },
-      { key: "3", name: "Execution" },
-      { key: "4", name: "Shield Bash" },
-      { key: "R", name: "Animation Cancel" },
-      { key: "Q", name: "Macro Trigger" }
+      { key: "L-Click", name: "Quick Slot 1" },
+      { key: "R-Click", name: "In-Game Macro (Slot 4)" },
+      { key: "C", name: "Quick Slot 2" },
+      { key: "R", name: "Judgment (Razer key)" },
+      { key: "Thumb", name: "HyperSpeed → R, 10/sec" }
     ],
     macroHotkeys: [
-      { key: "Mouse 4", action: "PVX Macro chain" },
-      { key: "Mouse 5", action: "PvP burst combo" },
-      { key: "Shift+1", action: "PvE rotation loop" }
+      { key: "R-Click (PvX)", action: "Doom Shield → Annihilate → Debilitating Smash → Pummel" },
+      { key: "R-Click (PvE)", action: "Annihilate → Debilitating Smash → Flash Rampage → Pummel" },
+      { key: "Thumb (R)", action: "Judgment → Shield Smite → Warding Strike → Doom Shield" }
     ]
   };
 
