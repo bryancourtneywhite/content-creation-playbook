@@ -15,8 +15,8 @@
   <a class="brand" href="index.html"><span class="sp">🌀</span> Ashura Whole Heavens</a>
   <div class="links">
     <a href="index.html">Home</a>
-    <a href="builds.html">Builds</a>
     <a href="watch.html">Watch</a>
+    <a href="builds.html">Builds</a>
     <a href="hardware.html" class="active">Hardware</a>
     <a href="optimize.html">Sponsors</a>
     <a href="playbook.html">Playbook</a>
@@ -66,6 +66,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="assets/background.js"></script>
+<script src="assets/brand-logos.js"></script>
 <script src="assets/affiliates.js"></script>
 <script>
 (function () {
@@ -84,10 +85,17 @@
   function priceClass(p) { return p.free ? 'price-free' : 'price-paid'; }
 
   function cardHTML(p) {
-    var shot = p.image
-      ? '<div class="product-shot has-photo"><span class="brand-chip">' + esc(p.brand) + '</span>' +
-        '<img src="' + esc(p.image) + '" alt="' + esc(p.name) + '"></div>'
-      : '<div class="product-shot"><span class="brand-chip">' + esc(p.brand) + '</span>' + esc(p.icon) + '</div>';
+    var shot;
+    if (p.image) {
+      shot = '<div class="product-shot has-photo"><span class="brand-chip">' + esc(p.brand) + '</span>' +
+             '<img src="' + esc(p.image) + '" alt="' + esc(p.name) + '"></div>';
+    } else if (p.hwicon && window.HW_ICONS && window.HW_ICONS[p.hwicon]) {
+      // Stylized SVG illustration of the device type + brand label (fallback).
+      shot = '<div class="product-shot"><span class="brand-chip">' + esc(p.brand) + '</span>' +
+             window.HW_ICONS[p.hwicon](p.brand) + '</div>';
+    } else {
+      shot = '<div class="product-shot"><span class="brand-chip">' + esc(p.brand) + '</span>' + esc(p.icon) + '</div>';
+    }
 
     var btn;
     if (p.free) {
