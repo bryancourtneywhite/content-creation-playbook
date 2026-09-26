@@ -11,9 +11,10 @@
      browsers block autoplay-with-sound until then.
    - Floating 🔊 / 🔇 toggle mutes BOTH music and SFX; choice persists via
      localStorage so it never nags across pages.
-   - Note: because YouTube reinitializes on each page load, cross-page
-     resume is approximate (it restarts the loop) — an accepted trade for
-     moving hosting liability off this domain.
+   - Cross-page continuity: playback position is saved to localStorage every
+     second and on unload; the next page seeks to that spot (advanced by the
+     nav gap) so the track resumes rather than restarts. Volume fades IN on
+     start and fades OUT on internal navigation to avoid abrupt clipping.
 
    SFX — PlayStation-style click + intro warp are ORIGINAL synthesized
      sounds hosted here (assets/click.mp3, assets/warp.mp3). No copyright
@@ -31,13 +32,63 @@
   var SFX_VOLUME = 0.5;
 
   var MUTE_KEY = 'aws-audio-muted';
+  var POS_KEY  = 'aws-audio-pos';      // last playback time (seconds)
+  var TS_KEY   = 'aws-audio-ts';       // wall-clock ms of last save
+  var PLAY_KEY = 'aws-audio-playing';  // was it playing when we left?
   function setItem(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function getNum(k) { try { return parseFloat(localStorage.getItem(k)); } catch (e) { return NaN; } }
   function isMuted() { try { return localStorage.getItem(MUTE_KEY) === '1'; } catch (e) { return false; } }
   function setMutedPref(m) { setItem(MUTE_KEY, m ? '1' : '0'); }
+  function wasPlaying() { try { return localStorage.getItem(PLAY_KEY) === '1'; } catch (e) { return false; } }
 
   /* ---------------- MUSIC (hidden YouTube player) ---------------- */
   var player = null, playerReady = false, started = false, wantPlay = false;
   var btnRef = null;
+  var LOOP_LEN = 0;                    // track duration, learned once ready
+
+  // Where the track "should" resume, accounting for the brief navigation gap
+  // so it feels continuous across page loads rather than restarting.
+  function resumeTime() {
+    var pos = getNum(POS_KEY);
+    if (isNaN(pos) || pos < 0) return YT_START;
+    var ts = getNum(TS_KEY);
+    var elapsed = (!isNaN(ts)) ? (Date.now() - ts) / 1000 : 0;
+    if (elapsed < 0 || elapsed > 8) elapsed = 0;   // ignore long gaps (tab left open)
+    var t = pos + elapsed;
+    if (LOOP_LEN > 0) t = t % LOOP_LEN;             // wrap within the loop
+    return t;
+  }
+
+  function savePosition() {
+    try {
+      if (playerReady && isPlaying()) {
+        var t = player.getCurrentTime();
+        if (isFinite(t)) { setItem(POS_KEY, t.toFixed(2)); setItem(TS_KEY, Date.now()); setItem(PLAY_KEY, '1'); }
+      }
+    } catch (e) {}
+  }
+
+  // Smooth volume ramp (YouTube volume is 0–100).
+  var fadeTimer = null, curVol = 0;
+  function fadeTo(target, ms, done) {
+    if (!playerReady) { try { player.setVolume(target); } catch (e) {} curVol = target; if (done) done(); return; }
+    if (fadeTimer) { clearInterval(fadeTimer); fadeTimer = null; }
+    var steps = Math.max(1, Math.round(ms / 40));
+    var from = curVol;
+    var delta = (target - from) / steps;
+    var i = 0;
+    fadeTimer = setInterval(function () {
+      i++;
+      curVol = Math.max(0, Math.min(100, from + delta * i));
+      try { player.setVolume(curVol); } catch (e) {}
+      if (i >= steps) {
+        clearInterval(fadeTimer); fadeTimer = null;
+        curVol = Math.max(0, Math.min(100, target));
+        try { player.setVolume(curVol); } catch (e) {}
+        if (done) done();
+      }
+    }, 40);
+  }
 
   // Inject the YouTube IFrame API script once.
   function loadYT() {
@@ -76,7 +127,14 @@
       events: {
         onReady: function () {
           playerReady = true;
-          try { player.setVolume(VOLUME); } catch (e) {}
+          try {
+            var dur = player.getDuration();
+            if (isFinite(dur) && dur > 0) LOOP_LEN = dur;
+          } catch (e) {}
+          // Resume from where we left off on the previous page.
+          try { player.seekTo(resumeTime(), true); } catch (e) {}
+          curVol = 0;
+          try { player.setVolume(0); } catch (e) {}   // start silent, fade in
           if (wantPlay && !isMuted()) doPlay();
         },
         onStateChange: function (e) {
@@ -89,11 +147,16 @@
 
   function doPlay() {
     if (!playerReady) { wantPlay = true; return; }
-    try { player.setVolume(VOLUME); player.playVideo(); } catch (e) {}
+    try {
+      player.setVolume(0); curVol = 0;   // ensure we start from silence
+      player.playVideo();
+      fadeTo(VOLUME, 700);               // fade IN
+    } catch (e) {}
   }
   function doPause() {
-    if (!playerReady) { wantPlay = false; return; }
-    try { player.pauseVideo(); } catch (e) {}
+    if (!playerReady) { try { player.pauseVideo(); } catch (e2) {} wantPlay = false; return; }
+    // fade OUT, then pause
+    fadeTo(0, 350, function () { try { player.pauseVideo(); } catch (e) {} });
   }
   function isPlaying() {
     try { return playerReady && player.getPlayerState && player.getPlayerState() === 1; } catch (e) { return false; }
@@ -212,6 +275,39 @@
       window.addEventListener('pointerdown', firstGesture);
       window.addEventListener('keydown', firstGesture);
     }
+
+    // Persist playback position continuously + right before leaving, so the
+    // next page can resume from the same spot (cross-page continuity).
+    setInterval(savePosition, 1000);
+    window.addEventListener('pagehide', savePosition);
+    window.addEventListener('beforeunload', savePosition);
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'hidden') savePosition();
+    });
+
+    // Soft fade-out on internal navigation (avoids the abrupt audio clip on
+    // page unload). Hold the click briefly, ramp volume to 0, save position,
+    // then navigate.
+    document.addEventListener('click', function (e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+      if (!a) return;
+      var href = a.getAttribute('href') || '';
+      var tgt = a.getAttribute('target');
+      if (tgt === '_blank' || href.charAt(0) === '#' || /^(mailto:|tel:|javascript:)/i.test(href)) return;
+      var url;
+      try { url = new URL(a.href, location.href); } catch (er) { return; }
+      if (url.origin !== location.origin) return;
+      if (url.pathname === location.pathname && url.search === location.search) return; // same-page anchor
+      if (!isPlaying()) return;              // nothing playing → nothing to fade
+
+      e.preventDefault();
+      savePosition();
+      var navigated = false;
+      function go() { if (navigated) return; navigated = true; window.location.href = a.href; }
+      fadeTo(0, 220, go);
+      setTimeout(go, 300);                   // safety: navigate even if fade callback lags
+    }, true);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
