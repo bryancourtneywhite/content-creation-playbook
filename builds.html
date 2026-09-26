@@ -21,6 +21,7 @@
     <a href="index.html">Home</a>
     <a href="watch.html">Watch</a>
     <a href="builds.html" class="active">AION 2</a>
+    <a href="questlog.html">Questlog</a>
     <a href="tiers.html">Tier List</a>
     <a href="hardware.html">Hardware</a>
     <a href="optimize.html">Sponsors</a>
@@ -34,159 +35,128 @@
 <div class="content">
 
   <div class="section-head" style="margin-top:44px;">
-    <div class="kicker">⚔️ MMORPG BUILD HUB</div>
-    <h2>AION 2 Builds &amp; Guides</h2>
-    <p>Your one-stop AION 2 hub — Templar &amp; Gladiator builds, macros, kinah farming, and endgame mechanics. The exact setups that hit the AION 2 front page. Search and filter to find what you need. 🌙</p>
-    <div class="btn-row" style="justify-content:center;margin-top:18px;">
-      <a class="tool-btn" style="padding:12px 26px;" href="tiers.html">🏆 See the AION 2 Tier List →</a>
+    <div class="kicker">⚔️ AION 2 — HOW TO PLAY</div>
+    <h2>The AION 2 Player's Guide</h2>
+    <p>Everything a new or returning player needs to climb fast — the free-to-play progression path from level 1 to 2,500 combat power, straight from a Rank 1 player who did it without ever swiping. 🌙</p>
+    <div class="btn-row" style="justify-content:center;margin-top:18px;gap:12px;flex-wrap:wrap;">
+      <a class="tool-btn" style="padding:12px 26px;" href="questlog.html">🗡️ My AION 2 Builds (Questlog) →</a>
+      <a class="tool-btn" style="padding:12px 26px;background:linear-gradient(120deg,#6a4bd6,#9146ff);" href="tiers.html">🏆 Class Tier List →</a>
     </div>
   </div>
 
-  <!-- Search + filters -->
-  <div style="max-width:720px;margin:0 auto 30px;">
-    <input id="build-search" type="text" placeholder="🔍 Search builds and guides..."
-      style="width:100%;padding:14px 18px;border-radius:14px;background:var(--panel);border:1px solid var(--panel-border);color:var(--text);font-size:15px;backdrop-filter:blur(10px);outline:none;">
-    <div class="platform-tabs" style="margin-top:16px;">
-      <div class="platform-tab active" data-filter="all">All</div>
-      <div class="platform-tab" data-filter="templar">Templar</div>
-      <div class="platform-tab" data-filter="gladiator">Gladiator</div>
-      <div class="platform-tab" data-filter="pvp">PvP</div>
-      <div class="platform-tab" data-filter="pve">PvE</div>
-      <div class="platform-tab" data-filter="macro">Macros</div>
+  <!-- Quick navigation -->
+  <div class="guide-toc">
+    <a href="#leveling">① Leveling 1–45</a>
+    <a href="#gearing">② First Gear (Draft)</a>
+    <a href="#pvp-gear">③ PvP Gear Trick</a>
+    <a href="#ap">④ Farming AP</a>
+    <a href="#endgame">⑤ 2,000→2,500 CP</a>
+    <a href="#arcana">⑥ Arcana &amp; Endgame</a>
+  </div>
+
+  <div class="callout" style="max-width:820px;margin:0 auto 34px;">
+    💡 <strong style="color:#fff;">The core idea:</strong> AION 2 is full of resource sinks that keep you weak — wasted kinah, wasted materials, wasted time on the wrong content. This guide is about <strong>optimizing every resource</strong> so you climb combat power fast, especially as a free-to-play player. The concepts apply to everyone; F2P players just have to be more precise.
+  </div>
+
+  <!-- ① LEVELING -->
+  <div class="guide-block" id="leveling">
+    <div class="gb-num">①</div>
+    <div class="gb-body">
+      <h3>Leveling 1 → 45: do everything on the map</h3>
+      <p>Follow the <strong>yellow main-story quests</strong> — they route you through the world and unlock the systems you need. As you go:</p>
+      <ul>
+        <li><strong>Do every green quest.</strong> They hand you gear that eases leveling — and when you outgrow it, <strong>dissolve</strong> it for enhancement stones and materials.</li>
+        <li><strong>Clear the map's question marks.</strong> Those undiscovered spots are <strong>sealed dungeons</strong> and <strong>strongholds</strong>. If the story walks you past one, do it — you'll have to clear them all eventually.</li>
+        <li>They pay out <strong>statue scraps, titles, enhancement stones, Daeva crystals, and kinah</strong> — the essential mats for combat power.</li>
+      </ul>
+      <div class="callout" style="margin-top:14px;">🎯 <strong style="color:#fff;">At level 45:</strong> go back and finish <em>every</em> green quest, sealed dungeon, and stronghold you skipped. That alone puts you around <strong>1,100–1,200 combat power</strong>.</div>
     </div>
   </div>
 
-  <!-- Build cards -->
-  <div class="build-grid" id="build-grid">
-
-    <div class="build-card reveal" data-tags="templar macro pvp pve" data-thumb="1ebgmpl1YxQ">
-      <div class="bc-top">
-        <div class="bc-tags">
-          <span class="bc-pill">Templar</span>
-          <span class="bc-pill pvp">PvP</span>
-          <span class="bc-pill pve">PvE</span>
-        </div>
-        <h3>Templar Macro Guide</h3>
-        <p>The complete macro setup, skill layout, and hotkeys that push Templar DPS to the top. Includes animation-canceling and a 5.5M DPS rotation. Backed by a 12.4K-view front-page video.</p>
-        <a class="bc-btn" href="builds/templar-macro-guide.html">Read the guide →</a>
-        <a class="bc-btn" style="margin-top:10px;background:linear-gradient(120deg,#6a4bd6,#9146ff);" href="https://questlog.gg/aion-2/en/character-builder/QuickCobraLifeBanish" target="_blank" rel="noopener">🔗 Questlog Build →</a>
-      </div>
+  <!-- ② GEARING -->
+  <div class="guide-block" id="gearing">
+    <div class="gb-num">②</div>
+    <div class="gb-body">
+      <h3>First real gear: farm Draft, not Crowd Cave</h3>
+      <p>Open your <strong>Expedition</strong> menu and run <strong>Draft (Draftnear)</strong>. Completing dungeons the required number of times gives you a <strong>free pity item</strong> from the condensed cube — your first entry-level unique (~57 item level), the Transcendent Breastplate.</p>
+      <ul>
+        <li>Chase the <strong>Barma gear (68 item level)</strong> from Draftnear — it's so good it's still usable at 2,500 CP.</li>
+        <li><strong>Skip Crowd Cave.</strong> Its unique isn't a big enough upgrade and costs too many mats. Instead, use the <strong>gold unique weapon from the main-story ascension quest</strong> — it lasts you until ~1,700 CP.</li>
+        <li>Prioritize <strong>armor</strong> from Draft (breastplate + legs are the best), since your weapon is handled by the quest reward.</li>
+      </ul>
+      <div class="callout" style="margin-top:14px;">📈 From ~1,100 CP, farm Draft up to about <strong>1,700 CP</strong> — but don't burn all your tickets here. Save energy for Canyon later.</div>
     </div>
-
-    <div class="build-card reveal" data-tags="templar pve pvp berserk build" data-thumb="e8xxp9XuqZM">
-      <div class="bc-top">
-        <div class="bc-tags">
-          <span class="bc-pill">Templar</span>
-          <span class="bc-pill pve">PvE</span>
-          <span class="bc-pill pvp">PvP</span>
-        </div>
-        <h3>Templar Ultimate Guide (PvP &amp; PvE)</h3>
-        <p>The complete Berserk Templar breakdown — best-in-slot stats, arcana cards, David board, stigmas, skills, macros, and full PvP/PvE rotations. 100K+ PvE DPS.</p>
-        <a class="bc-btn" href="builds/templar-ultimate-guide.html">Read the guide →</a>
-        <a class="bc-btn" style="margin-top:10px;background:linear-gradient(120deg,#6a4bd6,#9146ff);" href="https://questlog.gg/aion-2/en/character-builder/QuickCobraLifeBanish" target="_blank" rel="noopener">🔗 Questlog Build →</a>
-      </div>
-    </div>
-
-    <div class="build-card reveal" data-tags="farming ap mechanics guide templar" data-thumb="Nro6Eh5drsc">
-      <div class="bc-top">
-        <div class="bc-tags">
-          <span class="bc-pill">Farming</span>
-          <span class="bc-pill">Mechanics</span>
-        </div>
-        <h3>1 Million AP in 2 Hours</h3>
-        <p>The fastest AP farming route and method in AION 2. A fun, interactive mechanics showcase. Full write-up coming soon.</p>
-        <a class="bc-btn" href="https://youtu.be/Nro6Eh5drsc" target="_blank" rel="noopener">Watch on YouTube →</a>
-      </div>
-    </div>
-
-    <!-- LEGACY GLADIATOR CONTENT -->
-
-    <div class="build-card reveal" data-tags="gladiator build pvp pve rank one berserk" data-thumb="pwY4X_rEeGs">
-      <div class="bc-top">
-        <div class="bc-tags">
-          <span class="bc-pill">Gladiator</span>
-          <span class="bc-pill pvp">PvP</span>
-          <span class="bc-pill pve">PvE</span>
-        </div>
-        <h3>Rank One Gladiator Build</h3>
-        <p>My complete Rank One Gladiator build guide for both PvP and PvE — the setup that carried me up the ladder. Legacy vault classic.</p>
-        <a class="bc-btn" href="builds/gladiator-build-guide.html">Read the guide →</a>
-        <a class="bc-btn" style="margin-top:10px;background:linear-gradient(120deg,#6a4bd6,#9146ff);" href="https://questlog.gg/aion-2/en/character-builder/ThePatienceOfTheThunderousFortune" target="_blank" rel="noopener">🔗 Questlog Build →</a>
-      </div>
-    </div>
-
-    <div class="build-card reveal" data-tags="gladiator pvp berserk build rift abyss update" data-thumb="6s5fXWZCGTw">
-      <div class="bc-top">
-        <div class="bc-tags">
-          <span class="bc-pill">Gladiator</span>
-          <span class="bc-pill pvp">PvP</span>
-        </div>
-        <h3>Gladiator Rift &amp; Abyss PvP (Berserk, Updated)</h3>
-        <p>Updated Berserk Gladiator build with Rift and Abyss PvP gameplay. See the build in action in real fights.</p>
-        <a class="bc-btn" href="https://youtu.be/6s5fXWZCGTw" target="_blank" rel="noopener">Watch on YouTube →</a>
-      </div>
-    </div>
-
-    <div class="build-card reveal" data-tags="gladiator build pvp pve berserk early game beginner" data-thumb="48wX29k-aDo">
-      <div class="bc-top">
-        <div class="bc-tags">
-          <span class="bc-pill">Gladiator</span>
-          <span class="bc-pill pvp">PvP</span>
-          <span class="bc-pill pve">PvE</span>
-        </div>
-        <h3>Berserk Gladiator Build (PvP &amp; PvE)</h3>
-        <p>The Berserk Gladiator build guide for PvP and PvE — a great early-game starting point for new Gladiators.</p>
-        <a class="bc-btn" href="https://youtu.be/48wX29k-aDo" target="_blank" rel="noopener">Watch on YouTube →</a>
-      </div>
-    </div>
-
-    <div class="build-card reveal" data-tags="gladiator build pve endgame after buffs" data-thumb="NducdcEvFCw">
-      <div class="bc-top">
-        <div class="bc-tags">
-          <span class="bc-pill">Gladiator</span>
-          <span class="bc-pill pve">PvE</span>
-          <span class="bc-pill">Endgame</span>
-        </div>
-        <h3>Endgame Gladiator PvE Build (After Buffs)</h3>
-        <p>The updated endgame Gladiator PvE build following the latest buffs — where the class landed at the top end.</p>
-        <a class="bc-btn" href="https://youtu.be/NducdcEvFCw" target="_blank" rel="noopener">Watch on YouTube →</a>
-      </div>
-    </div>
-
-    <div class="build-card reveal" data-tags="guide combat power free to play f2p progression general" data-thumb="lBi9eWeQhC4">
-      <div class="bc-top">
-        <div class="bc-tags">
-          <span class="bc-pill">Guide</span>
-          <span class="bc-pill">F2P</span>
-          <span class="bc-pill">Progression</span>
-        </div>
-        <h3>Zero to 2500 Combat Power (F2P Guide)</h3>
-        <p>The only free-to-play guide you need to raise your combat power from zero to 2500 — works for any class.</p>
-        <a class="bc-btn" href="https://youtu.be/lBi9eWeQhC4" target="_blank" rel="noopener">Watch on YouTube →</a>
-      </div>
-    </div>
-
-    <div class="build-card reveal" data-tags="guide farming kinah gold money economy general" data-thumb="zGBcdJKfVV8">
-      <div class="bc-top">
-        <div class="bc-tags">
-          <span class="bc-pill">Guide</span>
-          <span class="bc-pill">Farming</span>
-          <span class="bc-pill">Kinah</span>
-        </div>
-        <h3>Fastest Kinah Farming Method</h3>
-        <p>Solo Conquest Draft runs for ~1M kinah/hour — the fastest gold method right now, with a full written breakdown.</p>
-        <a class="bc-btn" href="builds/kinah-farming-guide.html">Read the guide →</a>
-      </div>
-    </div>
-
   </div>
 
-  <p id="no-results" style="display:none;text-align:center;color:var(--muted);margin-top:30px;">No builds match your search. Try a different term.</p>
+  <!-- ③ PVP GEAR TRICK -->
+  <div class="guide-block" id="pvp-gear">
+    <div class="gb-num">③</div>
+    <div class="gb-body">
+      <h3>The PvP-gear trick to break 1,800+ CP</h3>
+      <p>Here's the biggest F2P shortcut right now: <strong>PvP gear is nearly identical to PvE gear</strong> — the PvP piece just has one extra stat line. In PvE the difference is negligible, so you can <strong>grind PvP gear to fill the gaps</strong> in your PvE setup and push from 1,600 → 1,800 → 2,000 CP.</p>
+      <ul>
+        <li>Buy PvP <strong>accessories first</strong> — they're cheaper and give strong combat power per AP.</li>
+        <li>This is valid until the next season (the guide will be updated when that changes).</li>
+        <li><strong>You have to PvX.</strong> Pure PvE players won't have enough resources to gear through all the content — do both.</li>
+      </ul>
+    </div>
+  </div>
 
-  <!-- Legacy Gladiator note -->
-  <div class="callout" style="max-width:760px;margin:36px auto 0;text-align:center;">
-    ⚔️ <strong style="color:#fff;">Gladiator legacy vault:</strong> I main Templar now, but my
-    Gladiator build content lives on. More Gladiator guides porting over from the channel soon.
+  <!-- ④ AP -->
+  <div class="guide-block" id="ap">
+    <div class="gb-num">④</div>
+    <div class="gb-body">
+      <h3>Where to farm AP (Abyss Points)</h3>
+      <p>AP buys that PvP gear. The best sources, in order of efficiency:</p>
+      <ul>
+        <li><strong>Command Shop quests</strong> — look for the <em>red-text</em> quests (best value at low CP). Many send you to <strong>Eternal Isle</strong>, where regular mobs can drop uniques while you rack up AP.</li>
+        <li><strong>Duty missions</strong> (press <strong>J</strong>) — daily AP quests with a bonus random reward. Easy guaranteed AP.</li>
+        <li><strong>Battlefield</strong> — ~20k AP from your weekly wins. Even if you're the weakest player, you can get carried to the win.</li>
+        <li><strong>Killing players</strong> in rifts and the abyss — scales with skill, best once you have some gear.</li>
+      </ul>
+      <div class="callout" style="margin-top:14px;">⛔ <strong style="color:#fff;">Skip Arena for AP.</strong> The victory rewards are tiny (~100/win). Play it for the title and season rewards, not combat power.</div>
+    </div>
+  </div>
+
+  <!-- ⑤ 2000-2500 -->
+  <div class="guide-block" id="endgame">
+    <div class="gb-num">⑤</div>
+    <div class="gb-body">
+      <h3>2,000 → 2,500 CP: Canyon &amp; the min-max grind</h3>
+      <p>At ~1,800–2,000 CP you can start <strong>Canyon</strong> (your next weapon) and <strong>Sky Island</strong>. Canyon pays ~400k, Sky Island ~200k — prioritize <strong>Canyon</strong>. Then the real min-maxing begins:</p>
+      <ul>
+        <li><strong>Shugo Festival</strong> — PvE Daeva crystals + skill points.</li>
+        <li><strong>Feathers</strong> (open world + abyss) → the <strong>Monolith</strong> for skill points, keys, and enhancement scrolls.</li>
+        <li><strong>Nightmare dungeons</strong> — push the highest tier before each reset.</li>
+        <li><strong>Ascension Trial</strong> at 2,000+ for max kinah and season rewards.</li>
+        <li><strong>Statues</strong> in your Pantheon → big passive stats. <strong>Trade-shop PvE crystals</strong> up to step 3 (not past).</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ⑥ ARCANA -->
+  <div class="guide-block" id="arcana">
+    <div class="gb-num">⑥</div>
+    <div class="gb-body">
+      <h3>Arcana cards &amp; true endgame</h3>
+      <p>The single most important min-max is your <strong>Arcana cards</strong>, earned in <strong>Transcendence</strong> (separate tickets from Expedition — only Odal energy is shared, so spend it wisely).</p>
+      <ul>
+        <li>Grind each floor for an <strong>S rank</strong> to progress. Greens drop around floor 4; guaranteed blues around floors 6–7.</li>
+        <li>As a F2P player, <strong>~floor 46–47 is the realistic stopping point</strong> — past that isn't worth it unless you're swiping.</li>
+        <li><strong>Gold card:</strong> combine mysterious crystals — 2 from achievements, 2 from the season shop (~50k season rewards each), and 1 from extracting spare cards. The <strong>Grail card</strong> is the recommended gold craft.</li>
+      </ul>
+      <div class="callout" style="margin-top:14px;">🏰 <strong style="color:#fff;">True endgame:</strong> the <strong>Sanctuary</strong> raid needs ~2,700 CP to enter and 3,000+ to realistically clear. The entry-level raid is mostly just enhancement stones — don't over-invest in it early.</div>
+    </div>
+  </div>
+
+  <!-- CTA to builds -->
+  <div class="section-head" style="margin-top:10px;">
+    <div class="kicker">🗡️ Ready to pick a class?</div>
+    <h2 style="font-size:clamp(22px,4vw,32px);">Get My Exact Builds</h2>
+    <p>Guide's done — now grab the setups. Every AION 2 build I've released, with copy-paste Questlog links.</p>
+    <div class="btn-row" style="justify-content:center;margin-top:16px;">
+      <a class="tool-btn" style="padding:13px 30px;" href="questlog.html">🗡️ Open the Questlog →</a>
+    </div>
   </div>
 
   <div data-subscribe="mini"></div>
@@ -202,41 +172,6 @@
 <script src="assets/background.js"></script>
 <script src="assets/audio.js"></script>
 <script src="assets/subscribe.js"></script>
-<script src="assets/cards.js"></script>
-<script>
-(function () {
-  var search = document.getElementById('build-search');
-  var cards = Array.prototype.slice.call(document.querySelectorAll('.build-card'));
-  var tabs = document.querySelectorAll('.platform-tab');
-  var noResults = document.getElementById('no-results');
-  var activeFilter = 'all';
-
-  function apply() {
-    var q = search.value.trim().toLowerCase();
-    var shown = 0;
-    cards.forEach(function (card) {
-      var tags = card.getAttribute('data-tags');
-      var text = card.textContent.toLowerCase();
-      var matchesText = !q || text.indexOf(q) !== -1 || tags.indexOf(q) !== -1;
-      var matchesFilter = activeFilter === 'all' || tags.indexOf(activeFilter) !== -1;
-      var show = matchesText && matchesFilter;
-      card.style.display = show ? 'flex' : 'none';
-      if (show) shown++;
-    });
-    noResults.style.display = shown === 0 ? 'block' : 'none';
-  }
-
-  search.addEventListener('input', apply);
-  tabs.forEach(function (tab) {
-    tab.addEventListener('click', function () {
-      tabs.forEach(function (t) { t.classList.remove('active'); });
-      tab.classList.add('active');
-      activeFilter = tab.getAttribute('data-filter');
-      apply();
-    });
-  });
-})();
-</script>
 
 </body>
 </html>

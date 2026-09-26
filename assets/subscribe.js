@@ -5,33 +5,40 @@
        <div data-subscribe></div>            (full block)
        <div data-subscribe="mini"></div>     (compact footer bar)
 
-   ── ONE-TIME SETUP ────────────────────────────────────────────────
-   Uses Buttondown (free up to 100 subs, simple, no backend needed).
-   1. Sign up at https://buttondown.com/  (free).
-   2. Your username becomes your list. Set BUTTONDOWN_USER below to it.
-   3. That's it — the form posts straight to Buttondown; new subscribers
-      appear in your dashboard and get your emails.
+   ── ONE-TIME SETUP (pick ONE provider) ────────────────────────────
 
-   Prefer ConvertKit / Beehiiv / Mailchimp instead? Set PROVIDER='custom'
-   and paste your form's action URL + email field name in CUSTOM_ACTION /
-   CUSTOM_FIELD. The markup below is a standard POST form, so any provider
-   that gives you an embed action URL works.
+   OPTION A — Formspree (recommended: easiest, real inbox, no domain setup)
+     1. Go to https://formspree.io/  → sign up free with your email.
+     2. Create a new form → it gives you an endpoint like
+        https://formspree.io/f/abcdwxyz  (the "abcdwxyz" is your form ID).
+     3. Set PROVIDER='formspree' and FORMSPREE_ID='abcdwxyz' below.
+     • Submissions land in your Formspree inbox + forward to your email.
+     • Free tier: 50 submissions/month. Upgrade later if you outgrow it.
+     • Uses AJAX so the visitor stays on the page and sees a success note.
 
-   Until BUTTONDOWN_USER (or a custom action) is set, the form shows but
-   submitting opens a friendly "coming soon" note instead of erroring.
+   OPTION B — Buttondown (a real newsletter list, free to 100 subs)
+     1. Sign up at https://buttondown.com/  → your username is your list.
+     2. Set PROVIDER='buttondown' and BUTTONDOWN_USER='yourusername'.
+
+   OPTION C — Custom (ConvertKit / Beehiiv / Mailchimp / Google Form)
+     Set PROVIDER='custom', paste your form action URL in CUSTOM_ACTION,
+     and the email field's name in CUSTOM_FIELD.
+
+   Until a provider is configured, the form shows and submitting displays
+   a friendly "coming soon" note instead of erroring. Nothing to remove.
    ------------------------------------------------------------------ */
 (function () {
-  // ▼▼▼ CONFIG ▼▼▼
-  var PROVIDER = 'buttondown';       // 'buttondown' | 'custom'
+  // ▼▼▼ CONFIG — set PROVIDER + the matching value ▼▼▼
+  var PROVIDER = 'formspree';        // 'formspree' | 'buttondown' | 'custom'
+  var FORMSPREE_ID = '';             // e.g. 'abcdwxyz'  (from formspree.io/f/XXXX)
   var BUTTONDOWN_USER = '';          // e.g. 'solashur'
   var CUSTOM_ACTION = '';            // full form action URL (if PROVIDER='custom')
   var CUSTOM_FIELD = 'email';        // the email input's name attribute
   // ▲▲▲
 
   function actionURL() {
-    if (PROVIDER === 'buttondown' && BUTTONDOWN_USER) {
-      return 'https://buttondown.com/api/emails/embed-subscribe/' + encodeURIComponent(BUTTONDOWN_USER);
-    }
+    if (PROVIDER === 'formspree' && FORMSPREE_ID) return 'https://formspree.io/f/' + FORMSPREE_ID;
+    if (PROVIDER === 'buttondown' && BUTTONDOWN_USER) return 'https://buttondown.com/api/emails/embed-subscribe/' + encodeURIComponent(BUTTONDOWN_USER);
     if (PROVIDER === 'custom' && CUSTOM_ACTION) return CUSTOM_ACTION;
     return '';
   }
@@ -62,24 +69,65 @@
 
   function formHTML(cls) {
     var act = actionURL();
-    var method = configured ? 'post' : 'get';
-    var target = (PROVIDER === 'buttondown') ? ' target="popupwindow" onsubmit="window.open(\'' + act + '\',\'popupwindow\')"' : '';
     return '' +
-      '<form class="' + cls + '" action="' + (act || '#') + '" method="' + method + '"' + (configured ? target : '') + '>' +
+      '<form class="' + cls + '" action="' + (act || '#') + '" method="post">' +
         '<input class="sub-input" type="email" name="' + fieldName() + '" placeholder="you@email.com" required aria-label="Email address">' +
         '<button class="sub-btn" type="submit">Notify me →</button>' +
       '</form>';
   }
 
-  function wireFallback(root) {
-    if (configured) return;
+  function showNote(form, text, ok) {
+    var note = form.parentNode.querySelector('.sub-note');
+    if (!note) {
+      note = document.createElement('div');
+      note.className = 'sub-note';
+      form.parentNode.appendChild(note);
+    }
+    note.textContent = text;
+    note.classList.toggle('err', ok === false);
+  }
+
+  function wire(root) {
     root.querySelectorAll('form').forEach(function (f) {
       f.addEventListener('submit', function (e) {
         e.preventDefault();
-        var note = document.createElement('div');
-        note.className = 'sub-note';
-        note.textContent = '📬 Signups open very soon — follow on YouTube/Twitch in the meantime!';
-        if (!f.parentNode.querySelector('.sub-note')) f.parentNode.appendChild(note);
+
+        // Not configured yet → friendly placeholder.
+        if (!configured) {
+          showNote(f, '📬 Signups open very soon — follow on YouTube/Twitch in the meantime!', true);
+          return;
+        }
+
+        var input = f.querySelector('input[type="email"]');
+        var btn = f.querySelector('button');
+        var email = input ? input.value.trim() : '';
+        if (!email) return;
+
+        // Formspree + custom → AJAX (stay on page, inline success).
+        // Buttondown → open its subscribe endpoint in a popup (its flow).
+        if (PROVIDER === 'buttondown') {
+          window.open(actionURL() + '?email=' + encodeURIComponent(email), 'popupwindow');
+          showNote(f, '✅ Almost there — confirm in the popup to finish!', true);
+          return;
+        }
+
+        if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+        var data = new FormData(f);
+        fetch(actionURL(), { method: 'POST', body: data, headers: { 'Accept': 'application/json' } })
+          .then(function (r) {
+            if (r.ok) {
+              f.reset();
+              showNote(f, '✅ You\'re in! Watch your inbox for streams & new builds. 🌙', true);
+            } else {
+              showNote(f, '⚠️ Something went wrong — try again in a moment.', false);
+            }
+          })
+          .catch(function () {
+            showNote(f, '⚠️ Network hiccup — please try again.', false);
+          })
+          .then(function () {
+            if (btn) { btn.disabled = false; btn.textContent = 'Notify me →'; }
+          });
       });
     });
   }
@@ -88,7 +136,7 @@
     document.querySelectorAll('[data-subscribe]').forEach(function (el) {
       var mode = el.getAttribute('data-subscribe');
       el.innerHTML = (mode === 'mini') ? miniHTML() : fullHTML();
-      wireFallback(el);
+      wire(el);
     });
   }
 
