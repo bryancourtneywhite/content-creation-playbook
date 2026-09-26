@@ -421,6 +421,66 @@ html { color-scheme: dark; scrollbar-width: thin; scrollbar-color: rgba(214,30,4
 }
 .site-nav .links a.ext::after { content: " ↗"; opacity: 0.6; font-size: 11px; }
 
+/* ---------- MOBILE NAV (hamburger) ---------- */
+.nav-burger {
+  display: none;                 /* hidden on desktop */
+  background: none; border: 1px solid var(--panel-border);
+  border-radius: 10px; width: 42px; height: 38px;
+  cursor: pointer; padding: 0; align-items: center; justify-content: center;
+  color: var(--text);
+}
+.nav-burger .nb-lines, .nav-burger .nb-lines::before, .nav-burger .nb-lines::after {
+  content: ''; display: block; width: 20px; height: 2px; border-radius: 2px;
+  background: currentColor; transition: transform 0.25s ease, opacity 0.2s ease;
+}
+.nav-burger .nb-lines { position: relative; }
+.nav-burger .nb-lines::before { position: absolute; top: -6px; }
+.nav-burger .nb-lines::after  { position: absolute; top: 6px; }
+/* animate to an X when open */
+.site-nav.nav-open .nav-burger .nb-lines { background: transparent; }
+.site-nav.nav-open .nav-burger .nb-lines::before { transform: translateY(6px) rotate(45deg); }
+.site-nav.nav-open .nav-burger .nb-lines::after  { transform: translateY(-6px) rotate(-45deg); }
+
+@media (max-width: 820px) {
+  .site-nav {
+    flex-wrap: nowrap;
+    padding: 12px 18px;
+  }
+  .nav-burger { display: flex; }
+
+  /* Collapse the links into a slide-down panel */
+  .site-nav .links {
+    position: absolute;
+    top: 100%; left: 0; right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    padding: 10px 14px 16px;
+    background: var(--nav-bg);
+    border-bottom: 1px solid var(--panel-border);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+    max-height: 0; overflow: hidden;
+    opacity: 0; pointer-events: none;
+    transform: translateY(-8px);
+    transition: max-height 0.3s ease, opacity 0.25s ease, transform 0.25s ease;
+  }
+  .site-nav.nav-open .links {
+    max-height: 80vh; overflow-y: auto;
+    opacity: 1; pointer-events: auto; transform: translateY(0);
+  }
+  .site-nav .links a {
+    font-size: 16px; padding: 12px 14px; border-radius: 10px;
+  }
+  .site-nav .links a:hover, .site-nav .links a.active {
+    background: rgba(214,30,44,0.14);
+  }
+  /* keep the theme toggle sensible inside the dropdown */
+  .site-nav .links .theme-toggle.nav-toggle {
+    align-self: flex-start; margin: 6px 0 0 4px;
+  }
+}
+
 /* ---------- HERO ---------- */
 header.hero {
   min-height: 100vh;

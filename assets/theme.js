@@ -65,9 +65,50 @@
     }
   }
 
+  // Mobile hamburger: collapses the nav links into a slide-down menu on
+  // small screens (CSS handles the layout at <=820px; this just toggles the
+  // .nav-open class). Injected on every page since the nav is shared.
+  function initBurger() {
+    var nav = document.querySelector('.site-nav');
+    var links = nav && nav.querySelector('.links');
+    if (!nav || !links || nav.querySelector('.nav-burger')) return;
+
+    var burger = document.createElement('button');
+    burger.className = 'nav-burger';
+    burger.type = 'button';
+    burger.setAttribute('aria-label', 'Toggle menu');
+    burger.setAttribute('aria-expanded', 'false');
+    burger.innerHTML = '<span class="nb-lines"></span>';
+    // Place the burger as the last child of the nav (sits at the right edge).
+    nav.appendChild(burger);
+
+    function setOpen(open) {
+      nav.classList.toggle('nav-open', open);
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    burger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      setOpen(!nav.classList.contains('nav-open'));
+    });
+    // Close when a nav link is tapped (but not the theme toggle).
+    links.addEventListener('click', function (e) {
+      var a = e.target.closest ? e.target.closest('a') : null;
+      if (a) setOpen(false);
+    });
+    // Close when tapping outside the nav, or on Escape.
+    document.addEventListener('click', function (e) {
+      if (nav.classList.contains('nav-open') && !nav.contains(e.target)) setOpen(false);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') setOpen(false);
+    });
+  }
+
+  function initNav() { initButton(); initBurger(); }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initButton);
+    document.addEventListener('DOMContentLoaded', initNav);
   } else {
-    initButton();
+    initNav();
   }
 })();
