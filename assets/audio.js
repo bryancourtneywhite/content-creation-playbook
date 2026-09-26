@@ -214,6 +214,7 @@
     btn.classList.toggle('is-muted', !playing);
     btn.classList.toggle('is-playing', !!playing);
     if (playing) btn.classList.remove('needs-start');
+    if (typeof refreshPanelState === 'function') refreshPanelState();
   }
   function buildButton() {
     if (document.getElementById('audio-toggle')) return document.getElementById('audio-toggle');
@@ -238,6 +239,71 @@
     return btn;
   }
 
+  /* ---------------- "Now Playing" source panel ----------------
+     Shows the real YouTube source of the music (credits + link) with an
+     animated equalizer. NOTE: the equalizer is decorative — a cross-origin
+     YouTube iframe can't expose its audio waveform to the page, so this
+     reflects play/pause STATE, not real frequency data. */
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+  var panelEl = null, panelOpen = false, oembedLoaded = false;
+  function bars() {
+    var h = '';
+    for (var i = 0; i < 7; i++) h += '<span></span>';
+    return '<div class="np-eq" aria-hidden="true">' + h + '</div>';
+  }
+  function buildPanel() {
+    if (panelEl) return panelEl;
+    panelEl = document.createElement('div');
+    panelEl.id = 'now-playing';
+    panelEl.className = 'now-playing';
+    var watch = 'https://youtu.be/' + YT_VIDEO_ID;
+    panelEl.innerHTML =
+      '<button class="np-close" aria-label="Close">✕</button>' +
+      '<div class="np-head">' + bars() + '<span class="np-status">Now Playing</span></div>' +
+      '<a class="np-media" href="' + watch + '" target="_blank" rel="noopener">' +
+        '<img class="np-thumb" src="https://i.ytimg.com/vi/' + YT_VIDEO_ID + '/mqdefault.jpg" alt="" loading="lazy">' +
+        '<div class="np-meta">' +
+          '<div class="np-title">Loading…</div>' +
+          '<div class="np-chan"></div>' +
+        '</div>' +
+      '</a>' +
+      '<a class="np-source" href="' + watch + '" target="_blank" rel="noopener">▶ Watch source on YouTube ↗</a>';
+    document.body.appendChild(panelEl);
+    panelEl.querySelector('.np-close').addEventListener('click', function (e) { e.stopPropagation(); togglePanel(false); });
+    // Pull real title + channel from YouTube oEmbed (keyless, credits the source).
+    if (!oembedLoaded) {
+      oembedLoaded = true;
+      fetch('https://www.youtube.com/oembed?url=' + encodeURIComponent(watch) + '&format=json')
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) {
+          if (!d) return;
+          var t = panelEl.querySelector('.np-title'); if (t) t.textContent = d.title || 'Background Music';
+          var c = panelEl.querySelector('.np-chan'); if (c) c.textContent = d.author_name ? ('by ' + String(d.author_name).trim()) : '';
+        })
+        .catch(function () {
+          var t = panelEl.querySelector('.np-title'); if (t) t.textContent = 'Background Music';
+        });
+    }
+    return panelEl;
+  }
+  function refreshPanelState() {
+    if (!panelEl) return;
+    var playing = isPlaying();
+    panelEl.classList.toggle('is-playing', playing);
+    var st = panelEl.querySelector('.np-status');
+    if (st) st.textContent = playing ? 'Now Playing' : 'Paused';
+  }
+  function togglePanel(open) {
+    buildPanel();
+    panelOpen = (open === undefined) ? !panelOpen : open;
+    panelEl.classList.toggle('open', panelOpen);
+    if (panelOpen) refreshPanelState();
+  }
+
   /* ---------------- Init ---------------- */
   function init() {
     var btn = buildButton();
@@ -245,6 +311,16 @@
     initSfx();
     wireSfx();
     loadYT();
+
+    // Info button (next to the audio toggle) opens the "Now Playing" source panel.
+    var info = document.createElement('button');
+    info.id = 'audio-info';
+    info.className = 'audio-info';
+    info.type = 'button';
+    info.textContent = 'ℹ';
+    info.setAttribute('aria-label', 'Now playing — music source');
+    info.addEventListener('click', function (e) { e.stopPropagation(); togglePanel(); });
+    document.body.appendChild(info);
 
     // Show the "tap for sound" prompt until playback actually begins
     // (browsers block autoplay-with-sound until a user gesture).
