@@ -38,7 +38,7 @@
   //   YouTube playlist (`list`). All IDs verified real via YouTube oEmbed.
   var STATIONS = [
     { id: 'bleach',  name: 'Bleach OST',           video: 'mvhqe_eLLh0' },
-    { id: 'aion',    name: 'Classic AION OST',     list:  'PLYFEK0EdxB0rWdh06G5fFS5D-7DEQMxu2' },
+    { id: 'nier',    name: 'NieR: Automata OST',    video: 'cq1u2ihcWJE' },
     { id: 'kh',      name: 'Kingdom Hearts',       video: '9gUZayPkXbw' },
     { id: 'naruto',  name: 'Naruto',               video: 'WBmUZZNYxg0' },
     { id: 'tekken',  name: 'Tekken',               video: 'Dd1jwuz4exQ' },
