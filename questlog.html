@@ -56,8 +56,34 @@
     </div>
   </div>
 
+  <!-- View toggle: quick cards vs the full embedded Questlog site -->
+  <div class="platform-tabs" style="max-width:520px;margin:0 auto 22px;">
+    <div class="platform-tab active" data-view="cards">🗂️ My Build Cards</div>
+    <div class="platform-tab" data-view="embed">🔗 Live Questlog</div>
+  </div>
+
+  <!-- EMBEDDED QUESTLOG (loads on demand) -->
+  <div id="ql-embed" style="display:none;max-width:1200px;margin:0 auto 20px;">
+    <div class="ql-frame-wrap">
+      <div class="ql-frame-bar">
+        <span><span class="live-dot" style="position:static;display:inline-block;"></span> SolAshur's builds on Questlog.gg</span>
+        <a href="https://questlog.gg/aion-2/en/character-builder" target="_blank" rel="noopener">Open on questlog.gg ↗</a>
+      </div>
+      <iframe id="ql-frame" title="Solashur's Questlog AION 2 builds" loading="lazy"
+        src="about:blank" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <noscript><p style="padding:14px;color:var(--muted);">Enable JavaScript, or <a href="https://questlog.gg/aion-2/en/character-builder" target="_blank" rel="noopener">open Questlog directly</a>.</p></noscript>
+    </div>
+    <p style="text-align:center;color:var(--muted);font-size:12.5px;margin-top:10px;">
+      Live view of Questlog.gg. If it doesn't load (some browsers block embeds),
+      <a href="https://questlog.gg/aion-2/en/character-builder" target="_blank" rel="noopener" style="color:var(--accent-2);">open it in a new tab ↗</a>.
+    </p>
+  </div>
+
+  <!-- Cards view (default) -->
+  <div id="ql-cards">
+
   <!-- Search + filters -->
-  <div style="max-width:720px;margin:0 auto 30px;">
+  <div id="ql-cards-controls" style="max-width:720px;margin:0 auto 30px;">
     <input id="build-search" type="text" placeholder="🔍 Search builds and guides..."
       style="width:100%;padding:14px 18px;border-radius:14px;background:var(--panel);border:1px solid var(--panel-border);color:var(--text);font-size:15px;backdrop-filter:blur(10px);outline:none;">
     <div class="platform-tabs" style="margin-top:16px;">
@@ -144,8 +170,10 @@
   <p id="no-results" style="display:none;text-align:center;color:var(--muted);margin-top:30px;">No builds match your search. Try a different term.</p>
 
   <div class="callout" style="max-width:760px;margin:36px auto 0;text-align:center;">
-    🔗 <strong style="color:#fff;">How Questlog works:</strong> click any "Questlog Build" link to open the exact character-builder setup on questlog.gg — then import or copy it straight into your own planner. More builds port over from the channel regularly.
+    🔗 <strong style="color:#fff;">How Questlog works:</strong> click any "Questlog Build" link to open the exact character-builder setup on questlog.gg — then import or copy it straight into your own planner. Or switch to <strong>Live Questlog</strong> above to browse the full site right here.
   </div>
+
+  </div><!-- /#ql-cards -->
 
   <div data-subscribe="mini"></div>
 
@@ -162,6 +190,32 @@
 <script src="assets/live.js"></script>
 <script src="assets/subscribe.js"></script>
 <script src="assets/cards.js"></script>
+<!-- Questlog view toggle: quick cards vs embedded live site -->
+<script>
+(function () {
+  var QL_URL = 'https://questlog.gg/aion-2/en/character-builder';
+  var cardsView = document.getElementById('ql-cards');
+  var embedView = document.getElementById('ql-embed');
+  var frame = document.getElementById('ql-frame');
+  var tabs = document.querySelectorAll('.platform-tab[data-view]');
+  var loaded = false;
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      tabs.forEach(function (t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      var view = tab.getAttribute('data-view');
+      if (view === 'embed') {
+        if (!loaded) { frame.src = QL_URL; loaded = true; }   // lazy-load iframe
+        embedView.style.display = 'block';
+        cardsView.style.display = 'none';
+      } else {
+        embedView.style.display = 'none';
+        cardsView.style.display = 'block';
+      }
+    });
+  });
+})();
+</script>
 <script>
 (function () {
   var search = document.getElementById('build-search');
