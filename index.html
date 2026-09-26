@@ -252,6 +252,19 @@
 })();
 </script>
 
+<!-- Faded Solashur portrait: only show if assets/solashur.jpg exists -->
+<script>
+(function () {
+  var el = document.getElementById('solashur-portrait');
+  if (!el) return;
+  var img = new Image();
+  img.onload = function () { el.style.display = 'block'; };
+  img.onerror = function () { el.style.display = 'none'; };
+  el.style.display = 'none';
+  img.src = 'assets/solashur.jpg';
+})();
+</script>
+
 <!-- 3D legend timeline: reveal nodes as they scroll into view -->
 <script>
 (function () {
@@ -272,6 +285,43 @@
   setTimeout(function () {
     Array.prototype.slice.call(nodes, 0, 4).forEach(function (n) { n.classList.add('in'); });
   }, 200);
+
+  // Clickable milestones: nodes with data-video open the video in a modal.
+  var modal;
+  function openVideo(id) {
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.className = 'buy-modal';
+      modal.innerHTML =
+        '<div class="buy-backdrop" data-close></div>' +
+        '<div class="buy-dialog" style="width:min(880px,94vw);padding:16px;">' +
+          '<button class="buy-x" data-close aria-label="Close">✕</button>' +
+          '<div class="embed-wrap" style="margin-top:8px;"><iframe id="lt-video" src="" ' +
+            'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" ' +
+            'referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>' +
+        '</div>';
+      document.body.appendChild(modal);
+      modal.addEventListener('click', function (e) {
+        if (e.target.hasAttribute('data-close')) closeVideo();
+      });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeVideo(); });
+    }
+    modal.querySelector('#lt-video').src = 'https://www.youtube.com/embed/' + id + '?autoplay=1';
+    modal.removeAttribute('hidden'); modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+  function closeVideo() {
+    if (!modal) return;
+    modal.querySelector('#lt-video').src = '';
+    modal.style.display = 'none'; document.body.style.overflow = '';
+  }
+  nodes.forEach(function (n) {
+    var vid = n.getAttribute('data-video');
+    if (vid) {
+      n.classList.add('has-video');
+      n.addEventListener('click', function () { openVideo(vid); });
+    }
+  });
 })();
 </script>
 
