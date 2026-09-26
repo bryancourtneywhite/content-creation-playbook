@@ -3,6 +3,7 @@
   "live": false,
   "platform": "twitch",
   "youtubeLiveId": "",
+  "twitchFollowers": 0,
   "title": "AION 2 Templar ranked climb",
   "schedule": {
     "headline": "Next Stream Block",
