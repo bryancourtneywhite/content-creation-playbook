@@ -55,6 +55,9 @@
   }
   function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
+  // This script is often placed in <head>, which runs BEFORE <nav id="site-nav">
+  // exists in the <body>. Wait for the DOM so getElementById can find it.
+  function render() {
   var nav = document.getElementById('site-nav');
   if (!nav) return;
   var active = nav.getAttribute('data-active') || '';
@@ -110,4 +113,11 @@
       }
     });
   });
+  } // end render()
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', render);
+  } else {
+    render();
+  }
 })();
