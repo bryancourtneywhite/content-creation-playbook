@@ -77,6 +77,10 @@
   var player = null, playerReady = false, started = false, wantPlay = false;
   var btnRef = null;
   var LOOP_LEN = 0;                    // track duration, learned once ready
+  // True when the current station is a SINGLE looping video (vs a playlist).
+  // We loop these ourselves on ENDED so switching in/out of a named playlist
+  // never leaves looping broken.
+  var singleLoop = !YT_PLAYLIST;
 
   // Where the track "should" resume, accounting for the brief navigation gap
   // so it feels continuous across page loads rather than restarting.
@@ -188,7 +192,12 @@
         },
         onStateChange: function (e) {
           if (e.data === YT.PlayerState.PLAYING) { started = true; updateBtn(btnRef, true); }
-          else if (e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED) { updateBtn(btnRef, false); }
+          else if (e.data === YT.PlayerState.ENDED) {
+            // Loop single-video stations ourselves (playlists loop via the API).
+            if (singleLoop) { try { player.seekTo(0, true); player.playVideo(); } catch (er) {} }
+            else { updateBtn(btnRef, false); }
+          }
+          else if (e.data === YT.PlayerState.PAUSED) { updateBtn(btnRef, false); }
         }
       }
     });
@@ -234,13 +243,19 @@
     function load() {
       try {
         if (YT_PLAYLIST) {
+          singleLoop = false;
+          // Named playlist → load it. This reliably replaces prior content.
           player.loadPlaylist({ listType: 'playlist', list: YT_PLAYLIST, index: 0, startSeconds: 0 });
           if (YT_SHUFFLE) player.setShuffle(true);
           player.setLoop(true);
         } else {
-          // Single video, looped via a 2-item playlist trick (itself twice).
-          player.loadPlaylist([YT_VIDEO_ID], 0, 0);
-          player.setLoop(true);
+          // Single video → loadVideoById reliably replaces WHATEVER is loaded
+          // now (a video OR a named playlist). We loop it ourselves in the
+          // ENDED handler (the playerVars loop trick only covers the FIRST
+          // video and breaks after switching into/out of a named playlist).
+          singleLoop = true;
+          try { player.setLoop(false); } catch (e2) {}
+          player.loadVideoById({ videoId: YT_VIDEO_ID, startSeconds: 0 });
         }
         player.setVolume(0); curVol = 0;
         if (!isMuted()) fadeTo(VOLUME, 700);
