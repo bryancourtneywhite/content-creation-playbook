@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AION 2 Classes Guide — All 8 Classes, Roles &amp; Weapons | Solashur</title>
+<meta name="description" content="AION 2 class overview for all 8 global classes — Templar, Gladiator, Assassin, Ranger, Sorcerer, Spiritmaster, Cleric, Chanter (plus KR/TW Brawler). Roles, weapons, and PvE/PvP playstyle at a glance.">
+<meta name="keywords" content="Aion 2 classes, Aion 2 class guide, Aion 2 best class, Aion 2 Templar, Aion 2 Gladiator, Aion 2 Assassin, Aion 2 Ranger, Aion 2 Sorcerer, Aion 2 Spiritmaster, Aion 2 Cleric, Aion 2 Chanter, Aion 2 Brawler">
+<link rel="canonical" href="https://solashur.com/classes.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ashura Whole Heavens">
+<meta property="og:title" content="AION 2 Classes Guide — All 8 Classes | Solashur">
+<meta property="og:description" content="Roles, weapons, and PvE/PvP playstyle for every AION 2 class at a glance.">
+<meta property="og:url" content="https://solashur.com/classes.html">
+<meta property="og:image" content="https://solashur.com/assets/selfie%20profile%20pic.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AION 2 Classes Guide — All 8 Classes | Solashur">
+<meta name="twitter:description" content="Roles, weapons, and PvE/PvP playstyle for every AION 2 class.">
+<meta name="twitter:image" content="https://solashur.com/assets/selfie%20profile%20pic.jpg">
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/theme.js"></script>
+<script src="assets/analytics.js"></script>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<nav class="site-nav">
+  <a class="brand" href="index.html"><span class="sp">🌀</span> Ashura Whole Heavens</a>
+  <div class="links">
+    <a href="index.html">Home</a>
+    <a href="watch.html">Watch</a>
+    <a href="builds.html">AION 2</a>
+    <a href="classes.html" class="active">Classes</a>
+    <a href="questlog.html">Questlog</a>
+    <a href="guides.html">Guides</a>
+    <a href="tiers.html">Tier List</a>
+    <a href="hardware.html">Hardware</a>
+    <a href="optimize.html">Sponsors</a>
+    <a href="playbook.html">Playbook</a>
+    <a href="https://www.youtube.com/@SolAshur" class="ext" target="_blank" rel="noopener">YouTube</a>
+    <a href="https://www.twitch.tv/solashur" class="ext" target="_blank" rel="noopener">Twitch</a>
+    <a href="https://discord.gg/rTD6qxUcmG" class="ext" target="_blank" rel="noopener">Discord</a>
+  </div>
+</nav>
+
+<div class="content">
+
+  <div class="section-head" style="margin-top:44px;">
+    <div class="kicker">🎭 AION 2 CLASSES</div>
+    <h2>Every AION 2 Class — At a Glance</h2>
+    <p>All 8 global classes, their weapons, roles, and how they play in PvE and PvP. Use this to pick your class — then grab the full tested builds where I have them. 🌙</p>
+    <div class="btn-row" style="justify-content:center;margin-top:16px;gap:12px;flex-wrap:wrap;">
+      <a class="tool-btn" style="padding:12px 26px;" href="tiers.html">🏆 Class Tier List →</a>
+      <a class="tool-btn" style="padding:12px 26px;background:linear-gradient(120deg,#6a4bd6,#9146ff);" href="questlog.html">🗡️ My Builds →</a>
+    </div>
+  </div>
+
+  <div class="callout" style="max-width:820px;margin:0 auto 30px;">
+    ℹ️ <strong style="color:#fff;">How to read this:</strong> these are class <strong>overviews</strong> — role, weapon, and general playstyle drawn from the current meta. Full <strong>tested builds</strong> (stats, skills, rotations, Questlog links) come from classes I actually main — right now that's <strong>Templar</strong> and <strong>Gladiator</strong>. Others show "full build coming" until I've played them properly. I won't post a build I haven't tested.
+  </div>
+
+  <!-- Class filter -->
+  <div style="max-width:720px;margin:0 auto 26px;">
+    <input id="cls-search" type="text" placeholder="🔍 Search classes (tank, dps, healer, bow, dagger…)"
+      style="width:100%;padding:14px 18px;border-radius:14px;background:var(--panel);border:1px solid var(--panel-border);color:var(--text);font-size:15px;backdrop-filter:blur(10px);outline:none;">
+    <div class="platform-tabs" style="margin-top:16px;">
+      <div class="platform-tab active" data-filter="all">All</div>
+      <div class="platform-tab" data-filter="tank">Tank</div>
+      <div class="platform-tab" data-filter="melee">Melee DPS</div>
+      <div class="platform-tab" data-filter="ranged">Ranged DPS</div>
+      <div class="platform-tab" data-filter="support">Support</div>
+    </div>
+  </div>
+
+  <div class="build-grid" id="cls-grid">
+
+    <div class="build-card reveal" data-tags="tank templar longsword sword defense pvx">
+      <div class="bc-top">
+        <div class="bc-tags"><span class="bc-pill">Tank</span><span class="bc-pill">Longsword</span></div>
+        <h3>Templar</h3>
+        <p><strong>Role:</strong> Main tank / durable PvX. <strong>Weapon:</strong> Longsword.</p>
+        <p><strong>Playstyle:</strong> The anchor — high survivability, party protection, and steady pressure. Rewards players who like holding the line. In the current meta a strong group class; my main.</p>
+        <p><strong>PvE:</strong> reliable tank &amp; group anchor. <strong>PvP:</strong> god-mode PvX durability with real burst when built for DPS.</p>
+        <a class="bc-btn" href="questlog.html">My Templar builds →</a>
+      </div>
+    </div>
+
+    <div class="build-card reveal" data-tags="melee gladiator greatsword bruiser dps">
+      <div class="bc-top">
+        <div class="bc-tags"><span class="bc-pill">Melee DPS</span><span class="bc-pill">Greatsword</span></div>
+        <h3>Gladiator</h3>
+        <p><strong>Role:</strong> Heavy melee bruiser. <strong>Weapon:</strong> Greatsword.</p>
+        <p><strong>Playstyle:</strong> Hits hard without full-tanking — big burst and cleave, easy to make an impact with. Consistently rated one of the strongest all-around picks.</p>
+        <p><strong>PvE:</strong> top-tier damage &amp; cleave. <strong>PvP:</strong> huge burst; the build that carried me to Rank 1.</p>
+        <a class="bc-btn" href="questlog.html">My Gladiator builds →</a>
+      </div>
+    </div>
+
+    <div class="build-card reveal" data-tags="melee assassin dagger burst stealth dps">
+      <div class="bc-top">
+        <div class="bc-tags"><span class="bc-pill">Melee DPS</span><span class="bc-pill">Dagger</span></div>
+        <h3>Assassin</h3>
+        <p><strong>Role:</strong> Burst melee assassin. <strong>Weapon:</strong> Dagger.</p>
+        <p><strong>Playstyle:</strong> High-mobility burst — dodge everything, delete a target, reset. High skill ceiling, elite in good hands. Widely rated one of the best PvP picks.</p>
+        <p><strong>PvE:</strong> solid single-target once geared. <strong>PvP:</strong> premier duelist / ganker.</p>
+        <span class="bc-soon">📋 Full build coming</span>
+      </div>
+    </div>
+
+    <div class="build-card reveal" data-tags="ranged ranger bow physical dps allrounder">
+      <div class="bc-top">
+        <div class="bc-tags"><span class="bc-pill">Ranged DPS</span><span class="bc-pill">Bow</span></div>
+        <h3>Ranger</h3>
+        <p><strong>Role:</strong> Ranged physical all-rounder. <strong>Weapon:</strong> Bow.</p>
+        <p><strong>Playstyle:</strong> Safe, consistent ranged damage with strong kiting. Beginner-friendly and one of the strongest PvE picks by leaderboard data.</p>
+        <p><strong>PvE:</strong> reliable top-end DPS. <strong>PvP:</strong> strong kiter that punishes overextension.</p>
+        <span class="bc-soon">📋 Full build coming</span>
+      </div>
+    </div>
+
+    <div class="build-card reveal" data-tags="ranged sorcerer spellbook magic burst glass cannon dps">
+      <div class="bc-top">
+        <div class="bc-tags"><span class="bc-pill">Ranged DPS</span><span class="bc-pill">Spellbook</span></div>
+        <h3>Sorcerer</h3>
+        <p><strong>Role:</strong> Magic glass cannon. <strong>Weapon:</strong> Spellbook.</p>
+        <p><strong>Playstyle:</strong> Big spells from range with massive AoE — shines in PvE packs. High damage, low survivability, so positioning is everything.</p>
+        <p><strong>PvE:</strong> excellent AoE clear. <strong>PvP:</strong> high burst but fragile — needs peel.</p>
+        <span class="bc-soon">📋 Full build coming</span>
+      </div>
+    </div>
+
+    <div class="build-card reveal" data-tags="ranged spiritmaster elementalist orb pet summoner dps">
+      <div class="bc-top">
+        <div class="bc-tags"><span class="bc-pill">Ranged DPS</span><span class="bc-pill">Orb</span></div>
+        <h3>Spiritmaster <span style="font-weight:600;color:var(--muted);font-size:13px;">(a.k.a. Elementalist)</span></h3>
+        <p><strong>Role:</strong> Pet-based summoner. <strong>Weapon:</strong> Orb.</p>
+        <p><strong>Playstyle:</strong> A pet does much of the work while you sustain damage from range. Sources rate it a strong PvE DPS pick; positioning and pet management define the ceiling.</p>
+        <p><strong>PvE:</strong> often a top DPS recommendation. <strong>PvP:</strong> situational; strong with good pet control.</p>
+        <span class="bc-soon">📋 Full build coming</span>
+      </div>
+    </div>
+
+    <div class="build-card reveal" data-tags="support cleric mace healer heals group">
+      <div class="bc-top">
+        <div class="bc-tags"><span class="bc-pill">Support</span><span class="bc-pill">Mace</span></div>
+        <h3>Cleric</h3>
+        <p><strong>Role:</strong> Main healer. <strong>Weapon:</strong> Mace.</p>
+        <p><strong>Playstyle:</strong> The must-have group healer — keeps the party alive through the hardest content. Beginner-friendly, always in demand for groups.</p>
+        <p><strong>PvE:</strong> essential group anchor. <strong>PvP:</strong> strong in organized groups, weaker solo.</p>
+        <span class="bc-soon">📋 Full build coming</span>
+      </div>
+    </div>
+
+    <div class="build-card reveal" data-tags="support chanter staff buff hybrid bruiser">
+      <div class="bc-top">
+        <div class="bc-tags"><span class="bc-pill">Support</span><span class="bc-pill">Staff</span></div>
+        <h3>Chanter</h3>
+        <p><strong>Role:</strong> Buff-support / hybrid bruiser. <strong>Weapon:</strong> Staff.</p>
+        <p><strong>Playstyle:</strong> Some of the strongest party support in the game with real personal damage — great uptime and group value. A reliable A-tier anchor.</p>
+        <p><strong>PvE:</strong> high group value + solid damage. <strong>PvP:</strong> strong sustained bruiser with buffs.</p>
+        <span class="bc-soon">📋 Full build coming</span>
+      </div>
+    </div>
+
+    <div class="build-card reveal" data-tags="melee brawler gauntlet fighter korea taiwan">
+      <div class="bc-top">
+        <div class="bc-tags"><span class="bc-pill">Melee DPS</span><span class="bc-pill">Gauntlet</span><span class="bc-pill">KR/TW</span></div>
+        <h3>Brawler</h3>
+        <p><strong>Role:</strong> Close-range fighter. <strong>Weapon:</strong> Gauntlet. <strong>Note:</strong> added in the Korea/Taiwan Chapter 1 update — not yet on Global at launch.</p>
+        <p><strong>Playstyle:</strong> An in-your-face melee brawler that needs setup to shine. Details still limited outside KR/TW.</p>
+        <span class="bc-soon">📋 Full build coming</span>
+      </div>
+    </div>
+
+  </div>
+
+  <p id="cls-none" style="display:none;text-align:center;color:var(--muted);margin-top:30px;">No classes match that search.</p>
+
+  <div class="callout" style="max-width:820px;margin:34px auto 0;">
+    📚 <strong style="color:#fff;">Sources &amp; honesty note:</strong> class roles, weapons, and playstyle summaries are drawn from public AION 2 community resources and current meta write-ups (e.g. <a href="https://aion2hub.com/classes" target="_blank" rel="noopener nofollow">aion2hub</a>, <a href="https://www.mmoexp.com/News/aion-2-classes-guide-all-8-classes-explained-for-pve-and-pvp-best-roles-strengths-and-playstyles.html" target="_blank" rel="noopener nofollow">MMOEXP</a>, and others) and cross-checked. They're overviews, not tested builds. Tier placements reflect my read on the <a href="tiers.html" style="color:var(--accent-2);">tier list</a>. Content summarized and rephrased from public sources.
+  </div>
+
+  <div data-subscribe="mini"></div>
+
+  <footer>
+    <div class="big">Pick your class. Climb the ladder. 🌙</div>
+    <p>Ashura Whole Heavens — AION 2 · <a href="tiers.html" style="color:var(--accent-2);">Tier List</a></p>
+  </footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="assets/background.js"></script>
+<script src="assets/audio.js"></script>
+<script src="assets/subscribe.js"></script>
+<script src="assets/cards.js"></script>
+<script>
+(function () {
+  var search = document.getElementById('cls-search');
+  var cards = Array.prototype.slice.call(document.querySelectorAll('#cls-grid .build-card'));
+  var tabs = document.querySelectorAll('.platform-tab');
+  var none = document.getElementById('cls-none');
+  var activeFilter = 'all';
+
+  function apply() {
+    var q = search.value.trim().toLowerCase();
+    var shown = 0;
+    cards.forEach(function (card) {
+      var tags = card.getAttribute('data-tags');
+      var text = card.textContent.toLowerCase();
+      var matchesText = !q || text.indexOf(q) !== -1 || tags.indexOf(q) !== -1;
+      var matchesFilter = activeFilter === 'all' || tags.indexOf(activeFilter) !== -1;
+      var show = matchesText && matchesFilter;
+      card.style.display = show ? 'flex' : 'none';
+      if (show) shown++;
+    });
+    none.style.display = shown === 0 ? 'block' : 'none';
+  }
+
+  search.addEventListener('input', apply);
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      tabs.forEach(function (t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      activeFilter = tab.getAttribute('data-filter');
+      apply();
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

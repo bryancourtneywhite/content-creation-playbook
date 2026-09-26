@@ -1325,6 +1325,13 @@ header.hero > .scroll-hint { position: relative; z-index: 1; }
   transition: filter 0.2s ease;
 }
 .build-card .bc-btn:hover { filter: brightness(1.12); }
+.build-card .bc-soon {
+  margin-top: 16px; text-align: center;
+  font-weight: 700; font-size: 13px; padding: 11px 16px; border-radius: 12px;
+  color: var(--muted); background: rgba(255,255,255,0.04);
+  border: 1px dashed var(--panel-border);
+}
+[data-theme="light"] .build-card .bc-soon { background: rgba(20,60,110,0.06); color: #2c435c; }
 
 /* Article layout */
 .article { max-width: 820px; margin: 0 auto; }
