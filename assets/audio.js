@@ -147,9 +147,13 @@
 
   /* ---------------- Toggle button ---------------- */
   function updateBtn(btn, playing) {
+    if (!btn) return;
     btn.textContent = playing ? '🔊' : '🔇';
     btn.setAttribute('aria-label', playing ? 'Mute audio' : 'Play audio');
     btn.classList.toggle('is-muted', !playing);
+    btn.classList.toggle('is-playing', !!playing);
+    // Once audio is actually playing, drop the "tap for sound" prompt.
+    if (playing) btn.classList.remove('needs-start');
   }
   function buildButton() {
     if (document.getElementById('audio-toggle')) return document.getElementById('audio-toggle');
@@ -183,9 +187,21 @@
     initSfx();
     wireSfx();
 
-    // If music was playing when the user left the previous page, resume it
-    // immediately (they've already interacted, so autoplay is permitted).
-    if (!isMuted() && wasPlaying()) startPlayback();
+    // Try to start immediately. If the user was playing on a previous page
+    // (or the browser allows it), music resumes with no click needed.
+    // Otherwise, show an obvious "tap for sound" prompt on the button.
+    function showPrompt() {
+      if (!isMuted() && audio.paused) btn.classList.add('needs-start');
+    }
+    if (!isMuted()) {
+      startPlayback();
+      // Verify shortly after whether autoplay actually took (browsers may
+      // silently reject it without a gesture) and prompt if it didn't.
+      setTimeout(function () {
+        if (audio.paused) { started = false; showPrompt(); }
+        updateBtn(btn, !audio.paused);
+      }, 350);
+    }
 
     // Intro interaction → start the soundtrack AND layer the warp SFX.
     // 'aws-enter' fires on the first interaction with the intro overlay

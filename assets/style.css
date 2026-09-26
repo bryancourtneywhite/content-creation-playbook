@@ -108,8 +108,45 @@
 [data-theme="light"] .tool-btn,
 [data-theme="light"] .oc-btn,
 [data-theme="light"] .cta-row a.tool-btn,
-[data-theme="light"] a.big-btn { color: #ffffff !important; }
+[data-theme="light"] a.big-btn,
+[data-theme="light"] .sub-btn,
+[data-theme="light"] .tier-rank,
+[data-theme="light"] .gb-num,
+[data-theme="light"] .bc-btn { color: #ffffff !important; }
 [data-theme="light"] .big-btn.ghost { color: var(--accent-3) !important; }
+
+/* ---- Light mode: force dark text on all light surfaces ----
+   Nav, headings, card titles, and anything that hardcodes #fff via CSS
+   (not just inline styles) must go dark so it's legible on the light bg. */
+[data-theme="light"] .site-nav .brand { color: var(--accent-3); }
+[data-theme="light"] .site-nav .links a { color: #16304a; }
+[data-theme="light"] .site-nav .links a:hover {
+  color: var(--accent-3);
+  background: rgba(20, 60, 110, 0.10);
+}
+[data-theme="light"] .site-nav .links a.active {
+  color: var(--accent-3);
+  background: rgba(20, 60, 110, 0.14);
+  border-color: rgba(20, 60, 110, 0.4);
+}
+/* Card / section / footer titles that use color:#fff in dark mode */
+[data-theme="light"] .build-card h3,
+[data-theme="light"] .section-head h2,
+[data-theme="light"] .guide-block h3,
+[data-theme="light"] .sub-title,
+[data-theme="light"] .oc-title,
+[data-theme="light"] .article-body h2,
+[data-theme="light"] .article-body h3,
+[data-theme="light"] .logo-name,
+[data-theme="light"] footer .big,
+[data-theme="light"] .data-cell .dv,
+[data-theme="light"] .stat-box .sv,
+[data-theme="light"] .tc-cap strong,
+[data-theme="light"] .l3d-body h4 { color: var(--accent-3) !important; }
+/* Article body + list + generic paragraph text */
+[data-theme="light"] .article-body p,
+[data-theme="light"] .article-body li,
+[data-theme="light"] .l3d-body p { color: #16304a !important; }
 /* Body copy + section subtitles darker */
 [data-theme="light"] .step-body p,
 [data-theme="light"] .tip p,
@@ -1555,7 +1592,7 @@ footer .big {
 .audio-toggle:hover { transform: scale(1.1); border-color: var(--accent); }
 .audio-toggle.is-muted { opacity: 0.72; }
 /* Subtle pulse ring while playing to hint it's live */
-.audio-toggle:not(.is-muted)::after {
+.audio-toggle.is-playing::after {
   content: '';
   position: absolute;
   inset: -4px;
@@ -1568,6 +1605,46 @@ footer .big {
   0% { transform: scale(1); opacity: 0.5; }
   100% { transform: scale(1.5); opacity: 0; }
 }
+
+/* "Music available — tap to play" prompt: shown until audio first starts.
+   Grabs attention with a bounce + glowing ring + a floating label so users
+   know sound is available (autoplay-with-sound is blocked until they click). */
+.audio-toggle.needs-start {
+  border-color: var(--accent);
+  animation: audioBounce 1.6s ease-in-out infinite;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 0 0 rgba(214,30,44,0.55);
+}
+.audio-toggle.needs-start::after {
+  content: '';
+  position: absolute; inset: -6px; border-radius: 50%;
+  border: 2px solid var(--accent);
+  opacity: 0; animation: audioPulse 1.8s ease-out infinite;
+}
+.audio-toggle.needs-start::before {
+  content: '♪ Tap for sound';
+  position: absolute;
+  right: 58px;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-size: 12.5px; font-weight: 700;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  padding: 7px 13px; border-radius: 999px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+  animation: audioLabelFloat 2.6s ease-in-out infinite;
+}
+@keyframes audioBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+@keyframes audioLabelFloat {
+  0%, 100% { opacity: 0.9; transform: translateY(-50%) translateX(0); }
+  50% { opacity: 1; transform: translateY(-50%) translateX(-3px); }
+}
+@media (max-width: 560px) { .audio-toggle.needs-start::before { display: none; } }
 
 /* ---------- AION 2 PLAYER GUIDE (informational modules) ---------- */
 .guide-toc {
