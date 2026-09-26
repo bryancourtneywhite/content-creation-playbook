@@ -111,4 +111,7 @@
   } else {
     initNav();
   }
+  // The nav is rendered by nav.js (shared source of truth); when it signals
+  // it's ready, (re)inject the theme toggle + hamburger into the fresh nav.
+  window.addEventListener('aws-nav-ready', initNav);
 })();
