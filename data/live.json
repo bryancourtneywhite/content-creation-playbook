@@ -1,6 +1,11 @@
 {
-  "_comment": "Flip 'live' to true when you go live, false when you stop. Set 'platform' to 'twitch' or 'youtube' and optionally a 'title'. The home page shows a LIVE banner when live:true. Commit + push to update the site (or edit via GitHub web UI from your phone).",
+  "_comment": "Flip 'live' to true when you go live (shows the LIVE banner on the home page). 'schedule' fields drive the offline card on the Watch page — update the dates/text when your stream plans change.",
   "live": false,
   "platform": "twitch",
-  "title": "AION 2 Templar ranked climb"
+  "title": "AION 2 Templar ranked climb",
+  "schedule": {
+    "headline": "Next Stream Block",
+    "dates": "Sept 30 – Oct 5, 2026",
+    "note": "Catch me live on Twitch & YouTube during this window. Follow so you don't miss it."
+  }
 }

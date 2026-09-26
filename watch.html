@@ -43,25 +43,20 @@
 
   <!-- YouTube pane -->
   <div id="pane-youtube" class="watch-pane">
-    <div class="embed-label"><span class="pf-dot yt"></span> YouTube — Live or Latest</div>
-    <div class="embed-wrap">
-      <!-- Featured video (reliable). For true auto-live embedding, see the note
-           below and set YT_CHANNEL_ID in the script. -->
-      <iframe id="yt-frame"
-        src="https://www.youtube.com/embed/1ebgmpl1YxQ"
-        title="YouTube featured video"
+    <div class="embed-label"><span class="pf-dot yt"></span> YouTube — Live or Schedule</div>
+    <!-- When live:true in data/live.json this becomes the live embed; otherwise
+         it shows the branded offline/schedule card (no ugly "video unavailable"). -->
+    <div id="yt-slot" class="embed-wrap" style="display:none;">
+      <iframe id="yt-frame" src="about:blank"
+        title="YouTube live stream"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerpolicy="strict-origin-when-cross-origin"
-        allowfullscreen></iframe>
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
+    <div id="yt-offline" class="offline-card"></div>
     <div class="btn-row" style="margin-top:14px;">
-      <a class="big-btn" href="https://www.youtube.com/@SolAshur/streams" target="_blank" rel="noopener">🔴 Watch Live on YouTube</a>
-      <a class="big-btn ghost" href="https://www.youtube.com/@SolAshur/videos" target="_blank" rel="noopener">📺 All Videos</a>
+      <a class="big-btn" href="https://www.youtube.com/@SolAshur/streams" target="_blank" rel="noopener">📺 YouTube Streams</a>
+      <a class="big-btn ghost" href="https://www.youtube.com/@SolAshur/videos" target="_blank" rel="noopener">All Videos</a>
     </div>
-    <p style="color:var(--muted);font-size:13px;margin-top:10px;">
-      Auto-shows the live stream when I'm live, otherwise a "no live stream" notice —
-      use the buttons above for streams and the full library.
-    </p>
   </div>
 
   <!-- Twitch pane -->
@@ -96,13 +91,12 @@
     <div class="watch-grid" style="grid-template-columns:1fr 1fr;">
       <div>
         <div class="embed-label"><span class="pf-dot yt"></span> YouTube</div>
-        <div class="embed-wrap">
-          <iframe id="yt-frame-2"
-            src="https://www.youtube.com/embed/1ebgmpl1YxQ"
-            title="YouTube live or featured"
+        <div id="yt-slot-2" class="embed-wrap" style="display:none;">
+          <iframe id="yt-frame-2" src="about:blank" title="YouTube live stream"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen></iframe>
         </div>
+        <div id="yt-offline-2" class="offline-card"></div>
       </div>
       <div>
         <div class="embed-label"><span class="pf-dot tw"></span> Twitch</div>
@@ -160,13 +154,56 @@
   // #yt-frame iframe src to:
   //   'https://www.youtube.com/embed/live_stream?channel=' + YT_CHANNEL_ID
   var YT_CHANNEL_ID = 'UCXfA4M5_bHzLAoRkj-7Kz_A';   // Ashura Whole Heavens
-  if (YT_CHANNEL_ID) {
-    var live = 'https://www.youtube.com/embed/live_stream?channel=' + YT_CHANNEL_ID;
-    var f = document.getElementById('yt-frame');
-    if (f) f.src = live;
-    var f2 = document.getElementById('yt-frame-2');
-    if (f2) f2.src = live;
+
+  function escHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
   }
+
+  function offlineCardHTML(sched) {
+    sched = sched || {};
+    return '<span class="oc-moon">🌙</span>' +
+      '<span class="oc-badge">● Offline</span>' +
+      '<div class="oc-title">' + escHtml(sched.headline || 'Next Stream') + '</div>' +
+      '<div class="oc-dates">' + escHtml(sched.dates || 'Schedule coming soon') + '</div>' +
+      '<div class="oc-note">' + escHtml(sched.note || 'Follow so you don\'t miss it.') + '</div>' +
+      '<div class="oc-btns">' +
+        '<a class="oc-btn yt" href="https://www.youtube.com/@SolAshur/streams" target="_blank" rel="noopener">▶ YouTube</a>' +
+        '<a class="oc-btn tw" href="https://www.twitch.tv/solashur" target="_blank" rel="noopener">🎮 Twitch</a>' +
+      '</div>';
+  }
+
+  // Decide YouTube pane: live embed vs offline schedule card, driven by data/live.json.
+  fetch('data/live.json', { cache: 'no-store' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) {
+      var isLiveYT = d && d.live && d.platform === 'youtube';
+      var sched = d && d.schedule;
+      var slot = document.getElementById('yt-slot');
+      var slot2 = document.getElementById('yt-slot-2');
+      var off = document.getElementById('yt-offline');
+      var off2 = document.getElementById('yt-offline-2');
+      if (isLiveYT && YT_CHANNEL_ID) {
+        var live = 'https://www.youtube.com/embed/live_stream?channel=' + YT_CHANNEL_ID;
+        var f = document.getElementById('yt-frame'); if (f) f.src = live;
+        var f2 = document.getElementById('yt-frame-2'); if (f2) f2.src = live;
+        if (slot) slot.style.display = '';
+        if (slot2) slot2.style.display = '';
+        if (off) off.style.display = 'none';
+        if (off2) off2.style.display = 'none';
+      } else {
+        if (off) off.innerHTML = offlineCardHTML(sched);
+        if (off2) off2.innerHTML = offlineCardHTML(sched);
+      }
+    })
+    .catch(function () {
+      // Fallback: show a generic offline card if the config can't load.
+      var off = document.getElementById('yt-offline');
+      var off2 = document.getElementById('yt-offline-2');
+      if (off) off.innerHTML = offlineCardHTML(null);
+      if (off2) off2.innerHTML = offlineCardHTML(null);
+    });
 
   // Twitch embeds REQUIRE the parent domain(s) where they are hosted.
   // Include the live GitHub Pages host + localhost for testing.
