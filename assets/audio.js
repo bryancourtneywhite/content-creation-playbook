@@ -30,7 +30,7 @@
   var POS_KEY   = 'aws-audio-pos';     // last playback time (seconds)
   var PLAY_KEY  = 'aws-audio-playing'; // was it playing when we left?
   var TS_KEY    = 'aws-audio-ts';      // wall-clock timestamp of last save
-  var VOLUME = 0.35;
+  var VOLUME = 0.30;        // ~15% lower than before, to balance with menu SFX
   var SFX_VOLUME = 0.5;
 
   function getNum(k) { try { return parseFloat(localStorage.getItem(k)); } catch (e) { return NaN; } }

@@ -76,11 +76,57 @@
     }));
     scene.add(particles);
 
-    var start = performance.now(), running = true, revealed = false;
+    // ---- Shurikens that fly toward the viewer ----
+    // A crimson-edged 4-point star drawn to a canvas texture.
+    function makeShurikenTexture() {
+      var s = 256, c = document.createElement('canvas'); c.width = c.height = s;
+      var g = c.getContext('2d'); g.translate(s / 2, s / 2);
+      var blade = new Path2D();
+      for (var k = 0; k < 4; k++) {
+        var a = (k / 4) * Math.PI * 2, a2 = a + Math.PI / 4;
+        blade.moveTo(0, 0);
+        blade.lineTo(Math.cos(a) * 108, Math.sin(a) * 108);
+        blade.lineTo(Math.cos(a2) * 38, Math.sin(a2) * 38);
+      }
+      blade.closePath();
+      g.shadowColor = 'rgba(214,30,44,0.9)'; g.shadowBlur = 22;
+      g.fillStyle = '#2b2226'; g.fill(blade);
+      g.shadowBlur = 0; g.strokeStyle = '#f5f5f5'; g.lineWidth = 6; g.stroke(blade);
+      g.beginPath(); g.arc(0, 0, 16, 0, Math.PI * 2);
+      g.fillStyle = '#0d0b0d'; g.fill();
+      g.strokeStyle = '#d61e2c'; g.lineWidth = 6; g.stroke();
+      return new THREE.CanvasTexture(c);
+    }
+    var shuriTex = makeShurikenTexture();
+    var shurikens = [];
+    function spawnShuriken(sprite, immediate) {
+      // Start far ahead of the camera (deep negative z), off to a random side,
+      // then rush toward + past the viewer.
+      var camZ = camera.position.z;
+      sprite.position.set(
+        (Math.random() - 0.5) * 26,
+        (Math.random() - 0.5) * 18,
+        camZ - (immediate ? (20 + Math.random() * 40) : (60 + Math.random() * 60))
+      );
+      sprite.userData.speed = 34 + Math.random() * 26;   // units/sec toward viewer
+      sprite.userData.spin = (Math.random() < 0.5 ? -1 : 1) * (6 + Math.random() * 6);
+      var sc = 1.6 + Math.random() * 1.8;
+      sprite.scale.set(sc, sc, sc);
+    }
+    for (var si = 0; si < 9; si++) {
+      var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: shuriTex, transparent: true, depthWrite: false }));
+      sp.userData = {};
+      spawnShuriken(sp, true);
+      scene.add(sp);
+      shurikens.push(sp);
+    }
+
+    var start = performance.now(), running = true, revealed = false, lastT = 0;
     function animate() {
       if (!running) return;
       requestAnimationFrame(animate);
       var t = (performance.now() - start) / 1000;
+      var dt = Math.min(0.05, t - lastT); lastT = t;
       // Camera flies forward toward the moon over ~3.5s, then eases to rest.
       var z = 60 - Math.min(t / 3.5, 1) * 52;   // 60 -> 8
       camera.position.z = z;
@@ -88,6 +134,15 @@
       camera.lookAt(10, 6, -40);
       particles.rotation.y = t * 0.05;
       particles.rotation.z = t * 0.02;
+
+      // Fly shurikens toward the viewer; respawn once they pass the camera.
+      for (var q = 0; q < shurikens.length; q++) {
+        var m = shurikens[q];
+        m.position.z += m.userData.speed * dt;
+        m.material.rotation += m.userData.spin * dt;
+        if (m.position.z > camera.position.z + 6) spawnShuriken(m, false);
+      }
+
       renderer.render(scene, camera);
       if (!revealed && t > 1.2) { revealed = true; onReady(); }
     }
