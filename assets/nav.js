@@ -32,7 +32,8 @@
       { label: 'Elyos vs Asmodian',        href: 'lore/elyos-vs-asmodian.html' },
       { label: 'Balaur & Dragon Lords',    href: 'lore/balaur-dragon-lords.html' },
       { label: 'Daevas & Ascension',       href: 'lore/daevas-and-ascension.html' },
-      { label: 'AION 2 vs AION 1',         href: 'lore/aion-2-vs-aion-1.html' }
+      { label: 'AION 2 vs AION 1',         href: 'lore/aion-2-vs-aion-1.html' },
+      { label: 'The Abyss Explained',      href: 'lore/the-abyss-explained.html' }
     ]},
     { id: 'watch', label: 'Watch', href: 'watch.html', children: [
       { label: 'Watch / Live', href: 'watch.html' },
