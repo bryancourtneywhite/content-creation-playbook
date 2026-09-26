@@ -1,0 +1,29 @@
+{
+  "id": "gladiator-build-guide",
+  "class": "Gladiator",
+  "title": "Rank One Gladiator Build",
+  "roles": ["PvP", "PvE"],
+  "videoId": "pwY4X_rEeGs",
+  "questlogUrl": "https://questlog.gg/aion-2/en/character-builder/ThePatienceOfTheThunderousFortune",
+  "summary": "The Rank One Gladiator build for PvP and PvE — the Berserk setup that climbed to the top.",
+  "note": "Build values below are placeholders for the interactive viewer. Replace with your real Gladiator numbers — the layout renders whatever is in this JSON.",
+  "stats": [
+    { "label": "Role", "value": "Melee DPS" },
+    { "label": "Spec", "value": "Berserk" },
+    { "label": "Difficulty", "value": "Medium" },
+    { "label": "Best For", "value": "PvP + PvE" }
+  ],
+  "skills": [
+    { "key": "1", "name": "Cleave" },
+    { "key": "2", "name": "Rupture" },
+    { "key": "3", "name": "Berserk" },
+    { "key": "4", "name": "Charge" },
+    { "key": "R", "name": "Execute" },
+    { "key": "Q", "name": "Gap Closer" }
+  ],
+  "macroHotkeys": [
+    { "key": "Mouse 4", "action": "Burst opener" },
+    { "key": "Mouse 5", "action": "PvP combo" },
+    { "key": "Shift+1", "action": "PvE rotation" }
+  ]
+}
