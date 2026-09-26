@@ -94,16 +94,40 @@
   window.dispatchEvent(new Event('aws-nav-ready'));
 
   /* ---- Interactions ---- */
-  // Mobile accordion: tapping a group's top button toggles its dropdown.
+  var isMobile = function () { return window.matchMedia('(max-width: 820px)').matches; };
+
   nav.querySelectorAll('.nav-group').forEach(function (g) {
     var top = g.querySelector('.nav-top');
-    // On mobile, a top-level LINK with children should open the submenu on
-    // first tap instead of navigating. We detect small screens at click time.
+
+    /* ---- Desktop: hover-intent open/close (industry-standard) ----
+       Pure CSS :hover snaps the menu shut the instant the cursor touches any
+       dead space (e.g. moving diagonally toward a lower item). We add a small
+       CLOSE DELAY so brief exits are forgiven — the menu stays open while you
+       travel to it, and only closes after ~180ms away. This matches the
+       "hover intent" behavior used by large e-commerce/mega menus. */
+    var closeTimer = null;
+    function openGroup() {
+      if (isMobile()) return;
+      if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
+      // close any other open group immediately for a clean single-open menu
+      nav.querySelectorAll('.nav-group.hovering').forEach(function (o) { if (o !== g) o.classList.remove('hovering'); });
+      g.classList.add('hovering');
+    }
+    function scheduleClose() {
+      if (isMobile()) return;
+      if (closeTimer) clearTimeout(closeTimer);
+      closeTimer = setTimeout(function () { g.classList.remove('hovering'); closeTimer = null; }, 180);
+    }
+    g.addEventListener('mouseenter', openGroup);
+    g.addEventListener('mouseleave', scheduleClose);
+    // Keyboard: keep it open while focus is inside; close shortly after leaving.
+    g.addEventListener('focusin', openGroup);
+    g.addEventListener('focusout', scheduleClose);
+
+    /* ---- Mobile: tap the top button to toggle its dropdown (accordion) ---- */
     top.addEventListener('click', function (e) {
-      if (window.matchMedia('(max-width: 820px)').matches) {
-        // let the caret behave as an accordion toggle
+      if (isMobile()) {
         if (top.tagName === 'A') {
-          // first tap opens; if already open, allow navigation
           if (!g.classList.contains('open')) { e.preventDefault(); }
         } else {
           e.preventDefault();
@@ -112,6 +136,18 @@
         g.classList.toggle('open');
       }
     });
+  });
+
+  // Close any open desktop dropdown when clicking outside the nav or pressing Esc.
+  document.addEventListener('click', function (e) {
+    if (isMobile()) return;
+    if (nav.contains(e.target)) return;
+    nav.querySelectorAll('.nav-group.hovering').forEach(function (o) { o.classList.remove('hovering'); });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      nav.querySelectorAll('.nav-group.hovering').forEach(function (o) { o.classList.remove('hovering'); });
+    }
   });
   } // end render()
 
