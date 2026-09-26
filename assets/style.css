@@ -377,7 +377,9 @@ html { color-scheme: dark; scrollbar-width: thin; scrollbar-color: rgba(214,30,4
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 14px 24px;
+  /* Extra 25px of right padding so the menu items (MISC especially) never sit
+     under the floating theme toggle in the top-right corner. */
+  padding: 14px 49px 14px 24px;
   background: var(--nav-bg);
   border-bottom: 1px solid var(--panel-border);
   backdrop-filter: blur(12px);
