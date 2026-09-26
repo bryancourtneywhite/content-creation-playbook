@@ -25,12 +25,28 @@
       banner.className = 'live-banner';
       banner.innerHTML =
         '<span class="live-dot"></span>' +
-        '<span>🔴 LIVE NOW on ' + platform +
+        '<span>🔴 <strong>SOLASHUR IS LIVE</strong> on ' + platform +
           (d.title ? ' — ' + escapeHtml(d.title) : '') + '</span>' +
-        '<a class="live-cta" href="' + base + 'watch.html">▶ Watch the stream</a>' +
+        '<a class="live-cta" href="' + base + 'watch.html">▶ Watch now</a>' +
         '<button class="live-x" aria-label="Dismiss">✕</button>';
 
       document.body.insertBefore(banner, document.body.firstChild);
+
+      // Optional inline stream preview (hover-reveal) — only if a
+      // container with id="live-preview" exists on the page (home hero).
+      var previewHost = document.getElementById('live-preview');
+      if (previewHost && d.platform !== 'youtube') {
+        var ch = d.twitch || 'solashur';
+        var parents = ['solashur.com', 'www.solashur.com', 'bryancourtneywhite.github.io', 'localhost'];
+        var pq = parents.map(function (p) { return 'parent=' + p; }).join('&');
+        previewHost.innerHTML =
+          '<div class="live-preview-inner">' +
+            '<div class="lp-label"><span class="live-dot"></span> Live preview</div>' +
+            '<iframe src="https://player.twitch.tv/?channel=' + ch + '&' + pq + '&muted=true&autoplay=true" ' +
+              'allowfullscreen title="Solashur live preview"></iframe>' +
+          '</div>';
+        previewHost.style.display = 'block';
+      }
 
       banner.querySelector('.live-x').addEventListener('click', function () {
         banner.remove();
