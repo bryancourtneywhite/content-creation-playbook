@@ -14,16 +14,16 @@
 
 /* ---------- LIGHT THEME: white + blue primary, black tones ---------- */
 [data-theme="light"] {
-  --bg: #f4f8fd;
-  --panel: rgba(255, 255, 255, 0.82);
-  --panel-border: rgba(37, 99, 165, 0.28);
-  --accent: #1f6fd6;        /* primary blue */
-  --accent-2: #3fa9ff;      /* bright sky blue */
-  --accent-3: #0a1a2e;      /* deep black-blue */
-  --text: #0e1b2b;
-  --muted: #4a5f78;
-  --nav-bg: rgba(255, 255, 255, 0.86);
-  --fallback-grad: radial-gradient(1200px 800px at 70% 10%, #dcecff 0%, #f4f8fd 60%);
+  --bg: #dbe6f2;            /* deeper cool grey-blue for stronger contrast */
+  --panel: rgba(255, 255, 255, 0.92);
+  --panel-border: rgba(20, 60, 110, 0.35);
+  --accent: #15529c;        /* darker primary blue for legibility */
+  --accent-2: #1f6fd6;      /* mid sky blue */
+  --accent-3: #081524;      /* near-black blue */
+  --text: #0a141f;          /* near-black body text */
+  --muted: #2c435c;         /* much darker muted text (was too light) */
+  --nav-bg: rgba(255, 255, 255, 0.94);
+  --fallback-grad: radial-gradient(1200px 800px at 70% 10%, #c3d6ec 0%, #dbe6f2 60%);
 }
 
 /* Theme toggle button (fixed, top-right, above content) */
@@ -76,10 +76,33 @@
 [data-theme="light"] footer .big,
 [data-theme="light"] .callout strong,
 [data-theme="light"] .article-body h2 { color: var(--accent-3); }
-[data-theme="light"] .step-body li { color: #23405f; }
-[data-theme="light"] .tool-use { color: #23405f; }
-[data-theme="light"] .code-box { background: #eef4fb; color: #1b2c40; border-color: rgba(37,99,165,0.25); }
-[data-theme="light"] .tag-chip { background: rgba(37,99,165,0.08); border-color: rgba(37,99,165,0.28); color: #1f4c7a; }
+[data-theme="light"] .step-body li { color: #16304a; }
+[data-theme="light"] .tool-use { color: #16304a; }
+[data-theme="light"] .code-box { background: #e6eef8; color: #0f1f30; border-color: rgba(20,60,110,0.3); }
+[data-theme="light"] .tag-chip { background: rgba(20,60,110,0.1); border-color: rgba(20,60,110,0.3); color: #123a63; }
+
+/* Callout: readable in light mode (was light-pink text on light bg) */
+[data-theme="light"] .callout {
+  background: rgba(20, 60, 110, 0.06);
+  border-color: rgba(20, 60, 110, 0.28);
+  border-left-color: var(--accent);
+  color: #16304a;
+}
+/* Force-override inline white on callout strongs so they stay readable in light mode */
+[data-theme="light"] .callout strong,
+[data-theme="light"] .callout strong[style] { color: var(--accent-3) !important; }
+/* Body copy + section subtitles darker */
+[data-theme="light"] .step-body p,
+[data-theme="light"] .tip p,
+[data-theme="light"] .article-body p,
+[data-theme="light"] .section-head p,
+[data-theme="light"] .hero p.sub,
+[data-theme="light"] .frontpage-note,
+[data-theme="light"] .buy-disc,
+[data-theme="light"] .article-meta { color: #2c435c; }
+/* Pill-stat + article-body list text */
+[data-theme="light"] .pill-stat .lbl { color: #2c435c; }
+[data-theme="light"] .article-body li { color: #16304a; }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -535,6 +558,13 @@ h1 {
 .price-paid { background: rgba(245, 197, 66, 0.16); color: #f5c542; border: 1px solid rgba(245, 197, 66, 0.35); }
 .tool h4 { font-size: 19px; margin-bottom: 6px; }
 .tool-use { color: #d4dcf0; font-size: 14px; margin-bottom: 10px; }
+.tool-brandlogo {
+  display: flex; align-items: center; justify-content: center;
+  height: 48px; margin: 4px 0 12px;
+  border-radius: 10px; background: rgba(255,255,255,0.03);
+  border: 1px solid var(--panel-border);
+}
+.tool-brandlogo svg { max-width: 80%; max-height: 40px; }
 .tool-price-note { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
 .tool-price-note .warn { color: #ff9d6b; display: block; margin-top: 4px; font-size: 12px; }
 .tool-price-note strong { color: #fff; }
@@ -743,6 +773,11 @@ h1 {
 }
 .sponsor-banner:hover::after { left: 130%; }
 .sponsor-banner .sp-logo { font-size: 34px; line-height: 1; }
+.sponsor-banner .sp-brandlogo {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; height: 46px; margin: 2px 0 4px;
+}
+.sponsor-banner .sp-brandlogo svg { max-width: 100%; }
 .sponsor-banner .sp-name { font-size: 18px; font-weight: 800; letter-spacing: 0.3px; }
 .sponsor-banner .sp-tag {
   font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;
