@@ -111,6 +111,39 @@
 
   <p id="no-results" style="display:none;text-align:center;color:var(--muted);margin-top:30px;">No builds match your search. Try a different term.</p>
 
+  <!-- SPONSOR BANNER ROW (trackside-style) -->
+  <div class="section-head">
+    <div class="kicker">🤝 Powered By</div>
+    <h2>My Partners</h2>
+    <p>The gear and services I run every stream. Tap a banner to shop — supports the channel at no extra cost.</p>
+  </div>
+  <div class="sponsor-strip">
+    <a class="sponsor-banner s-razer" href="https://razer.a9yw.net/xJ6g1x" target="_blank" rel="noopener sponsored nofollow">
+      <span class="sp-badge">Partner</span>
+      <span class="sp-logo">🖱️</span>
+      <span class="sp-name">Razer</span>
+      <span class="sp-tag">Gaming Gear</span>
+    </a>
+    <a class="sponsor-banner s-exitlag" href="https://www.exitlag.com/refer/SOLASHUR" target="_blank" rel="noopener sponsored nofollow">
+      <span class="sp-badge">Sponsor</span>
+      <span class="sp-logo">🌐</span>
+      <span class="sp-name">ExitLag</span>
+      <span class="sp-tag">Lower Ping</span>
+    </a>
+    <a class="sponsor-banner s-amazon" href="hardware.html">
+      <span class="sp-badge">Partner</span>
+      <span class="sp-logo">📦</span>
+      <span class="sp-name">Amazon</span>
+      <span class="sp-tag">My Setup</span>
+    </a>
+    <a class="sponsor-banner s-bestbuy" href="https://bestbuycreators.7tiv.net/X4x4xX" target="_blank" rel="noopener sponsored nofollow">
+      <span class="sp-badge">Partner</span>
+      <span class="sp-logo">🛒</span>
+      <span class="sp-name">Best Buy</span>
+      <span class="sp-tag">Build It</span>
+    </a>
+  </div>
+
   <!-- FEATURED VIDEOS -->
   <div class="section-head">
     <div class="kicker">🔥 Front Page</div>
@@ -178,6 +211,25 @@
       tab.classList.add('active');
       activeFilter = tab.getAttribute('data-filter');
       apply();
+    });
+  });
+})();
+</script>
+
+<!-- Sponsor banners: subtle 3D tilt toward the cursor -->
+<script>
+(function () {
+  var banners = document.querySelectorAll('.sponsor-banner');
+  banners.forEach(function (b) {
+    b.addEventListener('mousemove', function (e) {
+      var r = b.getBoundingClientRect();
+      var px = (e.clientX - r.left) / r.width - 0.5;   // -0.5..0.5
+      var py = (e.clientY - r.top) / r.height - 0.5;
+      b.style.transform = 'rotateX(' + (-py * 12) + 'deg) rotateY(' + (px * 14) +
+        'deg) translateY(-8px) scale(1.04)';
+    });
+    b.addEventListener('mouseleave', function () {
+      b.style.transform = '';   // fall back to the CSS resting tilt
     });
   });
 })();

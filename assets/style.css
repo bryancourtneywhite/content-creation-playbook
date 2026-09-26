@@ -694,6 +694,78 @@ h1 {
 .thumb-card .tc-cap { padding: 10px 14px; font-size: 13px; color: var(--muted); }
 .thumb-card .tc-cap strong { color: #fff; display: block; margin-bottom: 2px; font-size: 13.5px; }
 
+/* ---------- SPONSOR BANNER ROW (trackside-style, interactive 3D) ---------- */
+.sponsor-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  justify-content: center;
+  align-items: stretch;
+  perspective: 1000px;
+  margin-top: 10px;
+}
+.sponsor-banner {
+  position: relative;
+  min-width: 180px;
+  flex: 1 1 180px;
+  max-width: 240px;
+  padding: 22px 20px;
+  border-radius: 16px;
+  text-decoration: none;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: linear-gradient(150deg, #1a1418, #0c0a0c);
+  box-shadow: 0 14px 34px rgba(0,0,0,0.45);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transform: rotateX(6deg);
+  transition: transform 0.35s cubic-bezier(.2,.7,.2,1), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.sponsor-banner:hover {
+  transform: rotateX(0deg) translateY(-8px) scale(1.04);
+  box-shadow: 0 26px 60px rgba(0,0,0,0.6);
+  border-color: rgba(255,255,255,0.35);
+}
+/* Shine sweep on hover */
+.sponsor-banner::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -60%;
+  width: 40%; height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,0.28), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.6s ease;
+}
+.sponsor-banner:hover::after { left: 130%; }
+.sponsor-banner .sp-logo { font-size: 34px; line-height: 1; }
+.sponsor-banner .sp-name { font-size: 18px; font-weight: 800; letter-spacing: 0.3px; }
+.sponsor-banner .sp-tag {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;
+  opacity: 0.85;
+}
+/* Brand-tinted accents */
+.sponsor-banner.s-razer  { background: linear-gradient(150deg, #0a1a0a, #061006); border-color: rgba(68,214,44,0.5); }
+.sponsor-banner.s-razer .sp-name  { color: #44d62c; }
+.sponsor-banner.s-amazon { background: linear-gradient(150deg, #1e1710, #0d0a06); border-color: rgba(255,153,0,0.5); }
+.sponsor-banner.s-amazon .sp-name { color: #ff9900; }
+.sponsor-banner.s-bestbuy{ background: linear-gradient(150deg, #16160a, #0b0b05); border-color: rgba(255,225,0,0.5); }
+.sponsor-banner.s-bestbuy .sp-name{ color: #ffe000; }
+.sponsor-banner.s-exitlag{ background: linear-gradient(150deg, #0a1420, #06090f); border-color: rgba(74,163,224,0.5); }
+.sponsor-banner.s-exitlag .sp-name{ color: #4aa3e0; }
+.sponsor-banner .sp-badge {
+  position: absolute; top: 8px; right: 10px;
+  font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  padding: 2px 7px; border-radius: 999px;
+  background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.8);
+}
+[data-theme="light"] .sponsor-banner { color: #0e1b2b; background: linear-gradient(150deg, #ffffff, #eef3fb); }
+[data-theme="light"] .sponsor-banner .sp-badge { background: rgba(0,0,0,0.08); color: #4a5f78; }
+
 /* ---------- FLOW STRIP ---------- */
 .flow { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center; margin-top: 20px; }
 .flow .node {
