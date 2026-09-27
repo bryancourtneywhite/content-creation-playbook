@@ -1,4 +1,4 @@
-# 🌀 solashur.com — Ashura Whole Heavens
+# 🌀 solashur.com - Ashura Whole Heavens
 
 The official site for **Ashura Whole Heavens**: livestreams, AION 2 builds
 and guides, and the content-creation playbook. Interactive multi-page site
@@ -11,15 +11,15 @@ with an animated Three.js background (floating Akatsuki clouds + shuriken).
 
 ## Pages
 
-- **Playbook** (`index.html`) — the 7-step content workflow + Golden Meta
+- **Playbook** (`index.html`) - the 7-step content workflow + Golden Meta
   (real front-page AION 2 videos with tags, descriptions, analytics)
-- **Watch** (`watch.html`) — embedded YouTube (auto-live) + Twitch (live + chat)
-- **AION 2 Builds** (`builds/index.html`) — searchable/filterable builds & guides
+- **Watch** (`watch.html`) - embedded YouTube (auto-live) + Twitch (live + chat)
+- **AION 2 Builds** (`builds/index.html`) - searchable/filterable builds & guides
   - Templar Macro Guide with an interactive JSON-driven build viewer + Questlog link
 
 ## Tech
 
-- Static site, no build step — hosts free on GitHub Pages
+- Static site, no build step - hosts free on GitHub Pages
 - Shared assets: `assets/style.css`, `assets/background.js`
 - [Three.js](https://threejs.org/) via CDN for the 3D background
 - Vanilla CSS + JS
@@ -29,14 +29,14 @@ with an animated Three.js background (floating Akatsuki clouds + shuriken).
 1. Domain `solashur.com` registered.
 2. The repo includes a `CNAME` file pointing to `solashur.com`.
 3. At the registrar's DNS, add for the **apex** domain (`solashur.com`) four
-   A records pointing to GitHub Pages:
-   - `185.199.108.153`
-   - `185.199.109.153`
-   - `185.199.110.153`
-   - `185.199.111.153`
-   And a `CNAME` record for `www` → `bryancourtneywhite.github.io`.
+  A records pointing to GitHub Pages:
+  - `185.199.108.153`
+  - `185.199.109.153`
+  - `185.199.110.153`
+  - `185.199.111.153`
+  And a `CNAME` record for `www` → `bryancourtneywhite.github.io`.
 4. In the repo: **Settings → Pages → Custom domain** → enter `solashur.com` → Save,
-   then check **Enforce HTTPS** once the cert is issued.
+  then check **Enforce HTTPS** once the cert is issued.
 
 DNS can take from minutes to a day or so to propagate.
 

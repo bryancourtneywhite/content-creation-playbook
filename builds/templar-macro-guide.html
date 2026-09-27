@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Templar Macro Guide — AION 2 | Ashura Whole Heavens</title>
+<title>Templar Macro Guide - AION 2 | Ashura Whole Heavens</title>
 <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
 <link rel="icon" href="../assets/favicon.ico">
@@ -22,132 +22,131 @@
 <div class="content">
   <article class="article">
 
-    <div class="article-head">
-      <div style="margin-bottom:14px;"><a href="../builds.html" style="color:var(--muted);text-decoration:none;font-size:14px;">← All Builds &amp; Guides</a></div>
-      <div class="bc-tags" style="margin-bottom:14px;">
-        <span class="bc-pill">Templar</span>
-        <span class="bc-pill pvp">PvP</span>
-        <span class="bc-pill pve">PvE</span>
-        <span class="bc-pill">Macros</span>
-      </div>
-      <h1>AION 2 Templar Macro Guide</h1>
-      <div class="article-meta">
-        <span>🏆 Front-page video</span> · <span>12.4K views</span> · <span>7.5% CTR</span> · <span>Ashura Whole Heavens</span>
-      </div>
-      <div class="tier-meta" style="justify-content:flex-start;margin-top:12px;">
-        <span class="tier-badge patch">Patch: Launch Meta</span>
-        <span class="tier-badge updated">Updated: Sep 25, 2026</span>
-      </div>
-    </div>
+  <div class="article-head">
+  <div style="margin-bottom:14px;"><a href="../builds.html" style="color:var(--muted);text-decoration:none;font-size:14px;">← All Builds &amp; Guides</a></div>
+  <div class="bc-tags" style="margin-bottom:14px;">
+  <span class="bc-pill">Templar</span>
+  <span class="bc-pill pvp">PvP</span>
+  <span class="bc-pill pve">PvE</span>
+  <span class="bc-pill">Macros</span>
+  </div>
+  <h1>AION 2 Templar Macro Guide</h1>
+  <div class="article-meta">
+  <span>🏆 Front-page video</span> · <span>12.4K views</span> · <span>7.5% CTR</span> · <span>Ashura Whole Heavens</span>
+  </div>
+  <div class="tier-meta" style="justify-content:flex-start;margin-top:12px;">
+  <span class="tier-badge patch">Patch: Launch Meta</span>
+  <span class="tier-badge updated">Updated: Sep 25, 2026</span>
+  </div>
+  </div>
 
-    <!-- Video embed -->
-    <div class="embed-wrap">
-      <iframe
-        src="https://www.youtube.com/embed/1ebgmpl1YxQ"
-        title="AION 2 Templar Macro Guide"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerpolicy="strict-origin-when-cross-origin"
-        allowfullscreen></iframe>
-    </div>
+  <!-- Video embed -->
+  <div class="embed-wrap">
+  <iframe
+  src="https://www.youtube.com/embed/1ebgmpl1YxQ"
+  title="AION 2 Templar Macro Guide"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  referrerpolicy="strict-origin-when-cross-origin"
+  allowfullscreen></iframe>
+  </div>
 
-    <div class="btn-row">
-      <a class="big-btn questlog" id="ql-btn" href="https://questlog.gg/aion-2/en/character-builder/QuickCobraLifeBanish" target="_blank" rel="noopener">🔗 Open Build in Questlog</a>
-      <a class="big-btn ghost" href="https://www.razer.com/synapse-4" target="_blank" rel="noopener">⌨️ Razer Synapse (macros)</a>
-      <a class="big-btn ghost" href="https://www.exitlag.com/refer/SOLASHUR" target="_blank" rel="noopener">🌐 ExitLag (sponsor)</a>
-    </div>
+  <div class="btn-row">
+  <a class="big-btn questlog" id="ql-btn" href="https://questlog.gg/aion-2/en/character-builder/QuickCobraLifeBanish" target="_blank" rel="noopener">🔗 Open Build in Questlog</a>
+  <a class="big-btn ghost" href="https://www.razer.com/synapse-4" target="_blank" rel="noopener">⌨️ Razer Synapse (macros)</a>
+  <a class="big-btn ghost" href="https://www.exitlag.com/refer/SOLASHUR" target="_blank" rel="noopener">🌐 ExitLag (sponsor)</a>
+  </div>
 
-    <div class="article-body">
+  <div class="article-body">
 
-      <p>Macros are class-specific — the setup that carries a Templar won't fit another class. This guide breaks down the exact Templar macro system I run in AION 2 across <strong>three setups</strong>: PvX (rifts/abyss), PvP (arenas), and PvE. Everything is built around one core idea: animation-canceling Judgment into Pummel for maximum sustained DPS.</p>
+  <p>Macros are class-specific - the setup that carries a Templar won't fit another class. This guide breaks down the exact Templar macro system I run in AION 2 across <strong>three setups</strong>: PvX (rifts/abyss), PvP (arenas), and PvE. Everything is built around one core idea: animation-canceling Judgment into Pummel for maximum sustained DPS.</p>
 
-      <!-- INTERACTIVE BUILD VIEWER -->
-      <h2>⚡ Interactive Build</h2>
-      <p>The macro system at a glance. For the full skill tree and to copy it into your own account, open it in Questlog.</p>
-      <div class="build-viewer" id="build-viewer">
-        <!-- rendered by JS from data/templar-macro.json (with fallback) -->
-      </div>
-      <div class="callout" id="viewer-note">
-        ⚙️ <strong style="color:#fff;">How the in-game macro works:</strong> it activates off the
-        <em>first</em> skill and runs the chain by priority (0 → 1 → 2 → 3), only firing a skill
-        if it's available or procced. So a PvX macro that reads Doom Shield → Annihilate →
-        Debilitating Smash → Pummel becomes a <em>Pummel spam</em> when nothing's procced, and
-        auto-weaves Annihilate (on knockdown) and Debilitating Smash (on proc) when they light up.
-      </div>
+  <!-- INTERACTIVE BUILD VIEWER -->
+  <h2>⚡ Interactive Build</h2>
+  <p>The macro system at a glance. For the full skill tree and to copy it into your own account, open it in Questlog.</p>
+  <div class="build-viewer" id="build-viewer">
+  <!-- rendered by JS from data/templar-macro.json (with fallback) -->
+  </div>
+  <div class="callout" id="viewer-note">
+  ⚙️ <strong style="color:#fff;">How the in-game macro works:</strong> it activates off the
+  <em>first</em> skill and runs the chain by priority (0 → 1 → 2 → 3), only firing a skill
+  if it's available or procced. So a PvX macro that reads Doom Shield → Annihilate →
+  Debilitating Smash → Pummel becomes a <em>Pummel spam</em> when nothing's procced, and
+  auto-weaves Annihilate (on knockdown) and Debilitating Smash (on proc) when they light up.
+  </div>
 
-      <h2>🧬 Full Character Builder</h2>
-      <p>The complete, interactive Templar build on Questlog. It loads below if the
-        site allows embedding — if not, open it in a new tab.</p>
-      <div id="ql-embed-wrap" class="embed-wrap" style="aspect-ratio:16/10;">
-        <iframe id="ql-embed" title="Questlog Templar Build"
-          referrerpolicy="no-referrer-when-downgrade"
-          loading="lazy"></iframe>
-      </div>
-      <div id="ql-embed-fallback" style="display:none;" class="callout">
-        Questlog doesn't allow embedding its builder on other sites, so it can't
-        load in-page. No problem —
-        <a href="https://questlog.gg/aion-2/en/character-builder/QuickCobraLifeBanish" target="_blank" rel="noopener"><strong>open the full interactive build on Questlog →</strong></a>
-      </div>
+  <h2>🧬 Full Character Builder</h2>
+  <p>The complete, interactive Templar build on Questlog. It loads below if the
+  site allows embedding - if not, open it in a new tab.</p>
+  <div id="ql-embed-wrap" class="embed-wrap" style="aspect-ratio:16/10;">
+  <iframe id="ql-embed" title="Questlog Templar Build"
+  referrerpolicy="no-referrer-when-downgrade"
+  loading="lazy"></iframe>
+  </div>
+  <div id="ql-embed-fallback" style="display:none;" class="callout">
+  Questlog doesn't allow embedding its builder on other sites, so it can't
+  load in-page. No problem - <a href="https://questlog.gg/aion-2/en/character-builder/QuickCobraLifeBanish" target="_blank" rel="noopener"><strong>open the full interactive build on Questlog →</strong></a>
+  </div>
 
-      <h2>🎬 Chapters</h2>
-      <p>Jump to any section of the video:</p>
-      <ul>
-        <li><strong>00:00</strong> — Intro</li>
-        <li><strong>01:01</strong> — PVX Macro Showcase</li>
-        <li><strong>04:21</strong> — Macro vs Non-Macro</li>
-        <li><strong>06:54</strong> — Damage Comparison (PVX / PvP)</li>
-        <li><strong>09:26</strong> — PvE Macro + Skill Set</li>
-        <li><strong>12:46</strong> — Manual Animation Cancel</li>
-        <li><strong>13:35</strong> — 5.5 Million DPS in 1 Rotation</li>
-        <li><strong>14:21</strong> — No-Macro DPS Showcase</li>
-        <li><strong>16:30</strong> — Macro Setup Tutorial</li>
-        <li><strong>20:15</strong> — Animation Canceling</li>
-        <li><strong>21:56</strong> — Macro Hotkeys In-Game</li>
-        <li><strong>23:01</strong> — Outro + Animation Canceling Tips</li>
-      </ul>
+  <h2>🎬 Chapters</h2>
+  <p>Jump to any section of the video:</p>
+  <ul>
+  <li><strong>00:00</strong> - Intro</li>
+  <li><strong>01:01</strong> - PVX Macro Showcase</li>
+  <li><strong>04:21</strong> - Macro vs Non-Macro</li>
+  <li><strong>06:54</strong> - Damage Comparison (PVX / PvP)</li>
+  <li><strong>09:26</strong> - PvE Macro + Skill Set</li>
+  <li><strong>12:46</strong> - Manual Animation Cancel</li>
+  <li><strong>13:35</strong> - 5.5 Million DPS in 1 Rotation</li>
+  <li><strong>14:21</strong> - No-Macro DPS Showcase</li>
+  <li><strong>16:30</strong> - Macro Setup Tutorial</li>
+  <li><strong>20:15</strong> - Animation Canceling</li>
+  <li><strong>21:56</strong> - Macro Hotkeys In-Game</li>
+  <li><strong>23:01</strong> - Outro + Animation Canceling Tips</li>
+  </ul>
 
-      <h2>🖱️ The Two-Button System</h2>
-      <p>Everything runs off two inputs I alternate constantly:</p>
-      <ul>
-        <li><strong>Right click</strong> = the in-game macro (my skill chain, e.g. Doom Shield / Annihilate / Pummel)</li>
-        <li><strong>Thumb button (Razer HyperSpeed)</strong> = the Judgment macro, mapped to the <strong>R</strong> key at ~10 presses/second</li>
-      </ul>
-      <p>Alternating the thumb button with right click is what produces the seamless Warding Strike → Judgment → Pummel animation-cancel loop. I run it on a <strong>Razer Basilisk V3 X HyperSpeed</strong>.</p>
+  <h2>🖱️ The Two-Button System</h2>
+  <p>Everything runs off two inputs I alternate constantly:</p>
+  <ul>
+  <li><strong>Right click</strong> = the in-game macro (my skill chain, e.g. Doom Shield / Annihilate / Pummel)</li>
+  <li><strong>Thumb button (Razer HyperSpeed)</strong> = the Judgment macro, mapped to the <strong>R</strong> key at ~10 presses/second</li>
+  </ul>
+  <p>Alternating the thumb button with right click is what produces the seamless Warding Strike → Judgment → Pummel animation-cancel loop. I run it on a <strong>Razer Basilisk V3 X HyperSpeed</strong>.</p>
 
-      <h2>🧩 The Three Setups</h2>
-      <h3>PvX (rifts / abyss)</h3>
-      <p>Right-click macro: <strong>Doom Shield → Annihilate → Debilitating Smash → Pummel</strong>. Built for going pack-to-pack and farming efficiently — every mob killed resets Doom Shield and Poach, so you get near-infinite resets, can dash in/out, and knock down groups when outnumbered.</p>
-      <h3>PvP (arenas)</h3>
-      <p>A tighter variant with more manual control over Executing Blade and Doom Shield, while keeping the Pummel / Annihilate / Debilitating Smash macro available. Easier left-click → right-click → animation cancel for precise fights.</p>
-      <h3>PvE</h3>
-      <p>Right-click macro: <strong>Annihilate → Debilitating Smash → Flash Rampage → Pummel</strong> (all in front of Pummel for the defense shred). The thumb (R) macro runs <strong>Judgment → Shield Smite (+2s Judgment) → Warding Strike (+2s Judgment) → Doom Shield (+3s reset)</strong> — about 4 seconds of Judgment uptime, and Doom Shield brings Shield Smite back off cooldown for a full rotation. Open with Punishment.</p>
+  <h2>🧩 The Three Setups</h2>
+  <h3>PvX (rifts / abyss)</h3>
+  <p>Right-click macro: <strong>Doom Shield → Annihilate → Debilitating Smash → Pummel</strong>. Built for going pack-to-pack and farming efficiently - every mob killed resets Doom Shield and Poach, so you get near-infinite resets, can dash in/out, and knock down groups when outnumbered.</p>
+  <h3>PvP (arenas)</h3>
+  <p>A tighter variant with more manual control over Executing Blade and Doom Shield, while keeping the Pummel / Annihilate / Debilitating Smash macro available. Easier left-click → right-click → animation cancel for precise fights.</p>
+  <h3>PvE</h3>
+  <p>Right-click macro: <strong>Annihilate → Debilitating Smash → Flash Rampage → Pummel</strong> (all in front of Pummel for the defense shred). The thumb (R) macro runs <strong>Judgment → Shield Smite (+2s Judgment) → Warding Strike (+2s Judgment) → Doom Shield (+3s reset)</strong> - about 4 seconds of Judgment uptime, and Doom Shield brings Shield Smite back off cooldown for a full rotation. Open with Punishment.</p>
 
-      <h2>👤 Animation Canceling</h2>
-      <p>The one visual indicator you're canceling correctly: a <strong>shadow after-image</strong> pops over your character on a clean cancel. Spam right click with no cancel and you won't see it. Lower ping = more consistent cancels — I'm on ~200 ping (Taiwan server), so even I don't hit it every time, but consistency is the edge.</p>
-      <div class="callout">
-        📊 <strong style="color:#fff;">Real numbers (full PvE rotation):</strong> with animation-canceling
-        macros I averaged roughly <strong>~5.5M</strong> per rotation (Judgment ~2.2M, Punishing Strike ~1M).
-        Without animation-canceling it dropped to ~4.9M — a <strong>500–700K DPS loss</strong>. Macros
-        beat manual presses every time I tested it.
-      </div>
-      <p>💡 Bonus tech: you can <strong>animation-cancel buffs too</strong>. Cast a skill, weave a buff, then
-        immediately cast again (skill → buff → skill) to keep buffs up mid-combo without losing DPS — handy in
-        PvP where pre-buffing telegraphs your engage.</p>
+  <h2>👤 Animation Canceling</h2>
+  <p>The one visual indicator you're canceling correctly: a <strong>shadow after-image</strong> pops over your character on a clean cancel. Spam right click with no cancel and you won't see it. Lower ping = more consistent cancels - I'm on ~200 ping (Taiwan server), so even I don't hit it every time, but consistency is the edge.</p>
+  <div class="callout">
+  📊 <strong style="color:#fff;">Real numbers (full PvE rotation):</strong> with animation-canceling
+  macros I averaged roughly <strong>~5.5M</strong> per rotation (Judgment ~2.2M, Punishing Strike ~1M).
+  Without animation-canceling it dropped to ~4.9M - a <strong>500–700K DPS loss</strong>. Macros
+  beat manual presses every time I tested it.
+  </div>
+  <p>💡 Bonus tech: you can <strong>animation-cancel buffs too</strong>. Cast a skill, weave a buff, then
+  immediately cast again (skill → buff → skill) to keep buffs up mid-combo without losing DPS - handy in
+  PvP where pre-buffing telegraphs your engage.</p>
 
-      <h2>⚙️ How to Replicate It</h2>
-      <ul>
-        <li><strong>In-game macros:</strong> the Annihilate right-click macro fires its skills on a fast delay (~10–30ms) — only increase the delay if you know when to cancel off it. Keep right click as fast as possible so it takes priority and cancels your Judgment.</li>
-        <li><strong>Razer Synapse:</strong> assign a keyboard function to the mouse thumb button — the <strong>R</strong> key at 10 presses/second. Tune the speed to your ping (no point overloading past what a 200-ping connection can use).</li>
-        <li><strong>Hotkeys:</strong> Quick Slot 1 = left click, Quick Slot 2 = C, and the movement/macro key is bound to right click + Z, so right click drives Quick Slot 4.</li>
-      </ul>
+  <h2>⚙️ How to Replicate It</h2>
+  <ul>
+  <li><strong>In-game macros:</strong> the Annihilate right-click macro fires its skills on a fast delay (~10–30ms) - only increase the delay if you know when to cancel off it. Keep right click as fast as possible so it takes priority and cancels your Judgment.</li>
+  <li><strong>Razer Synapse:</strong> assign a keyboard function to the mouse thumb button - the <strong>R</strong> key at 10 presses/second. Tune the speed to your ping (no point overloading past what a 200-ping connection can use).</li>
+  <li><strong>Hotkeys:</strong> Quick Slot 1 = left click, Quick Slot 2 = C, and the movement/macro key is bound to right click + Z, so right click drives Quick Slot 4.</li>
+  </ul>
 
-      <h2>🔗 Resources</h2>
-      <ul>
-        <li><a href="https://www.razer.com/synapse-4" target="_blank" rel="noopener">Razer Synapse 4</a> — the macro program used in this guide</li>
-        <li><a href="https://questlog.gg/aion-2/en/character-builder/QuickCobraLifeBanish" target="_blank" rel="noopener">Questlog build</a> — full skill tree (work in progress)</li>
-        <li><a href="https://www.youtube.com/watch?v=lSeRM7foIhE" target="_blank" rel="noopener">Previous video</a> — Templar Abyss PvP / Execution Punishment Combo</li>
-      </ul>
+  <h2>🔗 Resources</h2>
+  <ul>
+  <li><a href="https://www.razer.com/synapse-4" target="_blank" rel="noopener">Razer Synapse 4</a> - the macro program used in this guide</li>
+  <li><a href="https://questlog.gg/aion-2/en/character-builder/QuickCobraLifeBanish" target="_blank" rel="noopener">Questlog build</a> - full skill tree (work in progress)</li>
+  <li><a href="https://www.youtube.com/watch?v=lSeRM7foIhE" target="_blank" rel="noopener">Previous video</a> - Templar Abyss PvP / Execution Punishment Combo</li>
+  </ul>
 
-    </div>
+  </div>
   </article>
 
   <div data-follow></div>
@@ -155,8 +154,8 @@
   
 
   <footer>
-    <div class="big">Master the macros. Top the charts. 🌀</div>
-    <p>Ashura Whole Heavens — AION 2 Templar</p>
+  <div class="big">Master the macros. Top the charts. 🌀</div>
+  <p>Ashura Whole Heavens - AION 2 Templar</p>
   </footer>
 </div>
 
@@ -169,64 +168,64 @@
   // Interactive build viewer. Tries to load the JSON; falls back to an inline
   // copy so it still renders when opened via file:// (where fetch is blocked).
   var FALLBACK = {
-    stats: [
-      { label: "Setups", value: "PvX / PvP / PvE" },
-      { label: "Peak Rotation", value: "~5.5M DPS" },
-      { label: "Core Tech", value: "Animation Cancel" },
-      { label: "Mouse", value: "Basilisk V3 X" }
-    ],
-    skills: [
-      { key: "L-Click", name: "Quick Slot 1" },
-      { key: "R-Click", name: "In-Game Macro (Slot 4)" },
-      { key: "C", name: "Quick Slot 2" },
-      { key: "R", name: "Judgment (Razer key)" },
-      { key: "Thumb", name: "HyperSpeed → R, 10/sec" }
-    ],
-    macroHotkeys: [
-      { key: "R-Click (PvX)", action: "Doom Shield → Annihilate → Debilitating Smash → Pummel" },
-      { key: "R-Click (PvE)", action: "Annihilate → Debilitating Smash → Flash Rampage → Pummel" },
-      { key: "Thumb (R)", action: "Judgment → Shield Smite → Warding Strike → Doom Shield" }
-    ]
+  stats: [
+  { label: "Setups", value: "PvX / PvP / PvE" },
+  { label: "Peak Rotation", value: "~5.5M DPS" },
+  { label: "Core Tech", value: "Animation Cancel" },
+  { label: "Mouse", value: "Basilisk V3 X" }
+  ],
+  skills: [
+  { key: "L-Click", name: "Quick Slot 1" },
+  { key: "R-Click", name: "In-Game Macro (Slot 4)" },
+  { key: "C", name: "Quick Slot 2" },
+  { key: "R", name: "Judgment (Razer key)" },
+  { key: "Thumb", name: "HyperSpeed → R, 10/sec" }
+  ],
+  macroHotkeys: [
+  { key: "R-Click (PvX)", action: "Doom Shield → Annihilate → Debilitating Smash → Pummel" },
+  { key: "R-Click (PvE)", action: "Annihilate → Debilitating Smash → Flash Rampage → Pummel" },
+  { key: "Thumb (R)", action: "Judgment → Shield Smite → Warding Strike → Doom Shield" }
+  ]
   };
 
   function esc(s) {
-    return String(s).replace(/[&<>"]/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
-    });
+  return String(s).replace(/[&<>"]/g, function (c) {
+  return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+  });
   }
 
   function render(data) {
-    var el = document.getElementById('build-viewer');
-    if (!el) return;
-    var stats = (data.stats || []).map(function (s) {
-      return '<div class="stat-box"><div class="sv">' + esc(s.value) +
-             '</div><div class="sl">' + esc(s.label) + '</div></div>';
-    }).join('');
-    var skills = (data.skills || []).map(function (s) {
-      return '<div class="skill-chip"><span class="k">' + esc(s.key) +
-             '</span> ' + esc(s.name) + '</div>';
-    }).join('');
-    var macros = (data.macroHotkeys || []).map(function (m) {
-      return '<div class="skill-chip"><span class="k">' + esc(m.key) +
-             '</span> ' + esc(m.action) + '</div>';
-    }).join('');
+  var el = document.getElementById('build-viewer');
+  if (!el) return;
+  var stats = (data.stats || []).map(function (s) {
+  return '<div class="stat-box"><div class="sv">' + esc(s.value) +
+  '</div><div class="sl">' + esc(s.label) + '</div></div>';
+  }).join('');
+  var skills = (data.skills || []).map(function (s) {
+  return '<div class="skill-chip"><span class="k">' + esc(s.key) +
+  '</span> ' + esc(s.name) + '</div>';
+  }).join('');
+  var macros = (data.macroHotkeys || []).map(function (m) {
+  return '<div class="skill-chip"><span class="k">' + esc(m.key) +
+  '</span> ' + esc(m.action) + '</div>';
+  }).join('');
 
-    el.innerHTML =
-      '<div class="bv-section"><h4>Overview</h4><div class="stat-grid">' + stats + '</div></div>' +
-      '<div class="bv-section"><h4>Skill Layout</h4><div class="skill-row">' + skills + '</div></div>' +
-      '<div class="bv-section"><h4>Macro Hotkeys</h4><div class="skill-row">' + macros + '</div></div>';
+  el.innerHTML =
+  '<div class="bv-section"><h4>Overview</h4><div class="stat-grid">' + stats + '</div></div>' +
+  '<div class="bv-section"><h4>Skill Layout</h4><div class="skill-row">' + skills + '</div></div>' +
+  '<div class="bv-section"><h4>Macro Hotkeys</h4><div class="skill-row">' + macros + '</div></div>';
   }
 
   fetch('data/templar-macro.json')
-    .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
-    .then(function (data) {
-      render(data);
-      if (data.questlogUrl) {
-        var b = document.getElementById('ql-btn');
-        if (b) b.href = data.questlogUrl;
-      }
-    })
-    .catch(function () { render(FALLBACK); });
+  .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+  .then(function (data) {
+  render(data);
+  if (data.questlogUrl) {
+  var b = document.getElementById('ql-btn');
+  if (b) b.href = data.questlogUrl;
+  }
+  })
+  .catch(function () { render(FALLBACK); });
 })();
 </script>
 
@@ -241,19 +240,19 @@
 
   var loaded = false;
   frame.addEventListener('load', function () {
-    // Some blocked frames still fire load with an error page; we can't read
-    // cross-origin content, so we treat a load within the timeout as success.
-    loaded = true;
+  // Some blocked frames still fire load with an error page; we can't read
+  // cross-origin content, so we treat a load within the timeout as success.
+  loaded = true;
   });
 
   // If the frame hasn't loaded shortly (blocked by X-Frame-Options/CSP),
   // hide the broken box and show the link fallback instead.
   frame.src = URL;
   setTimeout(function () {
-    if (!loaded) {
-      wrap.style.display = 'none';
-      fallback.style.display = 'block';
-    }
+  if (!loaded) {
+  wrap.style.display = 'none';
+  fallback.style.display = 'block';
+  }
   }, 3500);
 })();
 </script>

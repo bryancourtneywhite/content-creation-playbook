@@ -39,17 +39,17 @@ Apply per brand for your top items; they often pay more than Amazon:
 - **Corsair**: https://www.corsair.com/affiliates
 When approved, put the tracking URL prefix in `affiliates.js` under `brand`.
 
-## Product images (compliance — read this)
+## Product images (compliance - read this)
 
 ⚠️ **Do NOT scrape/save Amazon product images.** It violates the
 Associates operating agreement and can get your account terminated.
 
 Compliant ways to add real product images:
 1. **Amazon SiteStripe** (after approval): each product page has a
-   SiteStripe bar → "Image" or "Text+Image" → copy the snippet, paste the
-   image URL into the `<img>` inside that card's `.product-shot`.
+  SiteStripe bar → "Image" or "Text+Image" → copy the snippet, paste the
+  image URL into the `<img>` inside that card's `.product-shot`.
 2. **Brand press/media kits:** Razer, SteelSeries, etc. publish official
-   product PNGs for partners. Allowed with attribution.
+  product PNGs for partners. Allowed with attribution.
 
 Each Hardware card already has an image slot ready:
 ```html

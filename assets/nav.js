@@ -1,15 +1,15 @@
 /* ------------------------------------------------------------------
-   Shared site navigation for Ashura Whole Heavens — ONE source of truth.
-   Renders a game-menu style nav with dropdowns into <nav id="site-nav">.
-   Every page just needs: <nav id="site-nav" data-active="builds"></nav>
-   and this script. Change the menu here → it updates everywhere.
+  Shared site navigation for Ashura Whole Heavens - ONE source of truth.
+  Renders a game-menu style nav with dropdowns into <nav id="site-nav">.
+  Every page just needs: <nav id="site-nav" data-active="builds"></nav>
+  and this script. Change the menu here → it updates everywhere.
 
-   - Auto-resolves relative paths by depth: pages in /builds/ or /lore/
-     get a "../" prefix so links work from subfolders.
-   - data-active on the <nav> highlights the current top-level item.
-   - Desktop: hover opens dropdowns. Mobile: hamburger → accordion.
-   - Pairs with theme.js (injects the theme toggle) + the .nav-burger CSS.
-   ------------------------------------------------------------------ */
+  - Auto-resolves relative paths by depth: pages in /builds/ or /lore/
+  get a "../" prefix so links work from subfolders.
+  - data-active on the <nav> highlights the current top-level item.
+  - Desktop: hover opens dropdowns. Mobile: hamburger → accordion.
+  - Pairs with theme.js (injects the theme toggle) + the .nav-burger CSS.
+  ------------------------------------------------------------------ */
 (function () {
   // Depth prefix: /builds/x.html and /lore/x.html are one level deep.
   var p = location.pathname;
@@ -18,40 +18,40 @@
 
   // Menu model. `id` matches data-active values for highlighting.
   var MENU = [
-    { id: 'home', label: 'Home', href: 'index.html' },
-    { id: 'aion2', label: 'AION 2', children: [
-      { label: "Player's Guide", href: 'builds.html' },
-      { label: 'Classes',        href: 'classes.html' },
-      { label: 'Builds',         href: 'questlog.html' },
-      { label: 'Guides',         href: 'guides.html' },
-      { label: 'Tier List',      href: 'tiers.html' }
-    ]},
-    { id: 'lore', label: 'Lore', href: 'lore.html', children: [
-      { label: 'Lore Hub',                 href: 'lore.html' },
-      { label: 'The Story of AION',        href: 'lore/aion-story-explained.html' },
-      { label: 'Elyos vs Asmodian',        href: 'lore/elyos-vs-asmodian.html' },
-      { label: 'Balaur & Dragon Lords',    href: 'lore/balaur-dragon-lords.html' },
-      { label: 'Daevas & Ascension',       href: 'lore/daevas-and-ascension.html' },
-      { label: 'AION 2 vs AION 1',         href: 'lore/aion-2-vs-aion-1.html' },
-      { label: 'The Abyss Explained',      href: 'lore/the-abyss-explained.html' }
-    ]},
-    { id: 'watch', label: 'Watch', href: 'watch.html', children: [
-      { label: 'Watch / Live', href: 'watch.html' },
-      { label: 'YouTube', href: 'https://www.youtube.com/@SolAshur', ext: true },
-      { label: 'Twitch',  href: 'https://www.twitch.tv/solashur', ext: true },
-      { label: 'Discord', href: 'https://discord.gg/rTD6qxUcmG', ext: true }
-    ]},
-    { id: 'sponsors', label: 'Sponsors', href: 'optimize.html', highlight: true },
-    { id: 'misc', label: 'MISC', children: [
-      { label: 'Hardware',  href: 'hardware.html' },
-      { label: 'Media Kit', href: 'media-kit.html' },
-      { label: 'Playbook',  href: 'playbook.html' }
-    ]}
+  { id: 'home', label: 'Home', href: 'index.html' },
+  { id: 'aion2', label: 'AION 2', children: [
+  { label: "Player's Guide", href: 'builds.html' },
+  { label: 'Classes',  href: 'classes.html' },
+  { label: 'Builds',  href: 'questlog.html' },
+  { label: 'Guides',  href: 'guides.html' },
+  { label: 'Tier List',  href: 'tiers.html' }
+  ]},
+  { id: 'lore', label: 'Lore', href: 'lore.html', children: [
+  { label: 'Lore Hub',  href: 'lore.html' },
+  { label: 'The Story of AION',  href: 'lore/aion-story-explained.html' },
+  { label: 'Elyos vs Asmodian',  href: 'lore/elyos-vs-asmodian.html' },
+  { label: 'Balaur & Dragon Lords',  href: 'lore/balaur-dragon-lords.html' },
+  { label: 'Daevas & Ascension',  href: 'lore/daevas-and-ascension.html' },
+  { label: 'AION 2 vs AION 1',  href: 'lore/aion-2-vs-aion-1.html' },
+  { label: 'The Abyss Explained',  href: 'lore/the-abyss-explained.html' }
+  ]},
+  { id: 'watch', label: 'Watch', href: 'watch.html', children: [
+  { label: 'Watch / Live', href: 'watch.html' },
+  { label: 'YouTube', href: 'https://www.youtube.com/@SolAshur', ext: true },
+  { label: 'Twitch',  href: 'https://www.twitch.tv/solashur', ext: true },
+  { label: 'Discord', href: 'https://discord.gg/rTD6qxUcmG', ext: true }
+  ]},
+  { id: 'sponsors', label: 'Sponsors', href: 'optimize.html', highlight: true },
+  { id: 'misc', label: 'MISC', children: [
+  { label: 'Hardware',  href: 'hardware.html' },
+  { label: 'Media Kit', href: 'media-kit.html' },
+  { label: 'FREE Content Playbook', href: 'playbook.html' }
+  ]}
   ];
 
   function url(href, ext) {
-    if (ext || /^https?:/.test(href)) return href;
-    return B + href;
+  if (ext || /^https?:/.test(href)) return href;
+  return B + href;
   }
   function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
@@ -66,23 +66,23 @@
   html += '<div class="links">';
 
   MENU.forEach(function (item) {
-    var isActive = item.id === active ? ' active' : '';
-    if (item.children) {
-      html += '<div class="nav-group' + isActive + (item.highlight ? ' nav-hot' : '') + '">';
-      // top-level: links to its href if it has one, else acts as a menu label
-      if (item.href) {
-        html += '<a class="nav-top" href="' + url(item.href) + '">' + esc(item.label) + ' <span class="nav-caret">▾</span></a>';
-      } else {
-        html += '<button class="nav-top" type="button" aria-haspopup="true" aria-expanded="false">' + esc(item.label) + ' <span class="nav-caret">▾</span></button>';
-      }
-      html += '<div class="nav-drop">';
-      item.children.forEach(function (c) {
-        html += '<a href="' + url(c.href, c.ext) + '"' + (c.ext ? ' target="_blank" rel="noopener"' : '') + '>' + esc(c.label) + (c.ext ? ' <span class="ext-arrow">↗</span>' : '') + '</a>';
-      });
-      html += '</div></div>';
-    } else {
-      html += '<a class="nav-top nav-solo' + isActive + (item.highlight ? ' nav-hot' : '') + '" href="' + url(item.href) + '">' + esc(item.label) + '</a>';
-    }
+  var isActive = item.id === active ? ' active' : '';
+  if (item.children) {
+  html += '<div class="nav-group' + isActive + (item.highlight ? ' nav-hot' : '') + '">';
+  // top-level: links to its href if it has one, else acts as a menu label
+  if (item.href) {
+  html += '<a class="nav-top" href="' + url(item.href) + '">' + esc(item.label) + ' <span class="nav-caret">▾</span></a>';
+  } else {
+  html += '<button class="nav-top" type="button" aria-haspopup="true" aria-expanded="false">' + esc(item.label) + ' <span class="nav-caret">▾</span></button>';
+  }
+  html += '<div class="nav-drop">';
+  item.children.forEach(function (c) {
+  html += '<a href="' + url(c.href, c.ext) + '"' + (c.ext ? ' target="_blank" rel="noopener"' : '') + '>' + esc(c.label) + (c.ext ? ' <span class="ext-arrow">↗</span>' : '') + '</a>';
+  });
+  html += '</div></div>';
+  } else {
+  html += '<a class="nav-top nav-solo' + isActive + (item.highlight ? ' nav-hot' : '') + '" href="' + url(item.href) + '">' + esc(item.label) + '</a>';
+  }
   });
 
   html += '</div>';
@@ -97,63 +97,63 @@
   var isMobile = function () { return window.matchMedia('(max-width: 820px)').matches; };
 
   nav.querySelectorAll('.nav-group').forEach(function (g) {
-    var top = g.querySelector('.nav-top');
+  var top = g.querySelector('.nav-top');
 
-    /* ---- Desktop: hover-intent open/close (industry-standard) ----
-       Pure CSS :hover snaps the menu shut the instant the cursor touches any
-       dead space (e.g. moving diagonally toward a lower item). We add a small
-       CLOSE DELAY so brief exits are forgiven — the menu stays open while you
-       travel to it, and only closes after ~180ms away. This matches the
-       "hover intent" behavior used by large e-commerce/mega menus. */
-    var closeTimer = null;
-    function openGroup() {
-      if (isMobile()) return;
-      if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
-      // close any other open group immediately for a clean single-open menu
-      nav.querySelectorAll('.nav-group.hovering').forEach(function (o) { if (o !== g) o.classList.remove('hovering'); });
-      g.classList.add('hovering');
-    }
-    function scheduleClose() {
-      if (isMobile()) return;
-      if (closeTimer) clearTimeout(closeTimer);
-      closeTimer = setTimeout(function () { g.classList.remove('hovering'); closeTimer = null; }, 180);
-    }
-    g.addEventListener('mouseenter', openGroup);
-    g.addEventListener('mouseleave', scheduleClose);
-    // Keyboard: keep it open while focus is inside; close shortly after leaving.
-    g.addEventListener('focusin', openGroup);
-    g.addEventListener('focusout', scheduleClose);
+  /* ---- Desktop: hover-intent open/close (industry-standard) ----
+  Pure CSS :hover snaps the menu shut the instant the cursor touches any
+  dead space (e.g. moving diagonally toward a lower item). We add a small
+  CLOSE DELAY so brief exits are forgiven - the menu stays open while you
+  travel to it, and only closes after ~180ms away. This matches the
+  "hover intent" behavior used by large e-commerce/mega menus. */
+  var closeTimer = null;
+  function openGroup() {
+  if (isMobile()) return;
+  if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
+  // close any other open group immediately for a clean single-open menu
+  nav.querySelectorAll('.nav-group.hovering').forEach(function (o) { if (o !== g) o.classList.remove('hovering'); });
+  g.classList.add('hovering');
+  }
+  function scheduleClose() {
+  if (isMobile()) return;
+  if (closeTimer) clearTimeout(closeTimer);
+  closeTimer = setTimeout(function () { g.classList.remove('hovering'); closeTimer = null; }, 180);
+  }
+  g.addEventListener('mouseenter', openGroup);
+  g.addEventListener('mouseleave', scheduleClose);
+  // Keyboard: keep it open while focus is inside; close shortly after leaving.
+  g.addEventListener('focusin', openGroup);
+  g.addEventListener('focusout', scheduleClose);
 
-    /* ---- Mobile: tap the top button to toggle its dropdown (accordion) ---- */
-    top.addEventListener('click', function (e) {
-      if (isMobile()) {
-        if (top.tagName === 'A') {
-          if (!g.classList.contains('open')) { e.preventDefault(); }
-        } else {
-          e.preventDefault();
-        }
-        nav.querySelectorAll('.nav-group.open').forEach(function (o) { if (o !== g) o.classList.remove('open'); });
-        g.classList.toggle('open');
-      }
-    });
+  /* ---- Mobile: tap the top button to toggle its dropdown (accordion) ---- */
+  top.addEventListener('click', function (e) {
+  if (isMobile()) {
+  if (top.tagName === 'A') {
+  if (!g.classList.contains('open')) { e.preventDefault(); }
+  } else {
+  e.preventDefault();
+  }
+  nav.querySelectorAll('.nav-group.open').forEach(function (o) { if (o !== g) o.classList.remove('open'); });
+  g.classList.toggle('open');
+  }
+  });
   });
 
   // Close any open desktop dropdown when clicking outside the nav or pressing Esc.
   document.addEventListener('click', function (e) {
-    if (isMobile()) return;
-    if (nav.contains(e.target)) return;
-    nav.querySelectorAll('.nav-group.hovering').forEach(function (o) { o.classList.remove('hovering'); });
+  if (isMobile()) return;
+  if (nav.contains(e.target)) return;
+  nav.querySelectorAll('.nav-group.hovering').forEach(function (o) { o.classList.remove('hovering'); });
   });
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') {
-      nav.querySelectorAll('.nav-group.hovering').forEach(function (o) { o.classList.remove('hovering'); });
-    }
+  if (e.key === 'Escape') {
+  nav.querySelectorAll('.nav-group.hovering').forEach(function (o) { o.classList.remove('hovering'); });
+  }
   });
   } // end render()
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', render);
+  document.addEventListener('DOMContentLoaded', render);
   } else {
-    render();
+  render();
   }
 })();
