@@ -1,0 +1,10 @@
+# Backend (Supabase schema, edge functions, env) — NOT part of the public site.
+# Keep it out of the GitHub Pages repo. Store/version it separately (private).
+backend/
+
+# Local dev + OS cruft
+.env
+.env.local
+*.log
+.DS_Store
+Thumbs.db

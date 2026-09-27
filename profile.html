@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Sol Profile — Ashura Whole Heavens</title>
+<meta name="description" content="Log in with Discord, YouTube (Google), Twitch, or email to claim your alias, check in for Sol, and climb the Solashur leaderboard.">
+<link rel="canonical" href="https://solashur.com/profile.html">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+<link rel="icon" href="assets/favicon.ico">
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/theme.js"></script>
+<script src="assets/nav.js"></script>
+<script src="assets/profile-chip.js"></script>
+<script src="assets/analytics.js"></script>
+<style>
+  .sol-wrap { max-width: 680px; margin: 40px auto; }
+  .sol-card { background: var(--panel); border: 1px solid var(--panel-border);
+    border-radius: 18px; padding: 28px; backdrop-filter: blur(10px); }
+  .sol-card + .sol-card { margin-top: 20px; }
+  .login-grid { display: grid; gap: 12px; margin-top: 18px; }
+  .login-btn { display:flex; align-items:center; justify-content:center; gap:10px;
+    padding: 14px 18px; border-radius: 12px; font-weight: 800; font-size: 15px;
+    color:#fff; text-decoration:none; cursor:pointer; border:none; transition: filter .15s ease, transform .1s ease; }
+  .login-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+  .b-discord { background:#5865F2; }
+  .b-google  { background:#ea4335; }
+  .b-twitch  { background:#9146ff; }
+  .b-email   { background: linear-gradient(120deg, var(--accent-2), var(--accent)); }
+  .email-row { display:flex; gap:8px; margin-top:10px; }
+  .email-row input { flex:1; padding:12px 14px; border-radius:10px; background:rgba(255,255,255,.05);
+    border:1px solid var(--panel-border); color:var(--text); }
+  .field { margin-top:16px; }
+  .field label { display:block; font-size:13px; letter-spacing:1px; text-transform:uppercase;
+    color:var(--muted); margin-bottom:6px; }
+  .field input[type=text] { width:100%; padding:12px 14px; border-radius:10px;
+    background:rgba(255,255,255,.05); border:1px solid var(--panel-border); color:var(--text); }
+  .toggle-row { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:16px; }
+  .rankbadge { display:inline-flex; align-items:center; gap:8px; font-weight:800; padding:6px 14px;
+    border-radius:999px; border:1px solid var(--panel-border); }
+  .sol-num { font-family: var(--font-display, inherit); font-weight:900; font-size:44px; line-height:1; }
+  .checkin-btn { width:100%; margin-top:18px; padding:18px; border:none; border-radius:14px; cursor:pointer;
+    font-weight:900; font-size:18px; letter-spacing:1px; text-transform:uppercase; color:#fff;
+    background: linear-gradient(120deg, var(--accent-2), var(--accent)); box-shadow: 0 8px 24px rgba(214,30,44,.4); }
+  .checkin-btn:disabled { opacity:.55; cursor:not-allowed; box-shadow:none; }
+  .muted { color: var(--muted); font-size: 13px; }
+  .toast { position:fixed; left:50%; bottom:28px; transform:translateX(-50%) translateY(20px);
+    background: var(--panel); border:1px solid var(--accent); color:#fff; padding:14px 22px;
+    border-radius:12px; font-weight:700; opacity:0; pointer-events:none; transition:opacity .3s, transform .3s; z-index:200; }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  .hidden { display:none !important; }
+  .progress { height:10px; border-radius:999px; background:rgba(255,255,255,.08); overflow:hidden; margin-top:10px; }
+  .progress > span { display:block; height:100%; background:linear-gradient(90deg,var(--accent-2),var(--accent)); width:0; transition:width .5s ease; }
+  /* toggle switch */
+  .switch { position:relative; display:inline-block; width:48px; height:26px; flex:0 0 auto; }
+  .switch input { opacity:0; width:0; height:0; }
+  .switch span { position:absolute; inset:0; cursor:pointer; border-radius:999px;
+    background:rgba(255,255,255,.15); transition:background .2s ease; }
+  .switch span::before { content:""; position:absolute; height:20px; width:20px; left:3px; top:3px;
+    border-radius:50%; background:#fff; transition:transform .2s ease; }
+  .switch input:checked + span { background:linear-gradient(120deg,var(--accent-2),var(--accent)); }
+  .switch input:checked + span::before { transform:translateX(22px); }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<nav id="site-nav" data-active="misc"></nav>
+
+<div class="content">
+  <div class="sol-wrap">
+
+    <div class="section-head" style="margin-bottom:18px;">
+      <div class="kicker">🌀 Sol Profile</div>
+      <h2>Your Ascension</h2>
+      <p>Log in, claim your alias, and check in daily to earn <strong>Sol</strong> and climb the ranks of the shinigami.</p>
+    </div>
+
+    <!-- LOGGED OUT -->
+    <div id="logged-out" class="sol-card hidden">
+      <h3 style="margin-bottom:4px;">Sign in to begin</h3>
+      <p class="muted">Come as you are — Discord, YouTube, Twitch, or email.</p>
+      <div class="login-grid">
+        <button class="login-btn b-discord" data-login="discord">🎮 Continue with Discord</button>
+        <button class="login-btn b-google"  data-login="google">▶️ Continue with YouTube (Google)</button>
+        <button class="login-btn b-twitch"  data-login="twitch">🟣 Continue with Twitch</button>
+      </div>
+      <div class="email-row">
+        <input id="email-input" type="email" placeholder="or your email…" autocomplete="email">
+        <button class="login-btn b-email" id="email-login" style="padding:12px 18px;">Send link</button>
+      </div>
+      <p class="muted" id="email-note" style="margin-top:8px;"></p>
+    </div>
+
+    <!-- LOGGED IN -->
+    <div id="logged-in" class="hidden">
+      <div class="sol-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+          <div>
+            <div class="muted">Your Sol</div>
+            <div class="sol-num accent-text" id="sol-total">0</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="rankbadge" id="rank-badge">🗡️ Shinigami</div>
+            <div class="muted" id="rank-position" style="margin-top:6px;"></div>
+          </div>
+        </div>
+        <div class="progress"><span id="rank-progress"></span></div>
+        <div class="muted" id="next-rank-note" style="margin-top:8px;"></div>
+
+        <button class="checkin-btn" id="checkin-btn">⚡ Check In &amp; Earn Sol</button>
+        <p class="muted" id="checkin-note" style="text-align:center;margin-top:10px;"></p>
+      </div>
+
+      <div class="sol-card">
+        <h3>Profile</h3>
+        <div class="field">
+          <label for="alias">Alias (your name on the leaderboard)</label>
+          <input id="alias" type="text" maxlength="24" placeholder="Choose an alias…">
+        </div>
+        <div class="field">
+          <label for="tagline">Tagline (shown on your profile)</label>
+          <input id="tagline" type="text" maxlength="80" placeholder="e.g. Rank 1 Templar main, Abyss enjoyer">
+        </div>
+        <div class="field">
+          <label for="fav_class">Main class</label>
+          <input id="fav_class" type="text" maxlength="24" placeholder="e.g. Templar">
+        </div>
+        <div class="field">
+          <label for="avatar_url">Avatar image URL (optional — overrides your login avatar)</label>
+          <input id="avatar_url" type="text" placeholder="https://…">
+        </div>
+        <div class="field" style="display:flex;align-items:center;gap:12px;">
+          <label for="accent" style="margin:0;">Card accent color</label>
+          <input id="accent" type="color" value="#d61e2c" style="width:48px;height:34px;border:none;background:none;cursor:pointer;">
+        </div>
+        <div class="toggle-row">
+          <div>
+            <strong>Email me stream updates</strong>
+            <div class="muted">Go-live alerts &amp; big announcements. Opt out anytime.</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="email-opt"><span></span></label>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <strong>Level-up sound</strong>
+            <div class="muted">Play a chime when you earn Sol.</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="sound-opt" checked><span></span></label>
+        </div>
+        <div class="btn-row" style="margin-top:18px;gap:10px;">
+          <button class="tool-btn" id="save-btn">💾 Save</button>
+          <a class="tool-btn" href="leaderboard.html">🏆 View Leaderboard</a>
+          <button class="tool-btn" id="logout-btn" style="background:rgba(255,255,255,.06);">Log out</button>
+        </div>
+        <p class="muted" id="save-note" style="margin-top:10px;"></p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/sol.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="assets/background.js"></script>
+<script>
+(function () {
+  if (!window.Sol) { console.error('Sol helper missing'); return; }
+  var $ = function (id) { return document.getElementById(id); };
+  var loggedOut = $('logged-out'), loggedIn = $('logged-in');
+
+  function toast(msg) {
+    var t = $('toast'); t.textContent = msg; t.classList.add('show');
+    clearTimeout(t._h); t._h = setTimeout(function () { t.classList.remove('show'); }, 2600);
+  }
+
+  // ---- Login handlers ----
+  document.querySelectorAll('[data-login]').forEach(function (b) {
+    b.addEventListener('click', function () { Sol.loginWith(b.getAttribute('data-login')); });
+  });
+  $('email-login').addEventListener('click', function () {
+    var email = $('email-input').value.trim();
+    if (!email) { $('email-note').textContent = 'Enter your email first.'; return; }
+    Sol.loginEmail(email).then(function () {
+      $('email-note').textContent = 'Check your inbox for a magic sign-in link. ✉️';
+    }).catch(function (e) { $('email-note').textContent = 'Could not send link: ' + e.message; });
+  });
+
+  // ---- Render logged-in state ----
+  function renderSummary() {
+    Sol.mySummary().then(function (s) {
+      if (!s) return;
+      var info = Sol.roleInfo(s.role);
+      $('sol-total').textContent = (s.sols || 0).toLocaleString();
+      $('rank-badge').textContent = info.icon + ' ' + info.label;
+      $('rank-badge').style.borderColor = info.color;
+      $('rank-badge').style.color = info.color;
+      $('rank-position').textContent = s.rank_pos ? ('Rank #' + s.rank_pos) : '';
+      if (s.sols_to_next > 0) {
+        var nextInfo = Sol.roleInfo(s.next_role);
+        // progress toward next threshold (Hollow=1000, Arrancar=5000)
+        var lowerBound = s.next_role === 'arrancar' ? 1000 : 0;
+        var upperBound = s.next_role === 'arrancar' ? 5000 : 1000;
+        var pct = Math.max(0, Math.min(100, ((s.sols - lowerBound) / (upperBound - lowerBound)) * 100));
+        $('rank-progress').style.width = pct + '%';
+        $('next-rank-note').textContent = s.sols_to_next.toLocaleString() + ' Sol to ' + nextInfo.icon + ' ' + nextInfo.label;
+      } else {
+        $('rank-progress').style.width = '100%';
+        $('next-rank-note').textContent = 'Top auto-rank reached. 🔥';
+      }
+    });
+    Sol.myProfile().then(function (p) {
+      if (!p) return;
+      $('alias').value = p.alias || '';
+      $('tagline').value = p.tagline || '';
+      $('fav_class').value = p.fav_class || '';
+      $('avatar_url').value = p.avatar_url || '';
+      if (p.accent) $('accent').value = p.accent;
+      $('email-opt').checked = !!p.email_opt_in;
+      var soundOn = localStorage.getItem('sol-sound') !== 'off';
+      $('sound-opt').checked = soundOn;
+    });
+  }
+
+  function showLoggedIn() { loggedOut.classList.add('hidden'); loggedIn.classList.remove('hidden'); renderSummary(); }
+  function showLoggedOut() { loggedIn.classList.add('hidden'); loggedOut.classList.remove('hidden'); }
+
+  // ---- Check-in ----
+  $('checkin-btn').addEventListener('click', function () {
+    var btn = this; btn.disabled = true; $('checkin-note').textContent = 'Absorbing Sol…';
+    Sol.checkIn().then(function (r) {
+      if (r && r.ok) {
+        $('checkin-note').textContent = '+' + r.awarded + ' Sol! Streak x' + r.streak +
+          (r.rankedUp ? ' — RANK UP! 🎉' : '');
+        renderSummary();
+        setTimeout(function () { btn.disabled = false; }, 1500);
+      } else if (r && r.reason === 'cooldown') {
+        $('checkin-note').textContent = 'Already checked in. Come back in ~' + r.hoursLeft + 'h. ⏳';
+        // keep disabled a moment; re-enable so they can retry later
+        setTimeout(function () { btn.disabled = false; }, 1500);
+      } else {
+        $('checkin-note').textContent = 'Something went off. Try again in a moment.';
+        btn.disabled = false;
+      }
+    }).catch(function (e) {
+      $('checkin-note').textContent = 'Error: ' + e.message; btn.disabled = false;
+    });
+  });
+
+  // ---- Save profile ----
+  // Client-side mirror of the server's reserved-name rule (instant feedback;
+  // the database enforces it for real regardless).
+  function aliasReserved(a) {
+    var v = (a || '').toLowerCase()
+      .replace(/[4]/g,'a').replace(/[3]/g,'e').replace(/[0]/g,'o')
+      .replace(/[1]/g,'i').replace(/[$5]/g,'s').replace(/[7]/g,'t')
+      .replace(/[^a-z0-9]/g,'');
+    return ['solashur','ashurasol','ashura','bryan','sol','ash'].some(function (t) {
+      return v.indexOf(t) !== -1;
+    });
+  }
+
+  $('save-btn').addEventListener('click', function () {
+    var alias = $('alias').value.trim();
+    if (alias && aliasReserved(alias)) {
+      $('save-note').textContent = '⛔ That alias is reserved. Please choose a different name.';
+      return;
+    }
+    localStorage.setItem('sol-sound', $('sound-opt').checked ? 'on' : 'off');
+    Sol.updateProfile({
+      alias: alias || null,
+      tagline: $('tagline').value.trim() || null,
+      fav_class: $('fav_class').value.trim() || null,
+      avatar_url: $('avatar_url').value.trim() || null,
+      accent: $('accent').value || null,
+      email_opt_in: $('email-opt').checked
+    })
+      .then(function (r) {
+        if (r && r.error) {
+          var msg = /reserved/i.test(r.error.message)
+            ? '⛔ That alias is reserved. Please choose a different name.'
+            : 'Save failed: ' + r.error.message;
+          $('save-note').textContent = msg; return;
+        }
+        $('save-note').textContent = 'Saved. ✅'; toast('Profile saved');
+      })
+      .catch(function (e) { $('save-note').textContent = 'Save failed: ' + e.message; });
+  });
+
+  $('logout-btn').addEventListener('click', function () { Sol.logout().then(showLoggedOut); });
+
+  // ---- Boot: react to auth state ----
+  Sol.getSession().then(function (s) { s ? showLoggedIn() : showLoggedOut(); });
+  Sol.onAuthChange(function (s) { s ? showLoggedIn() : showLoggedOut(); });
+})();
+</script>
+</body>
+</html>

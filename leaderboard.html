@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sol Leaderboard — Ashura Whole Heavens</title>
+<meta name="description" content="The Solashur Sol leaderboard — check in, earn Sol, and rise through the shinigami ranks. See who leads the Ascension.">
+<link rel="canonical" href="https://solashur.com/leaderboard.html">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+<link rel="icon" href="assets/favicon.ico">
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/theme.js"></script>
+<script src="assets/nav.js"></script>
+<script src="assets/profile-chip.js"></script>
+<script src="assets/analytics.js"></script>
+<style>
+  .lb-wrap { max-width: 820px; margin: 36px auto; }
+  .lb-list { display:flex; flex-direction:column; gap:10px; margin-top:20px; }
+  .lb-row { display:grid; grid-template-columns: 54px 1fr auto; align-items:center; gap:14px;
+    padding:14px 18px; border-radius:14px; background:var(--panel); border:1px solid var(--panel-border);
+    backdrop-filter: blur(8px); transition: transform .12s ease, border-color .2s ease; }
+  .lb-row:hover { transform: translateY(-1px); }
+  .lb-row.me { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 6px 20px rgba(214,30,44,.25); }
+  .lb-pos { font-family: var(--font-display, inherit); font-weight:900; font-size:22px; text-align:center; color:var(--muted); }
+  .lb-row.top1 .lb-pos { color:#ffd24a; } .lb-row.top2 .lb-pos { color:#cfd6e6; } .lb-row.top3 .lb-pos { color:#d9954a; }
+  .lb-who { display:flex; align-items:center; gap:12px; min-width:0; }
+  .lb-avatar { width:40px; height:40px; border-radius:50%; object-fit:cover; background:rgba(255,255,255,.08);
+    border:1px solid var(--panel-border); flex:0 0 auto; display:flex; align-items:center; justify-content:center; font-size:18px; }
+  .lb-alias { font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .lb-role { font-size:12px; font-weight:700; }
+  .lb-sols { font-family: var(--font-display, inherit); font-weight:900; font-size:20px; white-space:nowrap; }
+  .lb-sols small { font-size:11px; font-weight:700; color:var(--muted); margin-left:4px; }
+  .lb-empty { text-align:center; color:var(--muted); padding:40px 0; }
+  .cta-bar { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:8px; }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<nav id="site-nav" data-active="misc"></nav>
+
+<div class="content">
+  <div class="lb-wrap">
+    <div class="section-head" style="margin-bottom:6px;">
+      <div class="kicker">🏆 The Ascension Ranks</div>
+      <h2>Sol Leaderboard</h2>
+      <p>Check in daily to absorb <strong>Sol</strong> and rise through the shinigami hierarchy — Shinigami → Hollow → Arrancar → Royal Guard → 👑 Sol King.</p>
+    </div>
+    <div class="cta-bar">
+      <a class="tool-btn" href="profile.html">⚡ Check In &amp; Earn Sol</a>
+    </div>
+
+    <div class="lb-list" id="lb-list">
+      <div class="lb-empty">Summoning the ranks…</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/sol.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="assets/background.js"></script>
+<script>
+(function () {
+  if (!window.Sol) return;
+  var list = document.getElementById('lb-list');
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+  Sol.getUser().then(function (me) {
+    var myId = me && me.id;
+    Sol.fetchLeaderboard(100).then(function (rows) {
+      if (!rows.length) { list.innerHTML = '<div class="lb-empty">No souls ranked yet. Be the first — <a href="profile.html">check in</a>.</div>'; return; }
+      list.innerHTML = rows.map(function (r) {
+        var info = Sol.roleInfo(r.role);
+        var topClass = r.position === 1 ? 'top1' : r.position === 2 ? 'top2' : r.position === 3 ? 'top3' : '';
+        var eliteClass = (r.sols >= 5000) ? ' elite' : '';   // high-rank highlight
+        var meClass = (myId && r.id === myId) ? ' me' : '';
+        var avatar = r.avatar_url
+          ? '<img class="lb-avatar" src="' + esc(r.avatar_url) + '" alt="">'
+          : '<span class="lb-avatar">' + info.icon + '</span>';
+        var name = esc(r.alias || 'Unclaimed Soul');
+        return '<div class="lb-row ' + topClass + eliteClass + meClass + '">' +
+          '<div class="lb-pos">' + (r.position === 1 ? '👑' : '#' + r.position) + '</div>' +
+          '<div class="lb-who">' + avatar +
+            '<div style="min-width:0;">' +
+              '<div class="lb-alias">' + name + '</div>' +
+              '<div class="lb-role" style="color:' + info.color + '">' + info.icon + ' ' + info.label + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="lb-sols">' + (r.sols || 0).toLocaleString() + '<small>SOL</small></div>' +
+        '</div>';
+      }).join('');
+    });
+  });
+})();
+</script>
+</body>
+</html>

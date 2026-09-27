@@ -43,6 +43,8 @@
   ]},
   { id: 'sponsors', label: 'Sponsors', href: 'optimize.html', highlight: true },
   { id: 'misc', label: 'MISC', children: [
+  { label: '🏆 Sol Leaderboard', href: 'leaderboard.html' },
+  { label: 'My Profile', href: 'profile.html' },
   { label: 'Hardware',  href: 'hardware.html' },
   { label: 'Media Kit', href: 'media-kit.html' },
   { label: 'FREE Content Playbook', href: 'playbook.html' }
@@ -86,11 +88,16 @@
   });
 
   html += '</div>';
+
+  // Sitewide profile chip mount — sits at the right edge, after the menu.
+  // profile-chip.js fills this in with the user's avatar/alias/Sol (or a
+  // "Sign in" button when logged out).
+  html += '<div id="nav-profile" class="nav-profile"></div>';
+
   nav.className = 'site-nav';
   nav.innerHTML = html;
 
-  // Tell theme.js the nav exists now so it can inject the theme toggle +
-  // hamburger into it (nav.js may run after theme.js's initial pass).
+  // Tell theme.js (toggle + hamburger) AND profile-chip.js the nav is ready.
   window.dispatchEvent(new Event('aws-nav-ready'));
 
   /* ---- Interactions ---- */

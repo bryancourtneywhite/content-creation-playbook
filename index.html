@@ -30,6 +30,7 @@
 <link rel="stylesheet" href="assets/style.css">
 <script src="assets/theme.js"></script>
 <script src="assets/nav.js"></script>
+<script src="assets/profile-chip.js"></script>
 <script src="assets/analytics.js"></script>
 
 <!-- Structured data: helps Google understand who Solashur is -->
@@ -127,6 +128,19 @@
   <a class="tool-btn" style="padding:13px 30px;" href="watch.html">📺 Join the Ascension - Watch Live</a>
   </div>
 
+  <!-- SOL LEADERBOARD - front-page widget -->
+  <div class="sol-widget" id="sol-widget">
+    <div class="sw-head">
+      <div class="kicker" style="margin:0;">🏆 The Ascension</div>
+      <a class="sw-all" href="leaderboard.html">Full board →</a>
+    </div>
+    <h3 class="sw-title">Sol Leaderboard</h3>
+    <p class="sw-sub">Check in daily, earn <strong>Sol</strong>, rise through the shinigami ranks.</p>
+    <ol class="sw-list" id="sw-list"><li class="sw-loading">Summoning ranks…</li></ol>
+    <div class="sw-me" id="sw-me" style="display:none;"></div>
+    <a class="tool-btn sw-cta" id="sw-cta" href="profile.html">⚡ Check In &amp; Earn Sol</a>
+  </div>
+
   <!-- FREE CONTENT PLAYBOOK - promo banner -->
   <div class="callout" style="max-width:920px;margin:46px auto 10px;text-align:center;padding:30px 26px;position:relative;overflow:hidden;">
   <div class="badge" style="margin:0 auto 14px;"><span class="dot"></span> 100% FREE · No Email Required</div>
@@ -205,6 +219,11 @@
   <div class="build-card reveal" data-tags="templar macro pvp pve" data-thumb="1ebgmpl1YxQ">
   <div class="bc-top">
   <div class="bc-tags">
+  <picture>
+  <source srcset="assets/Templar-icon-aion2-wiki-guide.avif" type="image/avif">
+  <source srcset="assets/Templar-icon-aion2-wiki-guide.webp" type="image/webp">
+  <img class="class-icon badge" src="assets/Templar-icon-aion2-wiki-guide.png" alt="Templar" width="26" height="26">
+  </picture>
   <span class="bc-pill">Templar</span>
   <span class="bc-pill pvp">PvP</span>
   <span class="bc-pill pve">PvE</span>
@@ -219,6 +238,11 @@
   <div class="build-card reveal" data-tags="templar pve pvp berserk build" data-thumb="e8xxp9XuqZM">
   <div class="bc-top">
   <div class="bc-tags">
+  <picture>
+  <source srcset="assets/Templar-icon-aion2-wiki-guide.avif" type="image/avif">
+  <source srcset="assets/Templar-icon-aion2-wiki-guide.webp" type="image/webp">
+  <img class="class-icon badge" src="assets/Templar-icon-aion2-wiki-guide.png" alt="Templar" width="26" height="26">
+  </picture>
   <span class="bc-pill">Templar</span>
   <span class="bc-pill pve">PvE</span>
   <span class="bc-pill pvp">PvP</span>
@@ -287,8 +311,52 @@
   <a class="tool-btn" href="watch.html">📺 Watch the full library →</a>
   </div>
 
-  <!-- EMAIL CAPTURE -->
-  <div data-subscribe></div>
+  <!-- JOIN THE LEADERBOARD (login + profile creation; replaces plain email capture) -->
+  <div class="callout" id="join-module" style="max-width:720px;margin:40px auto 10px;text-align:center;padding:30px 26px;">
+    <div style="font-size:34px;line-height:1;">🌀</div>
+    <h2 style="font-size:clamp(22px,4vw,32px);margin:10px 0 6px;">Join the Ascension</h2>
+    <p style="max-width:560px;margin:0 auto 18px;color:var(--muted);">
+      Sign in to claim your alias, earn <strong style="color:#fff;">Sol</strong>, and climb the leaderboard.
+      Opt in for go-live &amp; new-build emails too — no spam, just the good stuff. 🌙
+    </p>
+
+    <!-- logged-out: provider login -->
+    <div id="join-out">
+      <div style="display:grid;gap:10px;max-width:360px;margin:0 auto;">
+        <button class="tool-btn" data-join="discord" style="background:#5865F2;">🎮 Continue with Discord</button>
+        <button class="tool-btn" data-join="google"  style="background:#ea4335;">▶️ Continue with YouTube (Google)</button>
+        <button class="tool-btn" data-join="twitch"  style="background:#9146ff;">🟣 Continue with Twitch</button>
+        <div style="display:flex;gap:8px;">
+          <input id="join-email" type="email" placeholder="or your email…" style="flex:1;padding:12px 14px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid var(--panel-border);color:var(--text);">
+          <button class="tool-btn" id="join-email-btn" style="padding:12px 18px;">Send link</button>
+        </div>
+      </div>
+      <p class="muted" id="join-note" style="font-size:12.5px;margin-top:10px;">Unsubscribe anytime. Your email stays private.</p>
+    </div>
+
+    <!-- logged-in: your rank + quick check-in -->
+    <div id="join-in" style="display:none;">
+      <div id="join-me" style="font-weight:800;margin-bottom:12px;"></div>
+      <div class="btn-row" style="justify-content:center;">
+        <button class="tool-btn" id="join-checkin" style="padding:13px 26px;">⚡ Check In &amp; Earn Sol</button>
+        <a class="tool-btn" href="profile.html" style="padding:13px 26px;background:rgba(255,255,255,.06);">🎨 Customize Profile</a>
+      </div>
+      <p class="muted" id="join-checknote" style="font-size:12.5px;margin-top:10px;"></p>
+    </div>
+  </div>
+
+  <!-- LEADERBOARD (rendered directly below the join module) -->
+  <div class="section-head" style="margin-top:34px;">
+    <div class="kicker">🏆 The Ascension Ranks</div>
+    <h2>Sol Leaderboard</h2>
+    <p>Top souls by Sol earned. Check in daily to climb.</p>
+  </div>
+  <div class="lb-list" id="home-leaderboard" style="max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:10px;">
+    <div style="text-align:center;color:var(--muted);padding:20px;">Summoning the ranks…</div>
+  </div>
+  <div class="btn-row" style="justify-content:center;margin-top:18px;">
+    <a class="tool-btn" href="leaderboard.html">🏆 Full Leaderboard →</a>
+  </div>
 
   <div data-follow></div>
 
@@ -462,5 +530,123 @@
 </script>
 
 <script src="assets/follow.js"></script>
+
+<!-- Sol leaderboard front-page widget -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/sol.js"></script>
+<script>
+(function () {
+  if (!window.Sol) return;
+  var listEl = document.getElementById('sw-list');
+  var meEl = document.getElementById('sw-me');
+  var ctaEl = document.getElementById('sw-cta');
+  if (!listEl) return;
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+  // Top 5 ranks
+  Sol.fetchLeaderboard(5).then(function (rows) {
+    if (!rows.length) {
+      listEl.innerHTML = '<li class="sw-loading">No souls ranked yet — be the first.</li>';
+      return;
+    }
+    listEl.innerHTML = rows.map(function (r) {
+      var info = Sol.roleInfo(r.role);
+      return '<li>' +
+        '<span class="sw-pos">' + (r.position === 1 ? '👑' : r.position) + '</span>' +
+        '<span style="min-width:0;">' +
+          '<span class="sw-name">' + esc(r.alias || 'Unclaimed Soul') + '</span>' +
+          '<span class="sw-role" style="display:block;color:' + info.color + '">' + info.icon + ' ' + info.label + '</span>' +
+        '</span>' +
+        '<span class="sw-sol">' + (r.sols || 0).toLocaleString() + '<small>SOL</small></span>' +
+      '</li>';
+    }).join('');
+  }).catch(function(){ listEl.innerHTML = '<li class="sw-loading">Leaderboard unavailable.</li>'; });
+
+  // If logged in, show the user's own rank + change the CTA
+  Sol.getSession().then(function (s) {
+    if (!s) return;
+    ctaEl.textContent = '⚡ Check In Now';
+    Sol.mySummary().then(function (m) {
+      if (!m) return;
+      var info = Sol.roleInfo(m.role);
+      meEl.style.display = 'block';
+      meEl.innerHTML = 'You: ' + info.icon + ' ' + esc(m.alias || 'Soul') +
+        ' · ' + (m.sols||0).toLocaleString() + ' Sol' + (m.rank_pos ? ' · Rank #' + m.rank_pos : '');
+    });
+  });
+
+  /* ---- Join module (login / create profile / check-in) ---- */
+  var joinOut = document.getElementById('join-out');
+  var joinIn = document.getElementById('join-in');
+  var joinMe = document.getElementById('join-me');
+  function renderJoin() {
+    Sol.getSession().then(function (s) {
+      if (s) {
+        joinOut.style.display = 'none'; joinIn.style.display = 'block';
+        Sol.mySummary().then(function (m) {
+          if (!m) return;
+          var info = Sol.roleInfo(m.role);
+          joinMe.innerHTML = 'Welcome back, ' + info.icon + ' ' + esc(m.alias || 'Soul') + ' — ' +
+            (m.sols||0).toLocaleString() + ' Sol' + (m.rank_pos ? ' · Rank #' + m.rank_pos : '');
+        });
+      } else {
+        joinOut.style.display = 'block'; joinIn.style.display = 'none';
+      }
+    });
+  }
+  document.querySelectorAll('[data-join]').forEach(function (b) {
+    b.addEventListener('click', function () { Sol.loginWith(b.getAttribute('data-join')); });
+  });
+  var jEmailBtn = document.getElementById('join-email-btn');
+  if (jEmailBtn) jEmailBtn.addEventListener('click', function () {
+    var em = document.getElementById('join-email').value.trim();
+    var note = document.getElementById('join-note');
+    if (!em) { note.textContent = 'Enter your email first.'; return; }
+    Sol.loginEmail(em).then(function () { note.textContent = 'Check your inbox for a magic sign-in link. ✉️'; })
+      .catch(function (e) { note.textContent = 'Could not send link: ' + e.message; });
+  });
+  var jCheck = document.getElementById('join-checkin');
+  if (jCheck) jCheck.addEventListener('click', function () {
+    var note = document.getElementById('join-checknote'); jCheck.disabled = true; note.textContent = 'Absorbing Sol…';
+    Sol.checkIn().then(function (r) {
+      if (r && r.ok) { note.textContent = '+' + r.awarded + ' Sol! Streak x' + r.streak + (r.rankedUp ? ' — RANK UP! 🎉' : '');
+        renderJoin(); loadHomeBoard(); setTimeout(function(){ jCheck.disabled = false; }, 1500); }
+      else if (r && r.reason === 'cooldown') { note.textContent = 'Come back in ~' + r.hoursLeft + 'h ⏳'; jCheck.disabled = false; }
+      else { note.textContent = 'Try again in a moment.'; jCheck.disabled = false; }
+    }).catch(function (e) { note.textContent = 'Error: ' + e.message; jCheck.disabled = false; });
+  });
+  Sol.onAuthChange(function () { renderJoin(); });
+  renderJoin();
+
+  /* ---- Home leaderboard (below the join module) ---- */
+  var board = document.getElementById('home-leaderboard');
+  function loadHomeBoard() {
+    if (!board) return;
+    Sol.getUser().then(function (me) {
+      var myId = me && me.id;
+      Sol.fetchLeaderboard(10).then(function (rows) {
+        if (!rows.length) { board.innerHTML = '<div style="text-align:center;color:var(--muted);padding:20px;">No souls ranked yet — be the first.</div>'; return; }
+        board.innerHTML = rows.map(function (r) {
+          var info = Sol.roleInfo(r.role);
+          var top = r.position === 1 ? 'top1' : r.position === 2 ? 'top2' : r.position === 3 ? 'top3' : '';
+          var elite = (r.sols >= 5000) ? ' elite' : '';           // high-rank highlight
+          var meClass = (myId && r.id === myId) ? ' me' : '';
+          var avatar = r.avatar_url ? '<img class="lb-avatar" src="' + esc(r.avatar_url) + '" alt="">'
+                                    : '<span class="lb-avatar">' + info.icon + '</span>';
+          return '<div class="lb-row ' + top + elite + meClass + '">' +
+            '<div class="lb-pos">' + (r.position === 1 ? '👑' : '#' + r.position) + '</div>' +
+            '<div class="lb-who">' + avatar + '<div style="min-width:0;">' +
+              '<div class="lb-alias">' + esc(r.alias || 'Unclaimed Soul') + '</div>' +
+              '<div class="lb-role" style="color:' + info.color + '">' + info.icon + ' ' + info.label + '</div>' +
+            '</div></div>' +
+            '<div class="lb-sols">' + (r.sols||0).toLocaleString() + '<small>SOL</small></div>' +
+          '</div>';
+        }).join('');
+      });
+    });
+  }
+  loadHomeBoard();
+})();
+</script>
 </body>
 </html>
