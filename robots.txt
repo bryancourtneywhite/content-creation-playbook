@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /stream/
 
 Sitemap: https://solashur.com/sitemap.xml
