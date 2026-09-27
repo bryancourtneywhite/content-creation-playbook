@@ -19,7 +19,7 @@
     {
       "name": "Punishment",
       "icon": "Punishment.webp",
-      "level": 10,
+      "level": 20,
       "maxLevel": 20,
       "type": ["active", "physic"],
       "desc": "Selects a target within 20m and deals damage to up to 4 enemies within 4m; grants the Executor effect (Accuracy +200, PvE Damage +20%, PvP Damage +10%) for 20s. Max 3 Charge Levels.",
@@ -28,7 +28,7 @@
         { "req": 8,  "text": "Inflicts Damage over Time to target on hit", "picked": true },
         { "req": 8,  "text": "+30% Skill Speed", "picked": true },
         { "req": 12, "text": "Changes to mobile skill", "picked": false },
-        { "req": 16, "text": "Ignores Block and Evasion and lands as a Critical Hit", "picked": false }
+        { "req": 16, "text": "Ignores Block and Evasion and lands as a Critical Hit", "picked": true }
       ]
     },
     {
