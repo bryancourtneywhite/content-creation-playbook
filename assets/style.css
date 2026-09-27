@@ -377,9 +377,9 @@ html { color-scheme: dark; scrollbar-width: thin; scrollbar-color: rgba(214,30,4
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  /* Extra 25px of right padding so the menu items (MISC especially) never sit
-     under the floating theme toggle in the top-right corner. */
-  padding: 14px 49px 14px 24px;
+  /* Theme toggle now floats BELOW the nav (see .theme-toggle), so the nav no
+     longer needs extra right padding to avoid overlap. */
+  padding: 14px 24px;
   background: var(--nav-bg);
   border-bottom: 1px solid var(--panel-border);
   backdrop-filter: blur(12px);
@@ -478,9 +478,40 @@ html { color-scheme: dark; scrollbar-width: thin; scrollbar-color: rgba(214,30,4
     background: rgba(214,30,44,0.14);
   }
   /* keep the theme toggle sensible inside the dropdown */
-  .site-nav .links .theme-toggle.nav-toggle {
-    align-self: flex-start; margin: 6px 0 0 4px;
-  }
+}
+
+/* ---------- THEME TOGGLE (floats just BELOW the nav bar) ----------
+   Positioned under the sticky nav on the right so it never overlaps the nav
+   items (MISC dropdown) on desktop or mobile. */
+.theme-toggle {
+  position: fixed;
+  top: 72px;              /* sits just under the ~62px sticky nav */
+  right: 18px;
+  z-index: 60;            /* above content, below nav dropdowns (z 80) */
+  width: 40px; height: 40px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 18px; line-height: 1; cursor: pointer;
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(20, 12, 14, 0.72);
+  border: 1px solid rgba(214, 30, 44, 0.5);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.4), 0 0 12px rgba(214,30,44,0.25);
+  backdrop-filter: blur(8px);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.theme-toggle:hover {
+  transform: translateY(-1px) scale(1.06);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5), 0 0 16px rgba(214,30,44,0.45);
+}
+[data-theme="light"] .theme-toggle {
+  color: #16304a;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(31, 111, 214, 0.45);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15), 0 0 12px rgba(31,111,214,0.2);
+}
+@media (max-width: 820px) {
+  /* Keep clear of the hamburger; nav is a bit shorter on mobile. */
+  .theme-toggle { top: 64px; right: 14px; width: 38px; height: 38px; font-size: 17px; }
 }
 
 /* ---------- HERO ---------- */
@@ -1925,7 +1956,7 @@ footer .big {
 }
 .now-playing.open {
   opacity: 1; pointer-events: auto;
-  transform: translateY(0) rotateX(7deg) rotateY(-4deg) scale(1);
+  transform: translateY(0) rotateX(6deg) rotateY(-2deg) scale(1);
   animation: npFloat 6s ease-in-out infinite;
 }
 /* Straighten + lift toward the viewer when interacted with */
@@ -1937,13 +1968,15 @@ footer .big {
     0 0 22px rgba(214,30,44,0.3),
     inset 0 1px 0 rgba(255,255,255,0.08);
 }
-/* Give the inner content a hair of z-depth so the tilt reads as 3D */
+/* Give the inner content a hair of z-depth so the tilt reads as 3D.
+   Kept subtle (8px) — larger values magnify + shift these elements enough to
+   clip their text against the panel's rounded, overflow-hidden border. */
 .now-playing .np-head, .now-playing .np-media,
 .now-playing .np-source, .now-playing .np-picker-label,
-.now-playing .np-stations { transform: translateZ(18px); }
+.now-playing .np-stations { transform: translateZ(8px); }
 @keyframes npFloat {
-  0%,100% { transform: translateY(0) rotateX(7deg) rotateY(-4deg) scale(1); }
-  50%     { transform: translateY(-6px) rotateX(6deg) rotateY(-2deg) scale(1); }
+  0%,100% { transform: translateY(0) rotateX(6deg) rotateY(-2deg) scale(1); }
+  50%     { transform: translateY(-6px) rotateX(5deg) rotateY(-1deg) scale(1); }
 }
 @media (prefers-reduced-motion: reduce) {
   .now-playing.open { animation: none; transform: translateY(0) scale(1); }
@@ -1990,10 +2023,11 @@ footer .big {
 
 /* ---------- Now Playing: station picker ---------- */
 .np-picker-label {
-  margin: 12px 0 6px; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  margin: 12px 0 6px; padding: 0 16px;
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--muted); font-weight: 700;
 }
-.np-stations { display: flex; flex-wrap: wrap; gap: 6px; }
+.np-stations { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 16px; }
 .np-station {
   font: inherit; font-size: 12px; line-height: 1; cursor: pointer;
   padding: 7px 10px; border-radius: 999px;
