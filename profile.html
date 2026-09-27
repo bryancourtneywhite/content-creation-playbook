@@ -115,8 +115,10 @@
       <div class="sol-card">
         <h3>Profile</h3>
         <div class="field">
-          <label for="alias">Alias (your name on the leaderboard)</label>
-          <input id="alias" type="text" maxlength="24" placeholder="Choose an alias…">
+          <label for="alias">Alias (locked to your account name)</label>
+          <input id="alias" type="text" maxlength="24" readonly
+            style="opacity:.75;cursor:not-allowed;background:rgba(255,255,255,.03);">
+          <div class="muted" style="margin-top:6px;">🔒 Your alias is set from your Discord/login name so the leaderboard reflects real identities. It can't be changed.</div>
         </div>
         <div class="field">
           <label for="tagline">Tagline (shown on your profile)</label>
@@ -125,10 +127,6 @@
         <div class="field">
           <label for="fav_class">Main class</label>
           <input id="fav_class" type="text" maxlength="24" placeholder="e.g. Templar">
-        </div>
-        <div class="field">
-          <label for="avatar_url">Avatar image URL (optional — overrides your login avatar)</label>
-          <input id="avatar_url" type="text" placeholder="https://…">
         </div>
         <div class="field" style="display:flex;align-items:center;gap:12px;">
           <label for="accent" style="margin:0;">Card accent color</label>
@@ -217,7 +215,6 @@
       $('alias').value = p.alias || '';
       $('tagline').value = p.tagline || '';
       $('fav_class').value = p.fav_class || '';
-      $('avatar_url').value = p.avatar_url || '';
       if (p.accent) $('accent').value = p.accent;
       $('email-opt').checked = !!p.email_opt_in;
       var soundOn = localStorage.getItem('sol-sound') !== 'off';
@@ -251,40 +248,17 @@
   });
 
   // ---- Save profile ----
-  // Client-side mirror of the server's reserved-name rule (instant feedback;
-  // the database enforces it for real regardless).
-  function aliasReserved(a) {
-    var v = (a || '').toLowerCase()
-      .replace(/[4]/g,'a').replace(/[3]/g,'e').replace(/[0]/g,'o')
-      .replace(/[1]/g,'i').replace(/[$5]/g,'s').replace(/[7]/g,'t')
-      .replace(/[^a-z0-9]/g,'');
-    return ['solashur','ashurasol','ashura','bryan','sol','ash'].some(function (t) {
-      return v.indexOf(t) !== -1;
-    });
-  }
-
   $('save-btn').addEventListener('click', function () {
-    var alias = $('alias').value.trim();
-    if (alias && aliasReserved(alias)) {
-      $('save-note').textContent = '⛔ That alias is reserved. Please choose a different name.';
-      return;
-    }
+    // Alias + avatar are identity-locked and not sent. Only presentation fields.
     localStorage.setItem('sol-sound', $('sound-opt').checked ? 'on' : 'off');
     Sol.updateProfile({
-      alias: alias || null,
       tagline: $('tagline').value.trim() || null,
       fav_class: $('fav_class').value.trim() || null,
-      avatar_url: $('avatar_url').value.trim() || null,
       accent: $('accent').value || null,
       email_opt_in: $('email-opt').checked
     })
       .then(function (r) {
-        if (r && r.error) {
-          var msg = /reserved/i.test(r.error.message)
-            ? '⛔ That alias is reserved. Please choose a different name.'
-            : 'Save failed: ' + r.error.message;
-          $('save-note').textContent = msg; return;
-        }
+        if (r && r.error) { $('save-note').textContent = 'Save failed: ' + r.error.message; return; }
         $('save-note').textContent = 'Saved. ✅'; toast('Profile saved');
       })
       .catch(function (e) { $('save-note').textContent = 'Save failed: ' + e.message; });

@@ -99,8 +99,10 @@
   function updateProfile(fields) {
     return getUser().then(function (u) {
       if (!u) throw new Error('not_authenticated');
+      // alias + avatar are IDENTITY-LOCKED (derived from Discord/email, enforced
+      // by the DB column-guard). Users can only edit these presentation fields.
       var allowed = {};
-      ['alias', 'email_opt_in', 'settings', 'avatar_url', 'tagline', 'fav_class', 'accent'].forEach(function (k) {
+      ['email_opt_in', 'settings', 'tagline', 'fav_class', 'accent'].forEach(function (k) {
         if (k in fields) allowed[k] = fields[k];
       });
       return sb.from('profiles').update(allowed).eq('id', u.id).select().maybeSingle();
