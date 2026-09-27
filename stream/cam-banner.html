@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SolAshur - Cam Banner (6:2)</title>
+<link rel="stylesheet" href="theme.css">
+<!--
+  ============================================================================
+  CAM BANNER  -  6:2 ratio bar to sit ABOVE your webcam
+  Transparent background. Cross-fades on a loop between:
+      SOLASHUR  ->  Sponsored by RAZER  ->  Sponsored by EXITLAG
+                ->  Sponsored by AMAZON  ->  (repeat)
+  Shows each sponsor's REAL logo (files in the stream folder), with a readable
+  chip option behind dark logos, an optional promo code line under the logo,
+  and per-logo size control.
+
+  OBS SETUP
+  1. Sources -> + -> Browser. Check "Local file" and pick this file.
+  2. Set a 6:2 size (default targets 900 x 300; 600x200 or 1200x400 also work).
+  3. Uncheck "Shutdown source when not visible".
+  4. Position it directly above your webcam. Background is transparent.
+
+  Everything tunable lives in the CONFIG block near the bottom.
+  ============================================================================
+-->
+<style>
+  html, body { background: transparent; }
+  #banner { position:absolute; inset:0; overflow:hidden; container-type: size; }
+
+  .slide {
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:3%;
+    opacity:0; transition: opacity 700ms ease; text-align:center; padding:0 4%;
+  }
+  .slide.on { opacity:1; }
+
+  /* ---- Name slide ---- */
+  .name {
+    font-family: var(--font-display); font-weight:900; text-transform:uppercase;
+    letter-spacing:0.14em; color:#fff; font-size:34cqh;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.85), var(--glow-md);
+  }
+  .name .sub {
+    display:block; font-size:0.30em; letter-spacing:0.34em; opacity:0.9;
+    color: var(--accent-2); margin-top:0.15em; text-shadow: 0 1px 6px rgba(0,0,0,0.9);
+  }
+
+  /* ---- Sponsor slide ---- */
+  .spon { display:flex; align-items:center; gap:0.55em; }
+  .spon .lead {
+    font-family: var(--font-body); font-weight:700; text-transform:uppercase;
+    letter-spacing:0.24em; font-size:11cqh; color:#fff;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.9); white-space:nowrap;
+  }
+
+  .brandwrap { display:flex; flex-direction:column; align-items:center; gap:0.35em; }
+
+  .logobox { display:inline-flex; align-items:center; justify-content:center; padding:0; border-radius:14px; }
+  .logobox.chip { padding:3cqh 3cqw; background: rgba(255,255,255,0.92); box-shadow: 0 2px 12px rgba(0,0,0,0.45); }
+
+  .spon .logo { width:auto; object-fit:contain; display:none;
+                filter: drop-shadow(0 2px 8px rgba(0,0,0,0.55)); }
+  .spon.has-logo .logo  { display:block; }
+  .spon.has-logo .brand { display:none; }
+
+  .spon .brand {
+    font-family: var(--font-display); font-weight:900; text-transform:uppercase;
+    letter-spacing:0.06em; font-size:30cqh; text-shadow: 0 2px 10px rgba(0,0,0,0.85);
+  }
+  .brand.razer   { color:#44d62c; }
+  .brand.exitlag { color:#ff7a1a; }
+  .brand.amazon  { color:#ff9900; }
+
+  .promo {
+    font-family: var(--font-body); font-weight:800; letter-spacing:0.12em;
+    font-size:9cqh; color:#fff; text-transform:uppercase; white-space:nowrap;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.9); display:none;
+  }
+  .promo.show { display:block; }
+  .promo b { color: var(--accent-2); }
+</style>
+</head>
+<body>
+<script>
+  (function(){ var p=new URLSearchParams(location.search);
+    if (p.get('theme')==='light') document.documentElement.setAttribute('data-theme','light'); })();
+</script>
+
+  <div id="banner">
+    <!-- Slide 0: name -->
+    <div class="slide" data-slide>
+      <div class="name">SOLASHUR<span class="sub">ASHURA WHOLE HEAVENS</span></div>
+    </div>
+
+    <!-- Slide 1: Razer -->
+    <div class="slide" data-slide>
+      <div class="spon" data-sponsor="razer">
+        <span class="lead">Sponsored&nbsp;by</span>
+        <div class="brandwrap">
+          <span class="logobox"><img class="logo" alt="Razer" data-logo></span>
+          <span class="brand razer">RAZER</span>
+          <span class="promo" data-promo></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 2: ExitLag -->
+    <div class="slide" data-slide>
+      <div class="spon" data-sponsor="exitlag">
+        <span class="lead">Sponsored&nbsp;by</span>
+        <div class="brandwrap">
+          <span class="logobox"><img class="logo" alt="ExitLag" data-logo></span>
+          <span class="brand exitlag">EXITLAG</span>
+          <span class="promo" data-promo></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3: Amazon -->
+    <div class="slide" data-slide>
+      <div class="spon" data-sponsor="amazon">
+        <span class="lead">Sponsored&nbsp;by</span>
+        <div class="brandwrap">
+          <span class="logobox"><img class="logo" alt="Amazon" data-logo></span>
+          <span class="brand amazon">AMAZON</span>
+          <span class="promo" data-promo></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ==== CONFIG ==============================================================
+   Everything you tune lives here. Edit and reload.
+   ========================================================================== */
+var CONFIG = {
+  // Per-slide visible time (ms). Name holds long; sponsors flash briefly.
+  nameMs:    180000,  // SOLASHUR stays 3 minutes (the main focus)
+  sponsorMs: 5000,    // each sponsor shows ~5 seconds
+  fadeMs:    700,     // must match the CSS .slide transition (700ms)
+
+  /* SIZE PRESETS -----------------------------------------------------------
+     The banner scales to whatever OBS Browser-source size you set, as long as
+     it's a 6:2 ratio. Recommended: 900x300. Also fine: 600x200, 1200x400. */
+
+  sponsors: {
+    // height = % of banner height (cqh); maxW = % of banner width (cqw) cap.
+    // Sizes tuned to each file's real aspect ratio:
+    //   Razer 1529x1849 (tall, DARK->chip)  ExitLag 1170x262 (wide)  Amazon 600x600 (square)
+    razer: {
+      logo:   'RAZER%20LOGO%20PNG.png',       // stacked mark 1529x1849 (0.83:1, tall)
+      height: 82, maxW: 26,                   // tall logo -> nearly full height, narrow cap
+      chip:   true,                           // dark logo -> light chip keeps it visible
+      promo:  ''                              // '' hides the line
+    },
+    exitlag: {
+      logo:   'EXITLAG%20PNG.png',
+      height: 40, maxW: 62,                   // wide wordmark -> shorter, wider cap
+      chip:   false,
+      promo:  '20% OFF - code <b>SOLASHUR</b>'
+    },
+    amazon: {
+      logo:   'AMAZON%20PNG.png',
+      height: 58, maxW: 30,
+      chip:   false,
+      promo:  'Shop my gear - <b>solashur.com</b>'
+    }
+  }
+};
+
+/* ==== Apply per-sponsor logo, size, chip and promo ======================== */
+(function () {
+  document.querySelectorAll('.spon[data-sponsor]').forEach(function (spon) {
+    var key = spon.getAttribute('data-sponsor');
+    var cfg = CONFIG.sponsors[key];
+    if (!cfg) return;
+
+    var img   = spon.querySelector('[data-logo]');
+    var box   = spon.querySelector('.logobox');
+    var promo = spon.querySelector('[data-promo]');
+
+    // per-logo height + max-width cap (keeps wide wordmarks from overflowing)
+    if (img && cfg.height) img.style.height = cfg.height + 'cqh';
+    if (img && cfg.maxW)   img.style.maxWidth = cfg.maxW + 'cqw';
+    // readable chip behind dark logos
+    if (box && cfg.chip) box.classList.add('chip');
+    // promo / code line
+    if (promo && cfg.promo) { promo.innerHTML = cfg.promo; promo.classList.add('show'); }
+
+    // load logo; fall back to styled text if the file is missing
+    if (img && cfg.logo) {
+      img.onload  = function () { spon.classList.add('has-logo'); };
+      img.onerror = function () { spon.classList.remove('has-logo'); };
+      img.src = cfg.logo;
+    }
+  });
+})();
+
+/* ==== Slide cross-fade cycle ==============================================
+   Slide 0 is the name (holds nameMs). Slides 1+ are sponsors (hold sponsorMs).
+   Each slide schedules the next one based on its own duration.
+   ========================================================================== */
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll('[data-slide]'));
+  var i = 0;
+  slides[0].classList.add('on');
+
+  function holdFor(index) {
+    // index 0 = name (long hold); everything else = sponsor (short flash)
+    return (index === 0 ? CONFIG.nameMs : CONFIG.sponsorMs) + CONFIG.fadeMs;
+  }
+  function next() {
+    slides[i].classList.remove('on');
+    i = (i + 1) % slides.length;
+    slides[i].classList.add('on');
+    setTimeout(next, holdFor(i));
+  }
+  setTimeout(next, holdFor(0));
+})();
+</script>
+</body>
+</html>

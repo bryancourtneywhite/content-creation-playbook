@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SolAshur - Offline</title>
+<link rel="stylesheet" href="theme.css">
+<!--
+  ============================================================================
+  OFFLINE SCREEN - 1920x1080 (also used as Twitch/YouTube offline banner)
+  Drifting Akatsuki clouds + shuriken background, sparse reishi. Calm,
+  "come back later" energy + brand text and socials.
+  Export a still frame for platform offline banners (see README).
+  ============================================================================
+-->
+<style>
+  canvas.layer { position:absolute; inset:0; width:100%; height:100%; }
+  #ui { position:absolute; inset:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; text-align:center; }
+  #brand { font-size: 8vmin; }
+  #tag  { margin-top:1vh; font-size:2vmin; letter-spacing:8px; text-transform:uppercase; color:var(--reishi-dim); }
+  #status{ margin-top:3vh; }
+  #status .plate { font-size:2vmin; animation: pulseGlow 4s infinite; }
+  #socials { position:absolute; bottom:5vh; width:100%; display:flex; gap:40px; justify-content:center;
+  font-size:1.8vmin; letter-spacing:2px; color:var(--reishi-dim); }
+  #socials b { color:#fff; }
+</style>
+</head>
+<body class="scene">
+  <canvas id="clouds" class="layer"></canvas>
+  <canvas id="bg"  class="layer"></canvas>
+
+  <div id="ui">
+  <div id="brand" class="title accent-text">SOLASHUR</div>
+  <div id="tag">Ashura Whole Heavens</div>
+  <div id="status"><span class="plate">CURRENTLY OFFLINE</span></div>
+  </div>
+
+  <div id="socials">
+  <span>YouTube <b>@SolAshur</b></span>
+  <span>Web <b>solashur.com</b></span>
+  <span>Next stream soon</span>
+  </div>
+
+<script>
+  (function(){ var p=new URLSearchParams(location.search);
+  if (p.get('theme')==='light') document.documentElement.setAttribute('data-theme','light'); })();
+</script>
+<script src="engine.js"></script>
+<script>
+var CONFIG = { brand: 'SOLASHUR', tagline: 'Ashura Whole Heavens', status: 'CURRENTLY OFFLINE' };
+document.getElementById('brand').textContent  = CONFIG.brand;
+document.getElementById('tag').textContent  = CONFIG.tagline;
+document.querySelector('#status .plate').textContent = CONFIG.status;
+
+(function () {
+  var S = window.Solashur;
+  var clouds = new S.CloudField(document.getElementById('clouds'), { count: 8 });
+  var reishi = new S.Reishi(document.getElementById('bg'), { count: 45, drift: 6 });
+  var last = 0;
+  S.raf(function (t) {
+  var dt = Math.min(0.05, t-last); last=t;
+  clouds.step(t, dt);
+  reishi.step(t, dt);
+  });
+})();
+</script>
+</body>
+</html>

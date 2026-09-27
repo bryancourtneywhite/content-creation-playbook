@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SolAshur - Sponsor Billboard (AFK ad card)</title>
+<link rel="stylesheet" href="theme.css">
+<!--
+  ============================================================================
+  SPONSOR BILLBOARD  -  large rectangle ad card for your AFK / BRB page
+  A trackside-billboard style ad unit: big, bold, high-contrast, one sponsor
+  at a time with LOGO + name + promo, rotating on a steady loop so each brand
+  gets full spotlight. Meant to POP as an advertisement.
+
+  Recommended aspect ~16:9 or 4:3. OBS Browser source sizes that work well:
+      800 x 450  (16:9)   /   960 x 540   /   800 x 600 (4:3)
+  Transparent page background; the CARD itself is the solid ad panel.
+
+  Uses the real sponsor logo PNGs in this folder. Missing file -> text fallback.
+  Theme: red default; ?theme=light (or data-theme="light") for the blue set.
+  All timing/sponsors/promos tunable in CONFIG near the bottom.
+  ============================================================================
+-->
+<style>
+  html, body { background: transparent; width:100%; height:100%; }
+  #wrap { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:2%; }
+
+  /* The ad card itself */
+  #card {
+    position:relative; width:100%; height:100%; max-width:100%; max-height:100%;
+    border-radius:22px; overflow:hidden; container-type:size;
+    background: linear-gradient(160deg, #14141b 0%, #0a0a0f 60%, #050507 100%);
+    box-shadow:
+      0 0 0 3px var(--accent),
+      0 0 0 8px rgba(255,255,255,0.05),
+      0 18px 60px rgba(0,0,0,0.6),
+      var(--glow-lg);
+    animation: cardBreath 5s ease-in-out infinite;
+  }
+  :root[data-theme="light"] #card {
+    background: linear-gradient(160deg, #ffffff 0%, #eef4fc 60%, #dceaff 100%);
+    box-shadow: 0 0 0 3px var(--accent), 0 0 0 8px rgba(0,0,0,0.04),
+                0 18px 60px rgba(0,0,0,0.25), var(--glow-lg);
+  }
+  @keyframes cardBreath {
+    0%,100% { box-shadow: 0 0 0 3px var(--accent), 0 0 0 8px rgba(255,255,255,0.05), 0 18px 60px rgba(0,0,0,0.6), var(--glow-md); }
+    50%     { box-shadow: 0 0 0 3px var(--accent-2), 0 0 0 8px rgba(255,255,255,0.08), 0 18px 60px rgba(0,0,0,0.6), var(--glow-lg); }
+  }
+
+  /* Bright "AD / PARTNER" ribbon top-left so it clearly reads as an ad */
+  #ribbon {
+    position:absolute; top:5cqh; left:0; z-index:3;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    color:#fff; font-family:var(--font-body); font-weight:800;
+    letter-spacing:0.28em; text-transform:uppercase; font-size:4.5cqh;
+    padding:1.6cqh 4cqw 1.6cqh 3cqw;
+    border-top-right-radius:8px; border-bottom-right-radius:8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+  }
+
+  /* animated sweeping shine across the card for that billboard gloss */
+  #shine {
+    position:absolute; inset:0; z-index:2; pointer-events:none; overflow:hidden;
+  }
+  #shine::before {
+    content:""; position:absolute; top:-50%; left:-60%; width:40%; height:200%;
+    background: linear-gradient(115deg, transparent, rgba(255,255,255,0.16), transparent);
+    transform: rotate(8deg); animation: sweep 6s ease-in-out infinite;
+  }
+  @keyframes sweep { 0% { left:-60%; } 55%,100% { left:130%; } }
+
+  /* Sponsor slides */
+  .ad {
+    position:absolute; inset:0; z-index:1;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:4cqh; padding:12cqh 8cqw 8cqh;
+    opacity:0; transform:scale(0.96); transition: opacity 500ms ease, transform 500ms ease;
+    text-align:center;
+  }
+  .ad.on { opacity:1; transform:scale(1); }
+
+  .ad .kicker {
+    font-family:var(--font-body); font-weight:700; text-transform:uppercase;
+    letter-spacing:0.34em; font-size:5cqh; color:var(--accent-2);
+    text-shadow: 0 1px 8px rgba(0,0,0,0.6);
+  }
+
+  /* logo (real PNG) with a light plate option for dark logos */
+  .logobox { display:flex; align-items:center; justify-content:center; border-radius:16px; }
+  .logobox.chip { background:rgba(255,255,255,0.95); padding:5cqh 6cqw; box-shadow:0 4px 18px rgba(0,0,0,0.35); }
+  .ad .logo { width:auto; max-width:74cqw; max-height:52cqh; object-fit:contain; display:none;
+              filter: drop-shadow(0 4px 14px rgba(0,0,0,0.5)); }
+  .ad.has-logo .logo  { display:block; }
+  .ad.has-logo .brand { display:none; }
+
+  /* text fallback */
+  .ad .brand {
+    font-family:var(--font-display); font-weight:900; text-transform:uppercase;
+    letter-spacing:0.04em; font-size:22cqh; line-height:1;
+  }
+  .brand.razer   { color:#44d62c; }
+  .brand.exitlag { color:#ff7a1a; }
+  .brand.amazon  { color:#ff9900; }
+
+  .ad .promo {
+    font-family:var(--font-display); font-weight:900; text-transform:uppercase;
+    letter-spacing:0.06em; font-size:8cqh; color:#fff;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.6); line-height:1.1;
+  }
+  :root[data-theme="light"] .ad .promo { color: var(--accent-deep); }
+  .ad .promo b { color: var(--accent-2); }
+  .ad .promo:empty { display:none; }
+
+  /* progress bar showing time until next ad */
+  #progress { position:absolute; left:0; bottom:0; height:2.4cqh; z-index:3;
+              background: linear-gradient(90deg, var(--accent-2), var(--accent)); width:0%; }
+</style>
+</head>
+<body>
+<script>
+  (function(){ var p=new URLSearchParams(location.search);
+    if (p.get('theme')==='light') document.documentElement.setAttribute('data-theme','light'); })();
+</script>
+
+  <div id="wrap">
+    <div id="card">
+      <div id="ribbon">Partner</div>
+      <div id="shine"></div>
+      <div id="slides"></div>
+      <div id="progress"></div>
+    </div>
+  </div>
+
+<script>
+/* ==== CONFIG ==============================================================
+   Big billboard ad card. Each sponsor gets full spotlight, rotating steadily.
+   ========================================================================== */
+var CONFIG = {
+  perAdMs:   9000,     // how long each sponsor ad shows (9s)
+  fadeMs:    500,      // must match .ad transition (500ms)
+  ribbon:    'Partner',// top-left ribbon label (e.g. 'AD', 'Sponsor', 'Partner')
+
+  sponsors: [
+    { key:'razer',   logo:'RAZER%20LOGO%20PNG.png', maxW:40, chip:true,
+      kicker:'Gear Up With', promo:'RAZER' },
+    { key:'exitlag', logo:'EXITLAG%20PNG.png',      maxW:74, chip:false,
+      kicker:'Lag-Free With', promo:'20% OFF - code <b>SOLASHUR</b>' },
+    { key:'amazon',  logo:'AMAZON%20PNG.png',       maxW:52, chip:false,
+      kicker:'Shop My Setup', promo:'<b>solashur.com</b>' }
+  ]
+};
+
+/* ==== Build slides from CONFIG ============================================ */
+(function () {
+  document.getElementById('ribbon').textContent = CONFIG.ribbon;
+  var host = document.getElementById('slides');
+
+  CONFIG.sponsors.forEach(function (s) {
+    var ad = document.createElement('div');
+    ad.className = 'ad';
+    ad.innerHTML =
+      '<div class="kicker">' + (s.kicker || 'Sponsored By') + '</div>' +
+      '<div class="logobox' + (s.chip ? ' chip' : '') + '">' +
+        '<img class="logo" alt="' + s.key + '">' +
+        '<span class="brand ' + s.key + '">' + s.key.toUpperCase() + '</span>' +
+      '</div>' +
+      '<div class="promo">' + (s.promo || '') + '</div>';
+    var img = ad.querySelector('.logo');
+    if (s.maxW) img.style.maxWidth = s.maxW + 'cqw';
+    if (s.logo) {
+      img.onload  = function () { ad.classList.add('has-logo'); };
+      img.onerror = function () { ad.classList.remove('has-logo'); };
+      img.src = s.logo;
+    }
+    host.appendChild(ad);
+  });
+
+  /* ==== Rotate ads + progress bar ==== */
+  var ads = Array.prototype.slice.call(host.querySelectorAll('.ad'));
+  var progress = document.getElementById('progress');
+  var i = 0;
+  if (!ads.length) return;
+  ads[0].classList.add('on');
+
+  function restartProgress() {
+    progress.style.transition = 'none';
+    progress.style.width = '0%';
+    // force reflow so the transition restarts
+    void progress.offsetWidth;
+    progress.style.transition = 'width ' + CONFIG.perAdMs + 'ms linear';
+    progress.style.width = '100%';
+  }
+  restartProgress();
+
+  function next() {
+    ads[i].classList.remove('on');
+    i = (i + 1) % ads.length;
+    ads[i].classList.add('on');
+    restartProgress();
+  }
+  setInterval(next, CONFIG.perAdMs + CONFIG.fadeMs);
+})();
+</script>
+</body>
+</html>

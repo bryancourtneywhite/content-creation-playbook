@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SolAshur - Intermission / In-Game Layout</title>
+<link rel="stylesheet" href="theme.css">
+<!--
+  ============================================================================
+  MODULAR INTERMISSION / IN-GAME LAYOUT - 1920x1080 full-screen OBS scene
+  Three themed, transparent zones you place your real OBS sources BEHIND:
+  1) GAMEPLAY WINDOW  (large, left)  -> put your game capture behind it
+  2) CAM BORDER  (top-right)  -> put your webcam behind it
+  3) CHAT BOX  (bottom-right)  -> put a chat browser source behind it
+  This overlay draws the themed frames, labels, wing/blade accents and reishi.
+  Each zone's interior is transparent so your source shows through.
+
+  OBS: Browser source, 1920x1080, "Local file" -> this file (top of the list).
+  Then add game capture, webcam, and chat BELOW it, aligned to the zones.
+  Zone rectangles are defined in the CSS below (edit to taste).
+  ============================================================================
+-->
+<style>
+  #bg, #clouds { position:absolute; inset:0; width:100%; height:100%; }
+
+  /* ---- generic themed zone frame ---- */
+  .zone {
+  position:absolute;
+  border-radius: var(--radius);
+  /* transparent interior; only the frame + glow are visible */
+  box-shadow:
+  0 0 0 2px rgba(95,208,255,0.9),
+  0 0 0 6px rgba(30,144,255,0.35),
+  0 0 26px rgba(30,144,255,0.45),
+  inset 0 0 40px rgba(30,144,255,0.10);
+  background:
+  linear-gradient(180deg, rgba(30,144,255,0.06), rgba(5,5,7,0.0) 22%);
+  }
+  .zone .label {
+  position:absolute; top:-16px; left:20px;
+  padding:5px 16px; border-radius:999px; font-size:13px; font-weight:800;
+  letter-spacing:2px; text-transform:uppercase; color:#fff;
+  background: linear-gradient(120deg, var(--accent-2), var(--accent));
+  box-shadow: var(--glow-sm); white-space:nowrap;
+  }
+  /* corner brackets */
+  .zone .cnr { position:absolute; width:26px; height:26px; border:3px solid var(--accent-2);
+  filter: drop-shadow(var(--glow-sm)); }
+  .zone .tl{ top:-3px; left:-3px; border-right:0; border-bottom:0; border-top-left-radius:var(--radius);}
+  .zone .tr{ top:-3px; right:-3px; border-left:0; border-bottom:0; border-top-right-radius:var(--radius);}
+  .zone .bl{ bottom:-3px; left:-3px; border-right:0; border-top:0; border-bottom-left-radius:var(--radius);}
+  .zone .br{ bottom:-3px; right:-3px; border-left:0; border-top:0; border-bottom-right-radius:var(--radius);}
+
+  /* ---- specific zone placement (edit these to reposition) ---- */
+  #gameplay { left:2.5%;  top:6%;  width:64%;  height:74%; }
+  #cam  { right:2.5%; top:6%;  width:29%;  height:40%; border-radius:50% / 46%; }
+  #cam  { /* rounded cam */ }
+  #chat  { right:2.5%; bottom:6%; width:29%;  height:42%; }
+
+  /* bottom ticker bar */
+  #ticker {
+  position:absolute; left:2.5%; bottom:6%; width:64%; height:6.5%;
+  border-radius: 999px; display:flex; align-items:center; gap:22px; padding:0 26px;
+  background: linear-gradient(90deg, rgba(30,144,255,0.22), rgba(5,5,7,0.35));
+  box-shadow: 0 0 0 2px rgba(95,208,255,0.7), var(--glow-md); overflow:hidden;
+  }
+  #ticker .now { display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:2px;
+  text-transform:uppercase; color:#fff; white-space:nowrap; }
+  #ticker .dot { width:10px; height:10px; border-radius:50%; background:var(--accent-2);
+  box-shadow: var(--glow-sm); animation: flicker 2.5s infinite; }
+  #ticker .scroll { flex:1; overflow:hidden; white-space:nowrap; color:var(--reishi-dim); }
+  #ticker .scroll span { display:inline-block; padding-left:100%; animation: marquee 22s linear infinite; }
+  @keyframes marquee { to { transform: translateX(-100%); } }
+
+  .top-plate { position:absolute; top:1.5%; left:50%; transform:translateX(-50%); font-size:14px; z-index:5; }
+</style>
+</head>
+<body class="scene">
+  <canvas id="clouds"></canvas>
+  <canvas id="bg"></canvas>
+
+  <div class="plate top-plate">SOLASHUR<small>ASHURA WHOLE HEAVENS</small></div>
+
+  <!-- GAMEPLAY: put your Game Capture source behind this rectangle -->
+  <div id="gameplay" class="zone">
+  <span class="label">AION 2 - LIVE</span>
+  <i class="cnr tl"></i><i class="cnr tr"></i><i class="cnr bl"></i><i class="cnr br"></i>
+  </div>
+
+  <!-- CAM: put your Webcam source behind this rounded frame -->
+  <div id="cam" class="zone">
+  <span class="label" style="left:50%;transform:translateX(-50%);">SOLASHUR</span>
+  </div>
+
+  <!-- CHAT: put a Chat browser source behind this rectangle -->
+  <div id="chat" class="zone">
+  <span class="label">CHAT</span>
+  <i class="cnr tl"></i><i class="cnr tr"></i><i class="cnr bl"></i><i class="cnr br"></i>
+  </div>
+
+  <!-- Ticker / now-playing bar -->
+  <div id="ticker">
+  <span class="now"><i class="dot"></i> NOW PLAYING · AION 2</span>
+  <span class="scroll"><span id="tickerText">Welcome to the stream - drop a follow · AION 2 global launch grind · 100M gold weapon build · Elyos vs Asmodian faction war · solashur.com for builds &amp; guides</span></span>
+  </div>
+
+<script>
+  (function(){ var p=new URLSearchParams(location.search);
+  if (p.get('theme')==='light') document.documentElement.setAttribute('data-theme','light'); })();
+</script>
+<script src="engine.js"></script>
+<script>
+/* ==== CONFIG ============================================================== */
+var CONFIG = {
+  gameLabel:  'AION 2 - LIVE',
+  camLabel:  'SOLASHUR',
+  chatLabel:  'CHAT',
+  nowPlaying: 'NOW PLAYING · AION 2',
+  ticker:  'Welcome to the stream - drop a follow · AION 2 global launch grind · 100M gold weapon build · Elyos vs Asmodian faction war · solashur.com for builds & guides'
+};
+document.querySelector('#gameplay .label').textContent = CONFIG.gameLabel;
+document.querySelector('#cam .label').textContent = CONFIG.camLabel;
+document.querySelector('#chat .label').textContent = CONFIG.chatLabel;
+document.querySelector('#ticker .now').innerHTML = '<i class="dot"></i> ' + CONFIG.nowPlaying;
+document.getElementById('tickerText').textContent = CONFIG.ticker;
+
+/* ==== Background clouds + reishi =========================================== */
+(function () {
+  var S = window.Solashur;
+  var clouds = new S.CloudField(document.getElementById('clouds'), { count: 6 });
+  var reishi = new S.Reishi(document.getElementById('bg'), { count: 45, drift: 8 });
+  var last = 0;
+  S.raf(function (t) { var dt = Math.min(0.05, t-last); last=t; clouds.step(t, dt); reishi.step(t, dt); });
+})();
+</script>
+</body>
+</html>
+

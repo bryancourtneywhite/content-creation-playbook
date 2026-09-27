@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SolAshur - Plain Animated Background (loop)</title>
+<link rel="stylesheet" href="theme.css">
+<!--
+  ============================================================================
+  PLAIN ANIMATED BACKGROUND  -  1920x1080, NO TEXT
+  Matches solashur.com: drifting Akatsuki clouds + shuriken over reishi
+  particles and rune rings. No moon/blade/wing art - clean background only.
+  Add your OWN text on top in OBS, or SCREEN-RECORD this to make MP4/WebM.
+
+  THEME: black + red by default. For the white + blue variant, set the html tag:
+     <html lang="en" data-theme="light">
+  (or append ?theme=light to the file URL - handled by the small script below.)
+
+  EXPORT TO MP4 / WEBM (see README for full steps):
+    A) OBS: add as a 1920x1080 Browser source, then Start Recording.
+    B) ffmpeg / screen recorder at 60fps for ~15-30s. Motion loops acceptably.
+  ============================================================================
+-->
+<style>
+  canvas.layer { position:absolute; inset:0; width:100%; height:100%; }
+  .rr { top:50%; left:50%; transform:translate(-50%,-50%); }
+</style>
+</head>
+<body class="scene">
+  <canvas id="clouds" class="layer"></canvas>   <!-- Akatsuki clouds + shuriken -->
+  <canvas id="bg"     class="layer"></canvas>   <!-- reishi particles -->
+  <div class="rune-ring rr" style="width:70vmin;height:70vmin;"></div>
+  <div class="rune-ring reverse rr" style="width:86vmin;height:86vmin;"></div>
+  <div class="rune-ring rr" style="width:104vmin;height:104vmin;opacity:.5;"></div>
+
+<script>
+  /* Optional ?theme=light in the URL flips to the white/blue variant. */
+  (function(){ var p=new URLSearchParams(location.search);
+    if (p.get('theme')==='light') document.documentElement.setAttribute('data-theme','light'); })();
+</script>
+<script src="engine.js"></script>
+<script>
+(function () {
+  var S = window.Solashur;
+  var clouds = new S.CloudField(document.getElementById('clouds'), { count: 12 });
+  var reishi = new S.Reishi(document.getElementById('bg'), { count: 120, drift: 14 });
+  var last = 0;
+  S.raf(function (t) {
+    var dt = Math.min(0.05, t-last); last=t;
+    clouds.step(t, dt);
+    reishi.step(t, dt);
+  });
+})();
+</script>
+</body>
+</html>

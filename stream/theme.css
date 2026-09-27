@@ -1,0 +1,120 @@
+/* ============================================================================
+  SOLASHUR STREAM PACKAGE - SHARED THEME
+  Two variants matching solashur.com:
+  • DARK  (default)  = black + Akatsuki red  (Hueco Mundo)
+  • LIGHT (data-theme=light) = white + electric blue  (Lightning Templar)
+  ----------------------------------------------------------------------------
+  Single source of truth for brand color, type, glow and shared motion.
+  Every scene file links this with:  <link rel="stylesheet" href="theme.css">
+
+  Switch a scene's theme by setting the attribute on <html>:
+  <html data-theme="light">  ->  white/blue
+  <html>  ->  black/red (default)
+  The engine reads the same attribute so canvas motifs recolor to match.
+  ========================================================================== */
+
+/* ---- DARK (default): black + Akatsuki red ---- */
+:root {
+  --accent:  #d61e2c;  /* Akatsuki crimson (primary)  */
+  --accent-2:  #ff5563;  /* bright red glow / hot edge  */
+  --accent-deep: #7a0f18;  /* deep blood red (shadows)  */
+  --reishi:  #eef2ff;  /* pale reishi / feather white  */
+  --reishi-dim:  #b8c0e0;  /* dimmed reishi  */
+  --ink:  #0d0b0d;  /* Hueco Mundo near-black  */
+  --ink-2:  #16121a;  /* lifted panel black  */
+  --void:  #050507;  /* deepest void  */
+
+  --glow-sm: 0 0 8px  rgba(214,30,44,0.58);
+  --glow-md: 0 0 20px rgba(214,30,44,0.68);
+  --glow-lg: 0 0 46px rgba(255,85,99,0.45);
+
+  --font-display: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+  --font-body:  "Segoe UI", system-ui, sans-serif;
+  --radius: 16px;
+  --ring: 10px;
+}
+
+/* ---- LIGHT: white + electric blue (lightning Templar) ---- */
+:root[data-theme="light"] {
+  --accent:  #1f6fd6;  /* electric blue (primary)  */
+  --accent-2:  #3fa9ff;  /* bright cyan glow / hot edge  */
+  --accent-deep: #0a1a2e;  /* deep blue (shadows)  */
+  --reishi:  #0a1a2e;  /* dark ink text on light bg  */
+  --reishi-dim:  #45577a;  /* dimmed slate  */
+  --ink:  #eef4fc;  /* soft white panel  */
+  --ink-2:  #ffffff;  /* pure white  */
+  --void:  #f4f8fd;  /* lightest backdrop  */
+
+  --glow-sm: 0 0 8px  rgba(31,111,214,0.55);
+  --glow-md: 0 0 20px rgba(31,111,214,0.65);
+  --glow-lg: 0 0 46px rgba(63,169,255,0.45);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%; height: 100%;
+  background: transparent;  /* OBS composites over your sources */
+  overflow: hidden;
+  font-family: var(--font-body);
+  color: var(--reishi);
+}
+
+/* Full-screen scenes: dark black night by default; soft white in light mode.
+  (The canvas clouds/shuriken/moon render on top via the engine.) */
+body.scene {
+  background:
+  radial-gradient(1000px 700px at 78% 12%, #1a1c2e 0%, #05050a 55%, #030308 100%);
+}
+:root[data-theme="light"] body.scene {
+  background:
+  radial-gradient(1200px 800px at 70% 10%, #dcecff 0%, #f4f8fd 60%, #eaf3ff 100%);
+}
+
+/* ---- Reusable brand bits ---------------------------------------------------*/
+
+/* Nameplate pill (matches solashur.com) */
+.plate {
+  display: inline-block;
+  padding: 8px 26px; border-radius: 999px;
+  background: linear-gradient(120deg, var(--accent-2), var(--accent));
+  color: #fff; font-family: var(--font-display);
+  font-weight: 800; letter-spacing: 3px; text-transform: uppercase;
+  box-shadow: 0 6px 20px rgba(30,144,255,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
+  white-space: nowrap;
+}
+.plate small { display:block; font-size: 0.55em; letter-spacing: 2px; opacity: 0.85; }
+
+/* Big display title */
+.title {
+  font-family: var(--font-display);
+  font-weight: 900; letter-spacing: 4px; text-transform: uppercase;
+  color: #fff;
+  text-shadow: var(--glow-md), 0 2px 0 rgba(0,0,0,0.4);
+}
+
+/* Electric-blue gradient text accent */
+.accent-text {
+  background: linear-gradient(120deg, #fff, var(--accent-2) 55%, var(--accent));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+
+/* Dashed rotating rune ring (shared decorative element) */
+.rune-ring {
+  position: absolute; border-radius: 50%;
+  border: 2px dashed rgba(95,208,255,0.40);
+  animation: spin 40s linear infinite; pointer-events: none;
+}
+.rune-ring.reverse { border-style: dotted; border-color: rgba(30,144,255,0.30);
+  animation-duration: 64s; animation-direction: reverse; }
+
+/* Shared keyframes */
+@keyframes spin  { to { transform: rotate(360deg); } }
+@keyframes pulseGlow { 0%,100%{ filter: drop-shadow(var(--glow-sm)); } 50%{ filter: drop-shadow(var(--glow-md)); } }
+@keyframes floatY  { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-10px); } }
+@keyframes fadeUp  { from{ opacity:0; transform: translateY(16px);} to{ opacity:1; transform:none;} }
+@keyframes flicker  { 0%,100%{opacity:1;} 48%{opacity:.85;} 50%{opacity:.6;} 52%{opacity:.9;} }
+
+/* Utility */
+.center-abs { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+.stack { display:flex; flex-direction:column; align-items:center; gap:18px; }
