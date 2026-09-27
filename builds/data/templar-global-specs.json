@@ -105,6 +105,36 @@
         { "req": 20, "text": "+25% Stun Chance", "picked": false },
         { "req": 25, "text": "+200% damage to targets with Incapacitated Immunity", "picked": false }
       ]
+    },
+    {
+      "name": "Pummel",
+      "icon": "Pummel.webp",
+      "level": 20,
+      "maxLevel": 20,
+      "type": ["active", "physic"],
+      "desc": "Deals damage to up to 4 enemies within 4m and increases Enmity. 3 Stagger Gauge Damage. Part of the Holy Trinity (Pummel / Punishment / Judgment).",
+      "specs": [
+        { "req": 8,  "text": "-20% MP consumed", "picked": false },
+        { "req": 8,  "text": "[Punishing Strike] absorbs 3% HP", "picked": true },
+        { "req": 8,  "text": "Deals up to 12% more damage when fewer targets hit", "picked": true },
+        { "req": 12, "text": "-1s [Punishment] cooldown on hit", "picked": false },
+        { "req": 16, "text": "[Punishing Strike] grants extra damage on hit", "picked": true }
+      ]
+    },
+    {
+      "name": "Annihilate",
+      "icon": "Aniihilate.webp",
+      "level": 20,
+      "maxLevel": 20,
+      "type": ["active", "physic"],
+      "desc": "Deals damage to a target afflicted with Stun or Knockdown within 4m with a 30% chance to inflict Knockdown for 3s. 100% chance to inflict Knockdown on NPC targets. 5% chance to trigger vs targets with Incapacitated Immunity. 10 Stagger Gauge Damage. ALTERNATE BUILD: at Lv20 with 'Changes to AoE Skill', enables AOE Knockdown.",
+      "specs": [
+        { "req": 8,  "text": "+50% Multi-Hit on hit", "picked": false },
+        { "req": 8,  "text": "+20% Knockdown Chance", "picked": false },
+        { "req": 8,  "text": "+100% damage to targets with Incapacitated Immunity", "picked": true },
+        { "req": 12, "text": "-10s cooldown", "picked": true },
+        { "req": 16, "text": "Changes to AoE Skill", "picked": true }
+      ]
     }
   ]
 }
