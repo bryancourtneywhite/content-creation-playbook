@@ -1487,6 +1487,34 @@ header.hero > .scroll-hint { position: relative; z-index: 1; }
 }
 .big-btn:hover { filter: brightness(1.12); transform: scale(1.02); }
 
+/* ---------- CLASS ICON (Templar / class identity) ----------
+   The class emblem (e.g. Templar) used to instantly flag class content.
+   Two contexts: a large hero icon beside an article H1, and a small badge
+   sitting in a card's tag row so a build card reads as "Templar" at a glance. */
+.class-icon {
+  display: inline-block; vertical-align: middle;
+  border-radius: 12px; object-fit: cover;
+  background: rgba(0,0,0,0.35);
+  border: 1px solid var(--panel-border);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+}
+/* Hero icon: sits next to the article title on a guide page. */
+.article-head-row {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.article-head-row .article-head-titles { flex: 1; min-width: 240px; }
+.class-icon.hero {
+  width: 68px; height: 68px; border-radius: 16px;
+  flex: 0 0 auto;
+  box-shadow: 0 6px 20px rgba(214,30,44,0.28);
+}
+@media (max-width: 560px) { .class-icon.hero { width: 54px; height: 54px; } }
+/* Card badge: a compact class emblem for a build/class card tag row. */
+.bc-tags .class-icon.badge {
+  width: 26px; height: 26px; border-radius: 8px;
+  margin-right: 2px;
+}
+
 /* ---------- SKILL ICONS (build/guide visuals) ----------
    Square AION skill icons the user hosts in /assets as .webp. Used inline
    (.skill-ico), as a labeled chip (.skill-chip), and in a gallery grid. */
@@ -1525,6 +1553,20 @@ header.hero > .scroll-hint { position: relative; z-index: 1; }
 [data-theme="light"] .skill-tile { background: rgba(20,60,110,0.04); }
 /* Optional label above a grid */
 .skill-grid-label { font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-2); margin: 16px 0 2px; }
+
+/* Split layout: a "core" group and a separated "alternates" group. */
+.skill-split { display: flex; flex-wrap: wrap; align-items: stretch; gap: 16px; margin: 12px 0 6px; }
+.skill-split .ss-group { flex: 1 1 auto; min-width: 0; }
+.skill-split .ss-alt { flex: 0 1 auto; }
+.skill-split .ss-head { font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
+.skill-split .ss-core .ss-head { color: var(--accent-2); }
+/* vertical divider between core and alternates (becomes horizontal on mobile) */
+.skill-split .ss-divider { flex: 0 0 auto; width: 1px; align-self: stretch; background: linear-gradient(180deg, transparent, var(--panel-border), transparent); }
+.skill-split .ss-group .skill-grid { margin: 0; }
+@media (max-width: 720px) {
+  .skill-split { flex-direction: column; }
+  .skill-split .ss-divider { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, var(--panel-border), transparent); }
+}
 
 /* Full in-game skill-bar screenshot for a build profile. */
 .loadout-shot {
