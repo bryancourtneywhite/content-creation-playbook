@@ -29,6 +29,14 @@
   };
   function roleInfo(role) { return ROLES[role] || ROLES.shinigami; }
 
+  /* Default identity for souls with no set alias / no provider avatar.
+     Path is resolved for subfolder pages (builds/, lore/). */
+  var _deep = /\/(builds|lore)\//.test(location.pathname);
+  var DEFAULT_AVATAR = (_deep ? '../' : '') + 'assets/RINNEGAN%20EYE%20LOGO.png';
+  var DEFAULT_ALIAS = 'Unclaimed Sol';
+  function displayName(alias) { return alias && String(alias).trim() ? alias : DEFAULT_ALIAS; }
+  function avatarFor(url) { return url && String(url).trim() ? url : DEFAULT_AVATAR; }
+
   /* ---- Level-up chime (Web Audio; no file needed) ----
      A short ascending arpeggio, Zelda/Mario "power-up" flavored. `big` plays a
      longer, brighter fanfare (used on a rank-up). Respects a saved sound pref. */
@@ -147,6 +155,10 @@
     client: sb,
     ROLES: ROLES,
     roleInfo: roleInfo,
+    DEFAULT_AVATAR: DEFAULT_AVATAR,
+    DEFAULT_ALIAS: DEFAULT_ALIAS,
+    displayName: displayName,
+    avatarFor: avatarFor,
     playLevelUp: playLevelUp,
     loginWith: loginWith,
     loginEmail: loginEmail,

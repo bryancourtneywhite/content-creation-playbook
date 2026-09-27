@@ -32,11 +32,9 @@
     var rows = top.map(function (r, i) {
       var info = Sol.roleInfo(r.role);
       var medal = ['🥇','🥈','🥉'][i] || ('#' + r.position);
-      var avatar = r.avatar_url
-        ? '<img class="sr-av" src="' + esc(r.avatar_url) + '" alt="">'
-        : '<span class="sr-av">' + info.icon + '</span>';
+      var avatar = '<img class="sr-av" src="' + esc(Sol.avatarFor(r.avatar_url)) + '" alt="">';
       return '<li><span class="sr-pos">' + medal + '</span>' + avatar +
-        '<span class="sr-name">' + esc(r.alias || 'Soul') + '</span>' +
+        '<span class="sr-name">' + esc(Sol.displayName(r.alias)) + '</span>' +
         '<span class="sr-sol">' + (r.sols||0).toLocaleString() + '</span></li>';
     }).join('');
     return '<button class="sr-x" id="sr-close" aria-label="Dismiss">✕</button>' +

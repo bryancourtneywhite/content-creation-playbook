@@ -70,16 +70,14 @@
   Sol.getUser().then(function (me) {
     var myId = me && me.id;
     Sol.fetchLeaderboard(100).then(function (rows) {
-      if (!rows.length) { list.innerHTML = '<div class="lb-empty">No souls ranked yet. Be the first — <a href="profile.html">check in</a>.</div>'; return; }
+      if (!rows.length) { list.innerHTML = '<div class="lb-empty">No Sols ranked yet. Be the first — <a href="profile.html">check in</a>.</div>'; return; }
       list.innerHTML = rows.map(function (r) {
         var info = Sol.roleInfo(r.role);
         var topClass = r.position === 1 ? 'top1' : r.position === 2 ? 'top2' : r.position === 3 ? 'top3' : '';
         var eliteClass = (r.sols >= 5000) ? ' elite' : '';   // high-rank highlight
         var meClass = (myId && r.id === myId) ? ' me' : '';
-        var avatar = r.avatar_url
-          ? '<img class="lb-avatar" src="' + esc(r.avatar_url) + '" alt="">'
-          : '<span class="lb-avatar">' + info.icon + '</span>';
-        var name = esc(r.alias || 'Unclaimed Soul');
+        var avatar = '<img class="lb-avatar" src="' + esc(Sol.avatarFor(r.avatar_url)) + '" alt="">';
+        var name = esc(Sol.displayName(r.alias));
         return '<div class="lb-row ' + topClass + eliteClass + meClass + '">' +
           '<div class="lb-pos">' + (r.position === 1 ? '👑' : '#' + r.position) + '</div>' +
           '<div class="lb-who">' + avatar +

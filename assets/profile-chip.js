@@ -54,9 +54,7 @@
       var info = Sol.roleInfo(m.role || p.role || 'shinigami');
       var alias = p.alias || m.alias || 'Set your alias';
       var sols = (m.sols != null ? m.sols : 0);
-      var avatar = p.avatar_url
-        ? '<img class="np-avatar" src="' + esc(p.avatar_url) + '" alt="">'
-        : '<span class="np-avatar np-avatar-fallback" style="color:' + info.color + '">' + info.icon + '</span>';
+      var avatar = '<img class="np-avatar" src="' + esc(Sol.avatarFor(p.avatar_url)) + '" alt="">';
 
       mount.innerHTML =
         '<div class="np-chip" id="np-chip" tabindex="0" aria-haspopup="true" aria-expanded="false">' +
