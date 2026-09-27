@@ -243,22 +243,29 @@
 
     function load() {
       try {
+        // Reset the player state first. Switching from a single video (loaded
+        // via loadVideoById) straight into a named playlist is a known YouTube
+        // IFrame API quirk: loadPlaylist can silently no-op unless the current
+        // video is stopped first (symptom: the old track keeps playing). Clear
+        // any prior loop + stop, then load the new content.
+        try { player.setLoop(false); player.setShuffle(false); } catch (e0) {}
+        try { player.stopVideo(); } catch (e1) {}
+
         if (YT_PLAYLIST) {
           singleLoop = false;
-          // Named playlist → load it. This reliably replaces prior content.
-          player.loadPlaylist({ listType: 'playlist', list: YT_PLAYLIST, index: 0, startSeconds: 0 });
+          player.loadPlaylist({ listType: 'playlist', list: YT_PLAYLIST, index: 0, startSeconds: 0, suggestedQuality: 'default' });
           if (YT_SHUFFLE) player.setShuffle(true);
           player.setLoop(true);
         } else {
-          // Single video → loadVideoById reliably replaces WHATEVER is loaded
-          // now (a video OR a named playlist). We loop it ourselves in the
-          // ENDED handler (the playerVars loop trick only covers the FIRST
-          // video and breaks after switching into/out of a named playlist).
+          // Single video → loadVideoById reliably replaces whatever is loaded.
+          // We loop it ourselves in the ENDED handler.
           singleLoop = true;
-          try { player.setLoop(false); } catch (e2) {}
           player.loadVideoById({ videoId: YT_VIDEO_ID, startSeconds: 0 });
         }
+        // loadPlaylist/loadVideoById auto-play; make sure we're actually playing
+        // (stopVideo above can leave it cued), then fade the audio in.
         player.setVolume(0); curVol = 0;
+        try { player.playVideo(); } catch (e2) {}
         if (!isMuted()) fadeTo(VOLUME, 700);
       } catch (e) {}
     }
