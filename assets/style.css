@@ -2019,6 +2019,46 @@ footer .big {
   box-shadow: 0 0 10px rgba(214,30,44,0.25);
 }
 
+/* ---------- Now Playing: play/pause button in the header ---------- */
+.np-playpause {
+  flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 12px; line-height: 1; cursor: pointer; color: #fff;
+  border: 1px solid transparent;
+  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+  box-shadow: 0 3px 10px rgba(214,30,44,0.4);
+  transition: transform 0.12s ease, filter 0.15s ease;
+}
+.np-playpause:hover { transform: scale(1.1); filter: brightness(1.1); }
+.np-playpause:active { transform: scale(0.96); }
+
+/* ---------- Now Playing: sound console (volume / speed / ambience) ---------- */
+.np-console { padding: 4px 16px 14px; display: flex; flex-direction: column; gap: 9px; }
+.np-snd-sub { font-size: 10.5px; color: var(--muted); margin: 4px 0 -2px; letter-spacing: 0.04em; }
+.np-snd-row { display: grid; grid-template-columns: 52px 1fr 34px; align-items: center; gap: 8px; }
+.np-snd-lbl { font-size: 12px; font-weight: 700; color: var(--text); }
+.np-snd-val { font-size: 11px; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+/* Themed range sliders */
+.np-console input[type="range"] {
+  -webkit-appearance: none; appearance: none; width: 100%; height: 5px; border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), rgba(255,255,255,0.14)); cursor: pointer; outline: none;
+}
+.np-console input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 15px; height: 15px; border-radius: 50%;
+  background: #fff; border: 2px solid var(--accent-2);
+  box-shadow: 0 0 8px rgba(214,30,44,0.6); transition: transform 0.1s ease;
+}
+.np-console input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+.np-console input[type="range"]::-moz-range-thumb {
+  width: 15px; height: 15px; border-radius: 50%; background: #fff;
+  border: 2px solid var(--accent-2); box-shadow: 0 0 8px rgba(214,30,44,0.6);
+}
+[data-theme="light"] .np-console input[type="range"] {
+  background: linear-gradient(90deg, #d61e2c, rgba(20,60,110,0.18));
+}
+[data-theme="light"] .np-console input[type="range"]::-webkit-slider-thumb { border-color: #d61e2c; box-shadow: 0 0 8px rgba(214,30,44,0.4); }
+[data-theme="light"] .np-console input[type="range"]::-moz-range-thumb { border-color: #d61e2c; }
+
 /* ---------- LORE "COMIC" STYLING (original CSS art, no copyrighted images) ---------- */
 /* Cinematic scene panels for lore articles: bordered frames with a gradient
    "scene" wash, a glowing rune divider, and reveal-on-scroll. */

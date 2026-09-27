@@ -62,17 +62,31 @@
   var YT_PLAYLIST = station.list  || '';   // current playlist id (if any)
   var YT_SHUFFLE  = false;           // shuffle the playlist (after the first video) if true
   var YT_START = 0;                   // start seconds into the first track
-  var VOLUME = 22;                    // YouTube volume is 0–100 (gentle bg level)
   var SFX_VOLUME = 0.5;
 
   var MUTE_KEY = 'aws-audio-muted';
   var POS_KEY  = 'aws-audio-pos';      // last playback time (seconds)
   var TS_KEY   = 'aws-audio-ts';       // wall-clock ms of last save
   var PLAY_KEY = 'aws-audio-playing';  // was it playing when we left?
+  var VOL_KEY  = 'aws-audio-vol';      // music volume (0–100)
+  var RATE_KEY = 'aws-audio-rate';     // playback speed (0.5–1.5)
+  var AMB_KEY  = 'aws-audio-amb';      // ambient layer levels, JSON {drone,wind,rain}
+
+  // Music volume — a gentle default, overridable by the listener + persisted.
+  function loadVol() {
+    var v; try { v = parseFloat(localStorage.getItem(VOL_KEY)); } catch (e) {}
+    return (isFinite(v) && v >= 0 && v <= 100) ? v : 22;
+  }
+  var VOLUME = loadVol();            // YouTube volume is 0–100 (gentle bg level)
+  function loadRate() {
+    var r; try { r = parseFloat(localStorage.getItem(RATE_KEY)); } catch (e) {}
+    return (isFinite(r) && r >= 0.25 && r <= 2) ? r : 1;
+  }
+  var RATE = loadRate();
   function setItem(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
   function getNum(k) { try { return parseFloat(localStorage.getItem(k)); } catch (e) { return NaN; } }
   function isMuted() { try { return localStorage.getItem(MUTE_KEY) === '1'; } catch (e) { return false; } }
-  function setMutedPref(m) { setItem(MUTE_KEY, m ? '1' : '0'); }
+  function setMutedPref(m) { setItem(MUTE_KEY, m ? '1' : '0'); if (typeof refreshAmbient === 'function') refreshAmbient(); }
   function wasPlaying() { try { return localStorage.getItem(PLAY_KEY) === '1'; } catch (e) { return false; } }
 
   /* ---------------- MUSIC (hidden YouTube player) ---------------- */
@@ -190,6 +204,7 @@
           }
           curVol = 0;
           try { player.setVolume(0); } catch (e) {}   // start silent, fade in
+          try { player.setPlaybackRate(RATE); } catch (e) {}   // apply saved speed
           if (wantPlay && !isMuted()) doPlay();
         },
         onStateChange: function (e) {
@@ -226,6 +241,7 @@
     if (isMuted()) return;
     wantPlay = true;
     doPlay();
+    refreshAmbient();   // resume any saved ambient layers (needs a user gesture)
   }
 
   // Switch to a different station WITHOUT reloading the page: fade out, load
@@ -266,6 +282,7 @@
         // loadPlaylist/loadVideoById auto-play; make sure we're actually playing
         // (stopVideo above can leave it cued), then fade the audio in.
         player.setVolume(0); curVol = 0;
+        try { player.setPlaybackRate(RATE); } catch (e3) {}
         try { player.playVideo(); } catch (e2) {}
         if (!isMuted()) fadeTo(VOLUME, 700);
       } catch (e) {}
@@ -274,6 +291,109 @@
     if (!playerReady) { wantPlay = true; return; }
     // Fade out the current track, swap, then fade the new one in.
     fadeTo(0, 300, function () { load(); });
+  }
+
+  /* ---------------- Sound console: music volume + playback speed ----------------
+     These are REAL controls on the YouTube player (setVolume / setPlaybackRate).
+     NOTE: a true bass/mid/treble EQ is impossible on a cross-origin YouTube
+     iframe (the page can't touch its audio graph), so instead we offer volume,
+     speed, and self-synthesized AMBIENT layers below — all genuinely audible. */
+  function setMusicVolume(v) {
+    v = Math.max(0, Math.min(100, Math.round(v)));
+    VOLUME = v;
+    setItem(VOL_KEY, String(v));
+    // Only push to the player if we're not mid-fade (fades manage curVol).
+    if (playerReady && isPlaying()) { try { player.setVolume(v); curVol = v; } catch (e) {} }
+  }
+  function setPlaybackRate(r) {
+    r = Math.max(0.25, Math.min(2, r));
+    RATE = r;
+    setItem(RATE_KEY, String(r));
+    if (playerReady) { try { player.setPlaybackRate(r); } catch (e) {} }
+  }
+
+  /* ---------------- Ambient layers (self-synthesized via Web Audio) ----------------
+     Original sound — no files, no copyright. Three loops the listener can blend
+     under the music for immersion: a low "Hueco Mundo" drone, wind, and rain.
+     Each is filtered noise / oscillators with its own gain, persisted. */
+  var AC = null;                 // AudioContext (created on first gesture)
+  var amb = { drone: null, wind: null, rain: null };
+  var ambLevels = loadAmbLevels();
+  function loadAmbLevels() {
+    try { var o = JSON.parse(localStorage.getItem(AMB_KEY)); if (o) return { drone: +o.drone || 0, wind: +o.wind || 0, rain: +o.rain || 0 }; } catch (e) {}
+    return { drone: 0, wind: 0, rain: 0 };
+  }
+  function saveAmbLevels() { setItem(AMB_KEY, JSON.stringify(ambLevels)); }
+
+  function ensureAC() {
+    if (AC) return AC;
+    try {
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return null;
+      AC = new Ctx();
+    } catch (e) { AC = null; }
+    return AC;
+  }
+  // A reusable buffer of white noise (2 seconds, looped).
+  function noiseBuffer() {
+    var len = AC.sampleRate * 2;
+    var buf = AC.createBuffer(1, len, AC.sampleRate);
+    var d = buf.getChannelData(0);
+    for (var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    return buf;
+  }
+  function buildDrone() {
+    // Two detuned low oscillators through a lowpass = a deep ominous drone.
+    var g = AC.createGain(); g.gain.value = 0;
+    var lp = AC.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 240;
+    var o1 = AC.createOscillator(); o1.type = 'sawtooth'; o1.frequency.value = 55;      // ~A1
+    var o2 = AC.createOscillator(); o2.type = 'sine';     o2.frequency.value = 82.4;    // ~E2
+    o1.connect(lp); o2.connect(lp); lp.connect(g); g.connect(AC.destination);
+    o1.start(); o2.start();
+    return g;
+  }
+  function buildWind() {
+    // Bandpass-swept noise = wind.
+    var g = AC.createGain(); g.gain.value = 0;
+    var src = AC.createBufferSource(); src.buffer = noiseBuffer(); src.loop = true;
+    var bp = AC.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 600; bp.Q.value = 0.7;
+    // slow LFO on the filter for a gusting feel
+    var lfo = AC.createOscillator(); lfo.frequency.value = 0.08;
+    var lfoG = AC.createGain(); lfoG.gain.value = 320;
+    lfo.connect(lfoG); lfoG.connect(bp.frequency);
+    src.connect(bp); bp.connect(g); g.connect(AC.destination);
+    src.start(); lfo.start();
+    return g;
+  }
+  function buildRain() {
+    // Highpassed noise = rain hiss/patter.
+    var g = AC.createGain(); g.gain.value = 0;
+    var src = AC.createBufferSource(); src.buffer = noiseBuffer(); src.loop = true;
+    var hp = AC.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 1800;
+    src.connect(hp); hp.connect(g); g.connect(AC.destination);
+    src.start();
+    return g;
+  }
+  // Set an ambient layer's level (0–100) and (lazily) build its nodes.
+  function setAmbient(name, level) {
+    level = Math.max(0, Math.min(100, Math.round(level)));
+    ambLevels[name] = level;
+    saveAmbLevels();
+    if (level > 0 && !ensureAC()) return;      // no Web Audio support
+    if (level > 0) { try { if (AC.state === 'suspended') AC.resume(); } catch (e) {} }
+    if (level > 0 && !amb[name]) {
+      amb[name] = (name === 'drone') ? buildDrone() : (name === 'wind') ? buildWind() : buildRain();
+    }
+    if (amb[name]) {
+      // scale to a gentle range; drone is quieter to avoid muddiness
+      var max = (name === 'drone') ? 0.18 : (name === 'rain') ? 0.28 : 0.22;
+      var target = (isMuted() ? 0 : (level / 100) * max);
+      try { amb[name].gain.setTargetAtTime(target, AC.currentTime, 0.15); } catch (e) { amb[name].gain.value = target; }
+    }
+  }
+  // Re-apply all ambient levels (e.g. after mute changes).
+  function refreshAmbient() {
+    ['drone', 'wind', 'rain'].forEach(function (n) { if (ambLevels[n] > 0) setAmbient(n, ambLevels[n]); });
   }
 
   /* ---------------- Intro warp SFX (original, self-hosted) ---------------- */
@@ -385,6 +505,29 @@
     }
     return h + '</div>';
   }
+  // Build the "Sound" console: music volume, playback speed, ambient layers.
+  function sndRow(label, cls, min, max, step, val, suffix) {
+    return '<label class="np-snd-row"><span class="np-snd-lbl">' + esc(label) + '</span>' +
+      '<input type="range" class="' + cls + '" min="' + min + '" max="' + max + '" step="' + step + '" value="' + val + '">' +
+      '<span class="np-snd-val" data-suffix="' + esc(suffix || '') + '">' + val + esc(suffix || '') + '</span></label>';
+  }
+  function ambRow(label, name, val) {
+    return '<label class="np-snd-row"><span class="np-snd-lbl">' + esc(label) + '</span>' +
+      '<input type="range" class="np-amb" data-amb="' + name + '" min="0" max="100" step="1" value="' + val + '">' +
+      '<span class="np-snd-val">' + val + '</span></label>';
+  }
+  function soundConsole() {
+    var speedPct = Math.round(RATE * 100);
+    return '<div class="np-picker-label">Sound</div>' +
+      '<div class="np-console">' +
+        sndRow('Volume', 'np-vol', 0, 100, 1, Math.round(VOLUME), '') +
+        sndRow('Speed',  'np-rate', 50, 150, 5, speedPct, '%') +
+        '<div class="np-snd-sub">Ambience (blends under the music)</div>' +
+        ambRow('Drone', 'drone', ambLevels.drone) +
+        ambRow('Wind',  'wind',  ambLevels.wind) +
+        ambRow('Rain',  'rain',  ambLevels.rain) +
+      '</div>';
+  }
   // (Re)load the oEmbed title + channel for the CURRENT station.
   function loadOembed() {
     if (!panelEl) return;
@@ -428,7 +571,10 @@
     var thumb = stationThumbUrl();
     panelEl.innerHTML =
       '<button class="np-close" aria-label="Minimize player" title="Minimize">&#8211;</button>' +
-      '<div class="np-head">' + bars() + '<span class="np-status">Now Playing</span></div>' +
+      '<div class="np-head">' +
+        '<button class="np-playpause" type="button" aria-label="Play or pause">▶</button>' +
+        bars() + '<span class="np-status">Now Playing</span>' +
+      '</div>' +
       '<a class="np-media" href="' + watch + '" target="_blank" rel="noopener">' +
         '<img class="np-thumb" src="' + thumb + '" alt="" loading="lazy"' + (thumb ? '' : ' style="display:none"') + '>' +
         '<div class="np-meta">' +
@@ -438,9 +584,25 @@
       '</a>' +
       '<a class="np-source" href="' + watch + '" target="_blank" rel="noopener">▶ Watch source on YouTube ↗</a>' +
       '<div class="np-picker-label">Stations</div>' +
-      stationChips();
+      stationChips() +
+      soundConsole();
     document.body.appendChild(panelEl);
     panelEl.querySelector('.np-close').addEventListener('click', function (e) { e.stopPropagation(); togglePanel(false); });
+    // Play/Pause button — mirrors the speaker toggle but lives in the panel.
+    panelEl.querySelector('.np-playpause').addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (isPlaying()) {
+        doPause();
+        setMutedPref(true);          // keep it paused across pages
+        if (btnRef) updateBtn(btnRef, false);
+      } else {
+        setMutedPref(false);
+        startPlayback();
+        if (btnRef) updateBtn(btnRef, true);
+      }
+      // onStateChange will re-sync once YouTube confirms; this is instant feedback.
+      refreshPanelState();
+    });
     // Station chip clicks → switch stations in place (no page reload).
     panelEl.addEventListener('click', function (e) {
       var chip = e.target && e.target.closest ? e.target.closest('.np-station') : null;
@@ -450,6 +612,28 @@
       setMutedPref(false);        // choosing a station implies "play"
       if (!isPlaying() && !wantPlay) startPlayback();
       switchStation(id);
+    });
+    // Sound console sliders (live, no reload). Update the value label as they move.
+    function bindSlider(sel, onInput) {
+      var el = panelEl.querySelector(sel);
+      if (!el) return;
+      el.addEventListener('click', function (e) { e.stopPropagation(); });
+      el.addEventListener('input', function () {
+        var valEl = el.parentNode.querySelector('.np-snd-val');
+        if (valEl) valEl.textContent = el.value + (sel === '.np-rate' ? '%' : '');
+        onInput(parseFloat(el.value));
+      });
+    }
+    bindSlider('.np-vol',  function (v) { setMusicVolume(v); });
+    bindSlider('.np-rate', function (v) { setPlaybackRate(v / 100); });
+    // Ambient sliders share a class; bind each by its data-amb name.
+    panelEl.querySelectorAll('.np-amb').forEach(function (el) {
+      el.addEventListener('click', function (e) { e.stopPropagation(); });
+      el.addEventListener('input', function () {
+        var valEl = el.parentNode.querySelector('.np-snd-val');
+        if (valEl) valEl.textContent = el.value;
+        setAmbient(el.getAttribute('data-amb'), parseFloat(el.value));
+      });
     });
     // Pull real title + channel from YouTube oEmbed (keyless, credits the source).
     loadOembed();
@@ -461,6 +645,12 @@
     panelEl.classList.toggle('is-playing', playing);
     var st = panelEl.querySelector('.np-status');
     if (st) st.textContent = playing ? 'Now Playing' : 'Paused';
+    var pp = panelEl.querySelector('.np-playpause');
+    if (pp) {
+      pp.textContent = playing ? '❚❚' : '▶';
+      pp.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+      pp.title = playing ? 'Pause' : 'Play';
+    }
   }
   function togglePanel(open) {
     buildPanel();
