@@ -84,6 +84,14 @@
   </div>
   </div>
 
+  <h2>🧬 Skill Specializations (Core Skills)</h2>
+  <p>The exact specialization choices on my core skills - what each one is leveled to and which modifiers I picked at every breakpoint. A checked box is a selected specialization; dimmed rows are the higher-level options not yet unlocked at this skill level. Every other skill's spec is live in the interactive builder above.</p>
+  <div class="spec-legend">
+  <span class="lg-chip"><span class="lg-box"></span> Selected in this build</span>
+  <span class="lg-chip">Lv# = level required to unlock that specialization</span>
+  </div>
+  <div id="spec-cards" class="spec-grid" data-src="data/templar-global-specs.json"></div>
+
   <h2>🎛️ Three Preset Skill Pages</h2>
   <p>Set up <strong>three preset skill pages</strong> so you can swap instantly for the situation:</p>
   <ul>
@@ -261,6 +269,45 @@
   <p>Ashura Whole Heavens - AION 2</p>
   </footer>
 </div>
+
+<!-- Render the core-skill specialization cards from JSON -->
+<script>
+(function () {
+  var host = document.getElementById('spec-cards');
+  if (!host) return;
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]; }); }
+  function render(data) {
+    var skills = (data && data.skills) || [];
+    var html = '';
+    skills.forEach(function (s) {
+      var types = (s.type || []).map(function (t) { return '<span class="sh-type">' + esc(t) + '</span>'; }).join('');
+      var rows = (s.specs || []).map(function (sp) {
+        var unlocked = sp.req <= s.level;
+        var cls = sp.picked ? 'picked' : (unlocked ? '' : 'locked');
+        return '<li class="spec-row ' + cls + '">' +
+          '<span class="sr-req">Lv' + esc(sp.req) + '</span>' +
+          '<span class="sr-mark"></span>' +
+          '<span class="sr-text">' + esc(sp.text) + '</span></li>';
+      }).join('');
+      html += '<div class="spec-card">' +
+        '<div class="spec-head">' +
+          '<img src="../assets/' + encodeURI(s.icon) + '" alt="' + esc(s.name) + '" loading="lazy">' +
+          '<div><div class="sh-name">' + esc(s.name) + ' <span class="sh-lvl">Lv.' + esc(s.level) + '</span></div>' +
+          '<div class="sh-types">' + types + '</div></div>' +
+        '</div>' +
+        '<ul class="spec-list">' + rows + '</ul>' +
+      '</div>';
+    });
+    host.innerHTML = html;
+  }
+  fetch(host.getAttribute('data-src'))
+    .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+    .then(render)
+    .catch(function () {
+      host.innerHTML = '<p style="color:var(--muted);">Skill specialization detail is available in the interactive builder above.</p>';
+    });
+})();
+</script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="../assets/background.js"></script>

@@ -1,0 +1,110 @@
+{
+  "note": "Core Templar skill specializations for the global build, transcribed from Solashur's in-game spec panels (Questlog). 'picked: true' = the specialization is selected in this build. Icons live in /assets.",
+  "skills": [
+    {
+      "name": "Judgment",
+      "icon": "Judgement.webp",
+      "level": 20,
+      "maxLevel": 20,
+      "type": ["active", "physic"],
+      "desc": "Deals damage to a target within 4m and increases Enmity. 5 Stagger Gauge Damage.",
+      "specs": [
+        { "req": 8,  "text": "Absorbs 1% HP", "picked": false },
+        { "req": 8,  "text": "Deals extra damage vs targets afflicted with Impact-type status", "picked": false },
+        { "req": 8,  "text": "Extra damage on hit", "picked": true },
+        { "req": 12, "text": "Critical Hit on hit", "picked": true },
+        { "req": 16, "text": "Remove cooldown", "picked": true }
+      ]
+    },
+    {
+      "name": "Punishment",
+      "icon": "Punishment.webp",
+      "level": 10,
+      "maxLevel": 20,
+      "type": ["active", "physic"],
+      "desc": "Selects a target within 20m and deals damage to up to 4 enemies within 4m; grants the Executor effect (Accuracy +200, PvE Damage +20%, PvP Damage +10%) for 20s. Max 3 Charge Levels.",
+      "specs": [
+        { "req": 8,  "text": "Absorbs 10% HP", "picked": false },
+        { "req": 8,  "text": "Inflicts Damage over Time to target on hit", "picked": true },
+        { "req": 8,  "text": "+30% Skill Speed", "picked": true },
+        { "req": 12, "text": "Changes to mobile skill", "picked": false },
+        { "req": 16, "text": "Ignores Block and Evasion and lands as a Critical Hit", "picked": false }
+      ]
+    },
+    {
+      "name": "Battlefield Banner",
+      "icon": "Battiefield banner.webp",
+      "level": 25,
+      "maxLevel": 25,
+      "type": ["stigma", "magic"],
+      "desc": "Increases Attack proportional to Defense for 22.5s.",
+      "specs": [
+        { "req": 5,  "text": "+10% Multi-Hit Chance for duration", "picked": true },
+        { "req": 10, "text": "+10% Weapon Damage Boost for duration", "picked": true },
+        { "req": 15, "text": "+20% Attack increase proportional to Defense", "picked": true },
+        { "req": 20, "text": "-30s cooldown", "picked": true },
+        { "req": 25, "text": "+15% Combat Speed for the duration", "picked": true }
+      ]
+    },
+    {
+      "name": "Nezekan's Shield",
+      "icon": "Nezekan's Shield.webp",
+      "level": 5,
+      "maxLevel": 25,
+      "type": ["stigma", "magic"],
+      "desc": "Grants a Protective Shield that blocks damage equaling 45% of Max HP for 3s to the caster and nearby party members within 40m.",
+      "specs": [
+        { "req": 5,  "text": "+20% all Element Tolerance for Protective Shield duration", "picked": true },
+        { "req": 10, "text": "+2s Protective Shield duration", "picked": false },
+        { "req": 15, "text": "+20% PvE Damage Tolerance and +10% PvP Damage Tolerance for Protective Shield duration", "picked": false },
+        { "req": 20, "text": "Restores 20% of Max HP when Protective Shield is removed", "picked": false },
+        { "req": 25, "text": "+10% Protective Shield", "picked": false }
+      ]
+    },
+    {
+      "name": "Doom Shield",
+      "icon": "Doom Shield.webp",
+      "level": 15,
+      "maxLevel": 25,
+      "type": ["stigma", "physic"],
+      "desc": "Rushes to a target within 20m and deals damage. 75% chance to inflict Knockdown for 3s. Grants a Protective Shield (5% Max HP for 5s) on hit. Triggers [Judgment] for 3s. 100% chance to inflict Knockdown on NPC targets. 20 Stagger Gauge Damage.",
+      "specs": [
+        { "req": 5,  "text": "Resets [Annihilate] cooldown on hit", "picked": true },
+        { "req": 10, "text": "+200 Block for 5s on hit", "picked": true },
+        { "req": 15, "text": "Resets cooldown on defeating an enemy", "picked": true },
+        { "req": 20, "text": "+25% Knockdown Chance", "picked": false },
+        { "req": 25, "text": "Ignores Block and Evasion", "picked": false }
+      ]
+    },
+    {
+      "name": "Executing Blade",
+      "icon": "Executing Blade.webp",
+      "level": 10,
+      "maxLevel": 25,
+      "type": ["stigma", "physic"],
+      "desc": "Deals damage to up to 4 enemies within 4m and reduces Defense by 30% for 5s. Deals 20% more damage vs targets afflicted with Impact-type status. 20 Stagger Gauge Damage.",
+      "specs": [
+        { "req": 5,  "text": "-1s cooldown", "picked": true },
+        { "req": 10, "text": "Inflict Exposed for 5s on hit", "picked": true },
+        { "req": 15, "text": "Critical Hit on hit", "picked": false },
+        { "req": 20, "text": "+30% damage vs targets afflicted with Impact-type status", "picked": false },
+        { "req": 25, "text": "+3% all skill cooldowns of the target on hit", "picked": false }
+      ]
+    },
+    {
+      "name": "Empyrean Lord's Punishment",
+      "icon": "Empyrean Lord's Punishment.webp",
+      "level": 15,
+      "maxLevel": 25,
+      "type": ["stigma", "physic"],
+      "desc": "Selects a target within 20m and deals damage to up to 4 enemies within 4m with a 50% chance to inflict Stun for 3s. 100% chance to inflict Stun on NPC targets. 50 Stagger Gauge Damage.",
+      "specs": [
+        { "req": 5,  "text": "Up to +20% damage when fewer targets hit", "picked": true },
+        { "req": 10, "text": "+50 Stagger Gauge Damage", "picked": true },
+        { "req": 15, "text": "+10% PvE Damage Boost and +5% PvP Damage Boost for 10s on hit", "picked": true },
+        { "req": 20, "text": "+25% Stun Chance", "picked": false },
+        { "req": 25, "text": "+200% damage to targets with Incapacitated Immunity", "picked": false }
+      ]
+    }
+  ]
+}
