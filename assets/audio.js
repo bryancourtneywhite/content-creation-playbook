@@ -48,6 +48,7 @@
     { id: 'phonk',   name: 'Viral Phonk',          video: 'XSEyhGFc8rA' }
   ];
   var STATION_KEY = 'aws-audio-station';   // remembers the listener's chosen station
+  var PANEL_KEY   = 'aws-audio-panel';     // remembers if the player panel is open/minimized
   function findStation(id) {
     for (var i = 0; i < STATIONS.length; i++) { if (STATIONS[i].id === id) return STATIONS[i]; }
     return null;
@@ -426,7 +427,7 @@
     var watch = stationWatchUrl();
     var thumb = stationThumbUrl();
     panelEl.innerHTML =
-      '<button class="np-close" aria-label="Close">✕</button>' +
+      '<button class="np-close" aria-label="Minimize player" title="Minimize">&#8211;</button>' +
       '<div class="np-head">' + bars() + '<span class="np-status">Now Playing</span></div>' +
       '<a class="np-media" href="' + watch + '" target="_blank" rel="noopener">' +
         '<img class="np-thumb" src="' + thumb + '" alt="" loading="lazy"' + (thumb ? '' : ' style="display:none"') + '>' +
@@ -465,6 +466,8 @@
     buildPanel();
     panelOpen = (open === undefined) ? !panelOpen : open;
     panelEl.classList.toggle('open', panelOpen);
+    // Remember the listener's choice so it persists across pages.
+    setItem(PANEL_KEY, panelOpen ? '1' : '0');
     if (panelOpen) refreshPanelState();
   }
 
@@ -476,7 +479,7 @@
     wireSfx();
     loadYT();
 
-    // Info button (next to the audio toggle) opens the "Now Playing" source panel.
+    // Info button (next to the audio toggle) toggles the "Now Playing" panel.
     var info = document.createElement('button');
     info.id = 'audio-info';
     info.className = 'audio-info';
@@ -485,6 +488,13 @@
     info.setAttribute('aria-label', 'Now playing — music source');
     info.addEventListener('click', function (e) { e.stopPropagation(); togglePanel(); });
     document.body.appendChild(info);
+
+    // Show the music player EXPANDED by default so listeners see the stations
+    // right away. If they previously minimized it, respect that choice.
+    var startOpen;
+    try { startOpen = localStorage.getItem(PANEL_KEY); } catch (e) { startOpen = null; }
+    // Default (null / never chosen) = open. '0' = they minimized it.
+    togglePanel(startOpen !== '0');
 
     // Show the "tap for sound" prompt until playback actually begins
     // (browsers block autoplay-with-sound until a user gesture).

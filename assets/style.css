@@ -1895,21 +1895,70 @@ footer .big {
 }
 .audio-info:hover { transform: scale(1.1); border-color: var(--accent); }
 
+/* 3D-immersive music player panel: a floating console with layered depth,
+   a subtle perspective tilt + idle float, and a glowing crimson edge. It
+   straightens and lifts toward you on hover. */
 .now-playing {
   position: fixed; right: 18px; bottom: 74px; z-index: 121;
-  width: 300px; max-width: calc(100vw - 36px);
-  border-radius: 16px; overflow: hidden;
-  background: var(--panel); border: 1px solid var(--panel-border);
-  backdrop-filter: blur(14px);
-  box-shadow: 0 18px 50px rgba(0,0,0,0.5);
-  opacity: 0; transform: translateY(10px) scale(0.98);
-  pointer-events: none; transition: opacity 0.2s ease, transform 0.2s ease;
+  width: 312px; max-width: calc(100vw - 36px);
+  border-radius: 18px; overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 15% 0%, rgba(214,30,44,0.16), transparent 60%),
+    linear-gradient(165deg, rgba(30,16,22,0.94), rgba(10,8,12,0.94));
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(16px);
+  box-shadow:
+    0 26px 60px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(214,30,44,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    inset 0 -20px 40px rgba(0,0,0,0.35);
+  transform-style: preserve-3d; perspective: 900px;
+  opacity: 0; transform: translateY(14px) rotateX(10deg) scale(0.96);
+  transform-origin: bottom right;
+  pointer-events: none;
+  transition: opacity 0.28s ease, transform 0.32s cubic-bezier(.2,.9,.25,1);
 }
-.now-playing.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+[data-theme="light"] .now-playing {
+  background:
+    radial-gradient(120% 90% at 15% 0%, rgba(214,30,44,0.10), transparent 60%),
+    linear-gradient(165deg, rgba(255,255,255,0.96), rgba(232,238,248,0.96));
+}
+.now-playing.open {
+  opacity: 1; pointer-events: auto;
+  transform: translateY(0) rotateX(7deg) rotateY(-4deg) scale(1);
+  animation: npFloat 6s ease-in-out infinite;
+}
+/* Straighten + lift toward the viewer when interacted with */
+.now-playing.open:hover, .now-playing.open:focus-within {
+  transform: translateY(-2px) rotateX(0deg) rotateY(0deg) scale(1.02);
+  animation-play-state: paused;
+  box-shadow:
+    0 34px 74px rgba(0,0,0,0.66),
+    0 0 22px rgba(214,30,44,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+/* Give the inner content a hair of z-depth so the tilt reads as 3D */
+.now-playing .np-head, .now-playing .np-media,
+.now-playing .np-source, .now-playing .np-picker-label,
+.now-playing .np-stations { transform: translateZ(18px); }
+@keyframes npFloat {
+  0%,100% { transform: translateY(0) rotateX(7deg) rotateY(-4deg) scale(1); }
+  50%     { transform: translateY(-6px) rotateX(6deg) rotateY(-2deg) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .now-playing.open { animation: none; transform: translateY(0) scale(1); }
+  .now-playing { transition: opacity 0.2s ease; }
+}
 .now-playing .np-close {
-  position: absolute; top: 8px; right: 10px; z-index: 2;
-  background: none; border: none; color: var(--muted); font-size: 15px; cursor: pointer;
+  position: absolute; top: 8px; right: 10px; z-index: 3;
+  width: 24px; height: 24px; line-height: 1; border-radius: 8px;
+  background: rgba(0,0,0,0.25); border: 1px solid var(--panel-border);
+  color: var(--text); font-size: 18px; font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
 }
+.now-playing .np-close:hover { background: rgba(214,30,44,0.22); border-color: var(--accent); transform: scale(1.08); }
+[data-theme="light"] .now-playing .np-close { background: rgba(20,60,110,0.08); }
 .np-head { display: flex; align-items: center; gap: 10px; padding: 14px 16px 8px; }
 .np-status { font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--accent-2); }
 .np-media { display: flex; gap: 12px; align-items: center; padding: 6px 16px 12px; text-decoration: none; }
