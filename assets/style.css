@@ -1525,6 +1525,48 @@ header.hero > .scroll-hint { position: relative; z-index: 1; }
 [data-theme="light"] .skill-tile { background: rgba(20,60,110,0.04); }
 /* Optional label above a grid */
 .skill-grid-label { font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-2); margin: 16px 0 2px; }
+
+/* Full in-game skill-bar screenshot for a build profile. */
+.loadout-shot {
+  margin: 14px 0 6px; border-radius: 14px; overflow: hidden;
+  border: 1px solid var(--panel-border);
+  background: rgba(0,0,0,0.35);
+  box-shadow: 0 14px 34px rgba(0,0,0,0.45), 0 0 0 1px rgba(214,30,44,0.1);
+}
+.loadout-shot img { display: block; width: 100%; height: auto; }
+.loadout-shot figcaption {
+  padding: 8px 14px; font-size: 12px; color: var(--muted);
+  border-top: 1px solid var(--panel-border); background: rgba(0,0,0,0.25);
+}
+[data-theme="light"] .loadout-shot { background: rgba(20,60,110,0.04); }
+[data-theme="light"] .loadout-shot figcaption { background: rgba(20,60,110,0.05); }
+
+/* ---------- Questlog embed (interactive build) ---------- */
+.ql-embed-wrap {
+  margin: 20px 0; border-radius: 16px; overflow: hidden;
+  border: 1px solid var(--panel-border);
+  background:
+    radial-gradient(120% 90% at 12% 0%, rgba(214,30,44,0.14), transparent 60%),
+    linear-gradient(165deg, rgba(24,14,20,0.9), rgba(10,8,12,0.9));
+  box-shadow: 0 18px 44px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.ql-embed-head {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 12px 16px; border-bottom: 1px solid var(--panel-border);
+  background: rgba(0,0,0,0.3);
+}
+.ql-embed-head .ql-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent-2); box-shadow: 0 0 8px var(--accent-2); }
+.ql-embed-head .ql-title { font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; font-size: 13px; color: var(--text); }
+.ql-embed-head .ql-open {
+  margin-left: auto; font-size: 12px; font-weight: 700; text-decoration: none; color: #fff;
+  padding: 6px 14px; border-radius: 999px;
+  background: linear-gradient(120deg, var(--accent-2), var(--accent));
+  transition: filter 0.15s ease, transform 0.1s ease;
+}
+.ql-embed-head .ql-open:hover { filter: brightness(1.1); transform: scale(1.04); }
+.ql-embed-frame { position: relative; width: 100%; height: 640px; background: #0b0a0e; }
+.ql-embed-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+@media (max-width: 640px) { .ql-embed-frame { height: 560px; } }
 .big-btn.ghost { background: transparent; border: 1px solid var(--panel-border); color: var(--text); }
 .big-btn.questlog { background: linear-gradient(120deg, #6a4bd6, #9146ff); }
 
@@ -2280,3 +2322,30 @@ footer .big {
   .site-nav .nav-group.open .nav-caret { transform: rotate(180deg); }
   .site-nav .nav-hot { text-align: center; }
 }
+
+/* ---------- SOL LEADERBOARD front-page widget ---------- */
+.sol-widget {
+  max-width: 520px; margin: 40px auto 10px;
+  background: var(--panel); border: 1px solid var(--panel-border);
+  border-radius: 18px; padding: 22px 22px 20px; backdrop-filter: blur(10px);
+  box-shadow: 0 10px 34px rgba(0,0,0,0.35);
+}
+.sol-widget .sw-head { display:flex; align-items:center; justify-content:space-between; }
+.sol-widget .sw-all { color: var(--accent-2); text-decoration:none; font-weight:700; font-size:13px; }
+.sol-widget .sw-all:hover { text-decoration:underline; }
+.sol-widget .sw-title { margin:8px 0 4px; font-size:24px; }
+.sol-widget .sw-sub { color: var(--muted); font-size:13.5px; margin-bottom:14px; }
+.sol-widget .sw-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+.sol-widget .sw-list li { display:grid; grid-template-columns: 30px 1fr auto; align-items:center; gap:10px;
+  padding:9px 12px; border-radius:11px; background:rgba(255,255,255,.04); border:1px solid var(--panel-border); }
+.sol-widget .sw-pos { font-weight:900; text-align:center; color:var(--muted); }
+.sol-widget .sw-list li:first-child .sw-pos { color:#ffd24a; }
+.sol-widget .sw-name { font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sol-widget .sw-role { font-size:11px; font-weight:700; }
+.sol-widget .sw-sol { font-weight:900; white-space:nowrap; }
+.sol-widget .sw-sol small { font-size:10px; color:var(--muted); margin-left:3px; }
+.sol-widget .sw-loading { text-align:center; color:var(--muted); }
+.sol-widget .sw-me { margin-top:12px; padding:10px 12px; border-radius:11px; text-align:center;
+  border:1px solid var(--accent); color:#fff; font-weight:700; font-size:13.5px; }
+.sol-widget .sw-cta { display:block; text-align:center; margin-top:16px; padding:13px; font-weight:800; }
+[data-theme="light"] .sol-widget .sw-list li { background: rgba(20,60,110,0.05); }
