@@ -2034,7 +2034,6 @@ footer .big {
 
 /* ---------- Now Playing: sound console (volume / speed / ambience) ---------- */
 .np-console { padding: 4px 16px 14px; display: flex; flex-direction: column; gap: 9px; }
-.np-snd-sub { font-size: 10.5px; color: var(--muted); margin: 4px 0 -2px; letter-spacing: 0.04em; }
 .np-snd-row { display: grid; grid-template-columns: 52px 1fr 34px; align-items: center; gap: 8px; }
 .np-snd-lbl { font-size: 12px; font-weight: 700; color: var(--text); }
 .np-snd-val { font-size: 11px; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
