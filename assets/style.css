@@ -1960,6 +1960,15 @@ footer .big {
   box-shadow: 0 0 12px rgba(214,30,44,0.35);
 }
 [data-theme="light"] .np-station { background: rgba(20,60,110,0.05); }
+/* Light mode: the active station chip's white text washed out on the pale
+   gradient. Use bold RED text on a light backdrop so the selection pops.
+   (--accent-2 is blue in light theme, so hardcode the Akatsuki crimson here.) */
+[data-theme="light"] .np-station.active {
+  color: #d61e2c;
+  background: linear-gradient(135deg, rgba(214,30,44,0.14), rgba(214,30,44,0.06));
+  border-color: #d61e2c;
+  box-shadow: 0 0 10px rgba(214,30,44,0.25);
+}
 
 /* ---------- LORE "COMIC" STYLING (original CSS art, no copyrighted images) ---------- */
 /* Cinematic scene panels for lore articles: bordered frames with a gradient
