@@ -44,6 +44,7 @@
   { id: 'sponsors', label: 'Sponsors', href: 'optimize.html', highlight: true },
   { id: 'misc', label: 'MISC', children: [
   { label: '🏆 Sol Leaderboard', href: 'leaderboard.html' },
+  { label: '⚔️ MミRC Roster', href: 'roster.html' },
   { label: 'My Profile', href: 'profile.html' },
   { label: 'Hardware',  href: 'hardware.html' },
   { label: 'Media Kit', href: 'media-kit.html' },

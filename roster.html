@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MミRC Roster — Ashura Whole Heavens</title>
+<meta name="description" content="The MミRC AION 2 guild roster. Members-only: log in with Discord and sign up to join the operational roster.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://solashur.com/roster.html">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+<link rel="icon" href="assets/favicon.ico">
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/theme.js"></script>
+<script src="assets/nav.js"></script>
+<script src="assets/profile-chip.js"></script>
+<script src="assets/analytics.js"></script>
+<style>
+  .rs-wrap { max-width: 960px; margin: 34px auto; }
+  /* gate / signup panels */
+  .rs-panel { max-width: 560px; margin: 24px auto; padding: 26px 24px; border-radius: 16px;
+    background: var(--panel); border: 1px solid var(--panel-border); backdrop-filter: blur(10px); text-align: center; }
+  .rs-panel h3 { margin: 0 0 8px; }
+  .rs-panel p { color: var(--muted); margin: 0 0 16px; }
+  .rs-btn { display:inline-flex; align-items:center; gap:8px; text-decoration:none; cursor:pointer;
+    font-weight:800; font-size:15px; padding:12px 22px; border-radius:12px; color:#fff; border:none;
+    background: linear-gradient(120deg, var(--accent-2), var(--accent)); transition: filter .15s ease, transform .1s ease; }
+  .rs-btn:hover { filter:brightness(1.1); transform:scale(1.02); }
+  .rs-btn.discord { background: linear-gradient(120deg,#5865F2,#4752c4); }
+  .rs-form { text-align:left; display:flex; flex-direction:column; gap:14px; margin-top:8px; }
+  .rs-form label { font-size:13px; font-weight:700; color:var(--text); display:block; margin-bottom:6px; }
+  .rs-form input, .rs-form select, .rs-form textarea {
+    width:100%; padding:11px 14px; border-radius:10px; background:rgba(0,0,0,0.25);
+    border:1px solid var(--panel-border); color:var(--text); font-size:14px; font-family:inherit; outline:none; }
+  [data-theme="light"] .rs-form input, [data-theme="light"] .rs-form select, [data-theme="light"] .rs-form textarea { background:rgba(20,60,110,0.05); }
+  .rs-status-badge { display:inline-block; padding:6px 14px; border-radius:999px; font-weight:800; font-size:13px; }
+  .rs-status-badge.pending { background:rgba(255,180,60,0.16); color:#ffb43c; border:1px solid rgba(255,180,60,0.4); }
+  .rs-status-badge.rejected { background:rgba(160,160,170,0.14); color:var(--muted); border:1px solid var(--panel-border); }
+
+  /* summary strip */
+  .rs-summary { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin:8px 0 22px; }
+  .rs-stat { min-width:96px; padding:12px 16px; border-radius:12px; background:var(--panel); border:1px solid var(--panel-border); text-align:center; }
+  .rs-stat .n { font-weight:900; font-size:22px; color:var(--accent-2); }
+  .rs-stat .l { font-size:11px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); }
+
+  /* roster groups */
+  .rs-group { margin: 22px 0; }
+  .rs-group-h { font-size:13px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent-2); margin:0 0 10px; }
+  .rs-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px; }
+  .rs-card { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:12px;
+    background:var(--panel); border:1px solid var(--panel-border); border-left:4px solid var(--cc,#888); }
+  .rs-avatar { width:40px; height:40px; border-radius:50%; object-fit:cover; flex:0 0 auto; background:rgba(255,255,255,.08); border:1px solid var(--panel-border); }
+  .rs-name { font-weight:800; line-height:1.15; }
+  .rs-meta { font-size:12px; color:var(--muted); }
+  .rs-tag-row { display:flex; gap:5px; flex-wrap:wrap; margin-top:4px; }
+  .rs-chip { font-size:10px; font-weight:800; letter-spacing:.03em; text-transform:uppercase; padding:2px 7px; border-radius:999px; border:1px solid var(--panel-border); color:var(--muted); }
+  .rs-chip.war { background:rgba(214,30,44,.14); color:#ff8089; border-color:rgba(214,30,44,.4); }
+  .rs-chip.core { background:rgba(255,210,74,.14); color:#ffd24a; border-color:rgba(255,210,74,.4); }
+  .rs-chip.vet { background:rgba(90,140,255,.14); color:#8fb0ff; border-color:rgba(90,140,255,.4); }
+  .rs-verified { color:#4ad66b; font-weight:900; }
+
+  /* owner approval queue */
+  .rs-queue { margin:26px 0; padding:18px; border-radius:14px; background:rgba(214,30,44,0.06); border:1px solid rgba(214,30,44,0.3); }
+  .rs-queue h3 { margin:0 0 12px; }
+  .rs-q-row { display:flex; align-items:center; gap:12px; padding:10px 0; border-top:1px solid var(--panel-border); flex-wrap:wrap; }
+  .rs-q-row .grow { flex:1; min-width:160px; }
+  .rs-mini { font-size:12px; font-weight:700; padding:7px 12px; border-radius:9px; cursor:pointer; border:1px solid var(--panel-border); background:rgba(255,255,255,.05); color:var(--text); }
+  .rs-mini.ok { background:rgba(74,214,107,.16); border-color:rgba(74,214,107,.5); color:#8fe6a3; }
+  .rs-mini.no { background:rgba(160,160,170,.12); }
+  .rs-hidden { display:none !important; }
+  .rs-loading { text-align:center; color:var(--muted); padding:40px 0; }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<nav id="site-nav" data-active="misc"></nav>
+
+<div class="content">
+  <div class="rs-wrap">
+    <div class="section-head" style="margin-bottom:6px;">
+      <div class="kicker">⚔️ Guild Operations</div>
+      <h2>MミRC Roster</h2>
+      <p>The MミRC AION 2 operational roster. Members-only — log in with Discord and sign up to join.</p>
+    </div>
+
+    <div id="rs-root">
+      <div class="rs-loading">Summoning the roster…</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/sol.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="assets/background.js"></script>
+<script>
+(function () {
+  if (!window.Sol) { document.getElementById('rs-root').innerHTML = '<div class="rs-panel"><p>Roster is temporarily unavailable.</p></div>'; return; }
+  var root = document.getElementById('rs-root');
+
+  var CLASS_COLOR = {
+    Templar:'#d61e2c', Gladiator:'#ff7a45', Sorcerer:'#9d7bff', Ranger:'#4ad66b',
+    Assassin:'#ff5563', Cleric:'#ffd24a', Chanter:'#5ad1c8', Spiritmaster:'#8fb0ff'
+  };
+  var ROLE_ICON = { 'Tank':'🛡️', 'DPS':'⚔️', 'Healer':'✚', 'Support / Off-Heal':'🎶' };
+  var CLASSES = ['Templar','Gladiator','Sorcerer','Ranger','Assassin','Cleric','Chanter','Spiritmaster'];
+  var ROLES = ['Tank','DPS','Healer','Support / Off-Heal'];
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+  function loginGate() {
+    root.innerHTML =
+      '<div class="rs-panel">' +
+      '<h3>🔒 Members Only</h3>' +
+      '<p>The MミRC roster is visible to confirmed guild members. Log in with Discord to sign up.</p>' +
+      '<button class="rs-btn discord" id="rs-login">🎮 Log in with Discord</button>' +
+      '</div>';
+    document.getElementById('rs-login').addEventListener('click', function () { Sol.loginWith('discord'); });
+  }
+
+  function signupForm(existing) {
+    var isEdit = !!existing;
+    var opts = function (arr, sel) { return arr.map(function(v){ return '<option'+(v===sel?' selected':'')+'>'+esc(v)+'</option>'; }).join(''); };
+    root.innerHTML =
+      '<div class="rs-panel">' +
+      '<h3>' + (isEdit ? 'Edit your signup' : 'Sign up for the roster') + '</h3>' +
+      '<p>Submit your in-game identity. The guild master reviews and confirms you onto the roster.</p>' +
+      '<div class="rs-form">' +
+        '<div><label>In-game name</label><input id="f-name" maxlength="32" value="' + esc(existing && existing.player_name || '') + '" placeholder="Your AION 2 character name"></div>' +
+        '<div><label>Class</label><select id="f-class">' + opts(CLASSES, existing && existing.aion_class) + '</select></div>' +
+        '<div><label>Role</label><select id="f-role">' + opts(ROLES, existing && existing.guild_role) + '</select></div>' +
+        '<div><label>Note (optional)</label><textarea id="f-note" rows="2" maxlength="200" placeholder="Anything the guild master should know">' + esc(existing && existing.note || '') + '</textarea></div>' +
+        '<button class="rs-btn" id="f-submit">' + (isEdit ? 'Update signup' : 'Submit signup') + '</button>' +
+        '<div id="f-msg" style="color:var(--muted);font-size:13px;"></div>' +
+      '</div></div>';
+    document.getElementById('f-submit').addEventListener('click', function () {
+      var name = document.getElementById('f-name').value.trim();
+      var cls = document.getElementById('f-class').value;
+      var role = document.getElementById('f-role').value;
+      var note = document.getElementById('f-note').value.trim();
+      var msg = document.getElementById('f-msg');
+      if (name.length < 2) { msg.textContent = 'Enter your in-game name (2+ characters).'; return; }
+      msg.textContent = 'Submitting…';
+      Sol.rosterSignup(name, cls, role, note).then(function () { render(); })
+        .catch(function (e) { msg.textContent = 'Could not submit: ' + (e.message || 'try again'); });
+    });
+  }
+
+  function pendingScreen(row) {
+    var rejected = row.status === 'rejected';
+    root.innerHTML =
+      '<div class="rs-panel">' +
+      '<h3>' + (rejected ? 'Signup not approved' : '⏳ Awaiting confirmation') + '</h3>' +
+      '<p><span class="rs-status-badge ' + (rejected?'rejected':'pending') + '">' + (rejected?'Rejected':'Pending review') + '</span></p>' +
+      '<p>' + (rejected
+        ? 'Your signup was not approved. You can edit and resubmit, or reach out in Discord.'
+        : 'Your signup as <strong>' + esc(row.player_name) + '</strong> (' + esc(row.aion_class) + ' · ' + esc(row.guild_role) + ') is awaiting the guild master. You will see the full roster once confirmed.') + '</p>' +
+      '<button class="rs-btn" id="rs-edit">Edit my signup</button>' +
+      '</div>';
+    document.getElementById('rs-edit').addEventListener('click', function () { signupForm(row); });
+  }
+
+  function rosterCard(m) {
+    var color = CLASS_COLOR[m.aion_class] || '#888';
+    var avatar = m.linked_avatar || Sol.DEFAULT_AVATAR;
+    var chips = '';
+    if (m.war_status) chips += '<span class="rs-chip war">War</span>';
+    if (m.is_core)    chips += '<span class="rs-chip core">Core</span>';
+    if (m.tw_vet)     chips += '<span class="rs-chip vet">TW Vet</span>';
+    if (m.static_team) chips += '<span class="rs-chip">' + esc(m.static_team) + '</span>';
+    return '<div class="rs-card" style="--cc:' + color + '">' +
+      '<img class="rs-avatar" src="' + esc(avatar) + '" alt="" onerror="this.style.visibility=\'hidden\'">' +
+      '<div style="min-width:0;">' +
+        '<div class="rs-name">' + (ROLE_ICON[m.guild_role]||'') + ' ' + esc(m.player_name) + ' <span class="rs-verified" title="Confirmed member">✓</span></div>' +
+        '<div class="rs-meta" style="color:' + color + '">' + esc(m.aion_class) + ' · ' + esc(m.guild_role) + '</div>' +
+        (chips ? '<div class="rs-tag-row">' + chips + '</div>' : '') +
+      '</div></div>';
+  }
+
+  function memberView(rows, summary, isOwner) {
+    var confirmed = rows.filter(function(r){ return r.status === 'confirmed'; });
+    // group by assigned_group (fallback 'Unassigned')
+    var groups = {};
+    confirmed.forEach(function (m) {
+      var g = m.assigned_group || 'Unassigned';
+      (groups[g] = groups[g] || []).push(m);
+    });
+    var gk = Object.keys(groups).sort(function(a,b){
+      if (a==='Reserve') return 1; if (b==='Reserve') return -1;
+      if (a==='Unassigned') return 1; if (b==='Unassigned') return -1;
+      return a.localeCompare(b, undefined, {numeric:true});
+    });
+
+    var html = '';
+    if (summary) {
+      html += '<div class="rs-summary">' +
+        '<div class="rs-stat"><div class="n">' + (summary.confirmed||0) + '</div><div class="l">Roster</div></div>' +
+        '<div class="rs-stat"><div class="n">' + (summary.war_ready||0) + '</div><div class="l">War Ready</div></div>' +
+        '<div class="rs-stat"><div class="n">' + (summary.tanks||0) + '</div><div class="l">Tanks</div></div>' +
+        '<div class="rs-stat"><div class="n">' + (summary.healers||0) + '</div><div class="l">Healers</div></div>' +
+        '<div class="rs-stat"><div class="n">' + (summary.dps||0) + '</div><div class="l">DPS</div></div>' +
+        '<div class="rs-stat"><div class="n">' + (summary.support||0) + '</div><div class="l">Support</div></div>' +
+      '</div>';
+    }
+
+    // owner approval queue
+    if (isOwner) {
+      var pending = rows.filter(function(r){ return r.status === 'pending'; });
+      html += '<div class="rs-queue">' +
+        '<h3>🛡️ Approval Queue (' + pending.length + ')</h3>' +
+        (pending.length ? pending.map(function (p) {
+          return '<div class="rs-q-row" data-id="' + p.id + '">' +
+            '<div class="grow"><strong>' + esc(p.player_name) + '</strong> — ' + esc(p.aion_class) + ' · ' + esc(p.guild_role) +
+            (p.note ? '<div class="rs-meta">“' + esc(p.note) + '”</div>' : '') + '</div>' +
+            '<button class="rs-mini ok" data-act="confirm" data-id="' + p.id + '">Confirm</button>' +
+            '<button class="rs-mini no" data-act="reject" data-id="' + p.id + '">Reject</button>' +
+          '</div>';
+        }).join('') : '<div class="rs-meta">No pending signups.</div>') +
+      '</div>';
+    }
+
+    // grouped roster
+    gk.forEach(function (g) {
+      html += '<div class="rs-group"><div class="rs-group-h">' + esc(g) + ' · ' + groups[g].length + '</div>' +
+        '<div class="rs-cards">' + groups[g].map(rosterCard).join('') + '</div></div>';
+    });
+    if (!confirmed.length) html += '<div class="rs-loading">No confirmed members yet.</div>';
+
+    root.innerHTML = html;
+
+    if (isOwner) {
+      root.querySelectorAll('.rs-mini[data-act]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var id = parseInt(b.getAttribute('data-id'), 10);
+          var act = b.getAttribute('data-act');
+          b.disabled = true; b.textContent = '…';
+          var p = (act === 'confirm') ? Sol.rosterConfirm(id) : Sol.rosterReject(id);
+          p.then(function () { render(); });
+        });
+      });
+    }
+  }
+
+  function render() {
+    Sol.getUser().then(function (user) {
+      if (!user) { loginGate(); return; }
+      Sol.myRoster().then(function (mine) {
+        if (!mine) { signupForm(null); return; }
+        if (mine.status === 'confirmed') {
+          Promise.all([Sol.fetchRoster(), Sol.rosterSummary(), Sol.myProfile()]).then(function (res) {
+            var rows = res[0] || [], summary = res[1], profile = res[2];
+            var isOwner = profile && profile.role === 'sol_king';
+            memberView(rows, summary, isOwner);
+          });
+        } else {
+          pendingScreen(mine);   // pending or rejected
+        }
+      });
+    });
+  }
+
+  render();
+  Sol.onAuthChange(function () { render(); });
+})();
+</script>
+</body>
+</html>

@@ -131,6 +131,60 @@
       .then(function (r) { return r.data || []; });
   }
 
+  /* ---- MミRC Guild Roster (signup + confirm; members-only) ----
+     Roster starts empty. A member signs up (rosterSignup) -> pending. The owner
+     confirms them. Only CONFIRMED members can read the full roster (RLS-gated);
+     everyone else can read only their own signup row. */
+
+  // My own signup row (or null if I never signed up).
+  function myRoster() {
+    return getSession().then(function (s) {
+      if (!s) return null;
+      return sb.rpc('my_roster').then(function (r) {
+        // rpc returns the row (or null). Some PostgREST setups wrap in array.
+        var d = r.data;
+        if (Array.isArray(d)) return d[0] || null;
+        return d || null;
+      });
+    });
+  }
+  // Am I a confirmed roster member? (gates the members-only view/UI)
+  function isRosterMember() {
+    return myRoster().then(function (row) { return !!(row && row.status === 'confirmed'); });
+  }
+  // Create/update my signup. status is server-managed (pending until confirmed).
+  function rosterSignup(name, aionClass, guildRole, note) {
+    return sb.rpc('roster_signup', {
+      p_name: name, p_class: aionClass, p_role: guildRole, p_note: note || null
+    }).then(function (r) {
+      if (r.error) throw r.error;
+      var d = r.data; return Array.isArray(d) ? d[0] : d;
+    });
+  }
+  // Read the roster. RLS returns all CONFIRMED rows only to confirmed members;
+  // to everyone else it returns just their own row.
+  function fetchRoster() {
+    return sb.from('guild_roster')
+      .select('*')
+      .order('assigned_group', { ascending: true })
+      .order('player_name', { ascending: true })
+      .then(function (r) { return r.data || []; });
+  }
+  function rosterSummary() {
+    return sb.rpc('roster_summary').then(function (r) { return (r.data && r.data[0]) || null; });
+  }
+  // ---- owner controls (no-op / error for non-owners, enforced server-side) ----
+  function rosterConfirm(id) { return sb.rpc('roster_confirm', { p_id: id }); }
+  function rosterReject(id)  { return sb.rpc('roster_reject',  { p_id: id }); }
+  function rosterAssign(id, opts) {
+    opts = opts || {};
+    return sb.rpc('roster_assign', {
+      p_id: id, p_group: opts.group || null, p_team: opts.team || null,
+      p_cp: (opts.cp != null ? opts.cp : null), p_war: (opts.war != null ? opts.war : null),
+      p_core: (opts.core != null ? opts.core : null), p_vet: (opts.vet != null ? opts.vet : null)
+    });
+  }
+
   /* ---- Check-in (earn Sol) ---- */
   function checkIn() {
     return getSession().then(function (s) {
@@ -170,6 +224,14 @@
     updateProfile: updateProfile,
     mySummary: mySummary,
     fetchLeaderboard: fetchLeaderboard,
+    myRoster: myRoster,
+    isRosterMember: isRosterMember,
+    rosterSignup: rosterSignup,
+    fetchRoster: fetchRoster,
+    rosterSummary: rosterSummary,
+    rosterConfirm: rosterConfirm,
+    rosterReject: rosterReject,
+    rosterAssign: rosterAssign,
     checkIn: checkIn
   };
 })();
