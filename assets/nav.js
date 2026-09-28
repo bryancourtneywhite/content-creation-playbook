@@ -43,6 +43,7 @@
   ]},
   { id: 'sponsors', label: 'Sponsors', href: 'optimize.html', highlight: true },
   { id: 'roster', label: 'MミRC Roster', href: 'roster.html', children: [
+  { label: '📝 Apply to Guild', href: 'apply.html' },
   { label: '⚔️ Roster', href: 'roster.html' },
   { label: '📖 Day One Guide', href: 'merc-day-one-guide.html' },
   { label: '📘 Global Launch Guide', href: 'merc-launch-guide.html' }

@@ -183,6 +183,32 @@
       var d = r.data; return Array.isArray(d) ? d[0] : d;
     });
   }
+  // Full guild APPLICATION (apply.html). Writes the same pending roster row as a
+  // signup, but with all application answers. Owner/admins review it in the
+  // Signups tab; approval puts them on the roster + unlocks members-only docs.
+  // `app` is an object: { name, aionClass, guildRole, discord, ignHistory,
+  //   archetype, flex, pvpHistory, vod, playtime, timezone, economic, note }.
+  function rosterApply(app) {
+    app = app || {};
+    return sb.rpc('roster_apply', {
+      p_name:        app.name,
+      p_class:       app.aionClass,
+      p_role:        app.guildRole,
+      p_discord:     app.discord || null,
+      p_ign_history: app.ignHistory || null,
+      p_archetype:   app.archetype || null,
+      p_flex:        (app.flex != null && app.flex !== '' ? parseInt(app.flex, 10) : null),
+      p_pvp_history: app.pvpHistory || null,
+      p_vod:         app.vod || null,
+      p_playtime:    app.playtime || null,
+      p_timezone:    app.timezone || null,
+      p_economic:    app.economic || null,
+      p_note:        app.note || null
+    }).then(function (r) {
+      if (r.error) throw r.error;
+      var d = r.data; return Array.isArray(d) ? d[0] : d;
+    });
+  }
   // Read the roster. RLS returns all CONFIRMED rows only to confirmed members;
   // to everyone else it returns just their own row.
   function fetchRoster() {
@@ -290,6 +316,7 @@
     rosterAddMember: rosterAddMember,
     rosterRemove: rosterRemove,
     rosterSignup: rosterSignup,
+    rosterApply: rosterApply,
     fetchRoster: fetchRoster,
     rosterSummary: rosterSummary,
     rosterConfirm: rosterConfirm,

@@ -121,6 +121,13 @@
   .rs-ab.sel.excused { background:rgba(140,150,170,.2); color:#c4ccdc; }
   .rs-rate { font-size:12px; font-weight:800; }
   .rs-rate.hi { color:#4ad66b; } .rs-rate.mid { color:#ffb43c; } .rs-rate.lo { color:#ff8089; }
+  /* application details in the signups tab */
+  details.rs-app { margin-top:6px; }
+  details.rs-app > summary { list-style:none; color:var(--accent-2); }
+  details.rs-app > summary::-webkit-details-marker { display:none; }
+  details.rs-app > summary::before { content:'▸ '; }
+  details.rs-app[open] > summary::before { content:'▾ '; }
+  details.rs-app .rs-meta { margin:3px 0; }
 </style>
 </head>
 <body>
@@ -178,10 +185,21 @@
     root.innerHTML =
       '<div class="rs-panel">' +
       '<h3>🔒 Members Only</h3>' +
-      '<p>The MミRC roster is visible to confirmed guild members. Log in with Discord to sign up.</p>' +
+      '<p>The MミRC roster is visible to confirmed guild members. New here? Apply to the guild - once you are accepted the roster and all guild docs unlock.</p>' +
       '<button class="rs-btn discord" id="rs-login">🎮 Log in with Discord</button>' +
+      '<div style="margin-top:12px;"><a class="rs-btn" href="apply.html">📝 Apply to the Guild</a></div>' +
       '</div>';
     document.getElementById('rs-login').addEventListener('click', function () { Sol.loginWith('discord'); });
+  }
+
+  // Logged in, no roster row yet -> send them to the full guild application.
+  function applyPrompt() {
+    root.innerHTML =
+      '<div class="rs-panel">' +
+      '<h3>📝 Apply to MミRC</h3>' +
+      '<p>You are logged in. Fill out the guild application and the guild master will review you for the roster. Once accepted, every members-only doc unlocks automatically.</p>' +
+      '<a class="rs-btn" href="apply.html">Open the application</a>' +
+      '</div>';
   }
 
   function signupForm(existing) {
@@ -417,11 +435,34 @@
         } else if (st === 'confirmed') {
           actions = '<button class="rs-mini no" data-act="remove" data-rid="'+u.roster_id+'">Remove</button>';
         }
+        // Full application detail (only shown when the applicant submitted one).
+        var appRows = '';
+        function ln(label, val) { return val ? '<div class="rs-meta"><strong>' + label + ':</strong> ' + esc(val) + '</div>' : ''; }
+        var hasApp = u.discord_handle || u.ign_history || u.archetype || u.flex_scale != null ||
+                     u.pvp_history || u.vod_link || u.daily_playtime || u.timezone || u.economic_profile;
+        if (hasApp) {
+          appRows =
+            ln('Discord', u.discord_handle) +
+            ln('IGN history', u.ign_history) +
+            ln('Archetype', u.archetype) +
+            (u.flex_scale != null ? '<div class="rs-meta"><strong>Flex:</strong> ' + esc(u.flex_scale) + '/5</div>' : '') +
+            ln('Playtime', u.daily_playtime) +
+            ln('Timezone', u.timezone) +
+            ln('Economy', u.economic_profile) +
+            ln('PvP history', u.pvp_history) +
+            (u.vod_link ? '<div class="rs-meta"><strong>VOD:</strong> <a href="' + esc(u.vod_link) + '" target="_blank" rel="noopener" style="color:var(--accent-2);">watch footage ↗</a></div>' : '');
+        }
+        var appBlock = appRows
+          ? '<details class="rs-app"><summary class="rs-meta" style="cursor:pointer;font-weight:700;">Application details</summary>' +
+            '<div style="padding:6px 0 2px;">' + appRows + '</div></details>'
+          : '';
+
         return '<div class="rs-event"><div class="rs-event-h">' +
           '<span class="grow"><strong>' + esc(u.player_name || u.display_name || u.discord_name || '-') + '</strong>' +
             (u.aion_class ? ' <span class="rs-meta">' + esc(u.aion_class) + ' · ' + esc(u.guild_role) + '</span>' : '') +
-            '<div class="rs-meta">🎮 ' + esc(u.discord_name||'-') + '  ·  ✉ ' + esc(u.email||'-') + '  ·  joined ' + when + '</div>' +
+            '<div class="rs-meta">🎮 ' + esc(u.discord_handle || u.discord_name||'-') + '  ·  ✉ ' + esc(u.email||'-') + '  ·  ' + (u.applied_at ? 'applied ' + new Date(u.applied_at).toLocaleDateString() : 'joined ' + when) + '</div>' +
             (u.note ? '<div class="rs-meta">“' + esc(u.note) + '”</div>' : '') +
+            appBlock +
           '</span>' +
           '<span class="rs-chip' + (st==='confirmed'?' core':(st==='pending'?' war':'')) + '">' + (STAT[st]||st) + '</span>' +
           (u.is_admin ? '<span class="rs-chip core">Admin</span>' : '') +
@@ -590,8 +631,9 @@
         var privileged = isOwner || isAdmin;
 
         // No signup row yet: owner/admin still shouldn't be gated (rare), but
-        // normally they'll have a row. Non-privileged users see the signup form.
-        if (!mine && !privileged) { signupForm(null); return; }
+        // normally they'll have a row. Non-privileged users are sent to the full
+        // guild application (apply.html), which writes the same pending row.
+        if (!mine && !privileged) { applyPrompt(); return; }
 
         if (privileged || (mine && mine.status === 'confirmed')) {
           Promise.all([Sol.fetchRoster(), Sol.rosterSummary()]).then(function (r2) {
