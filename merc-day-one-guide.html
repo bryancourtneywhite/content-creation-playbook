@@ -81,8 +81,11 @@
   function render() {
     Sol.getUser().then(function (user) {
       if (!user) { gate(false); return; }
-      Sol.isRosterMember().then(function (isMember) {
-        if (!isMember) { gate(true); return; }
+      // Unlock for confirmed roster members AND for owners/admins (who may not
+      // hold a personal confirmed roster row after owner consolidation).
+      Promise.all([Sol.isRosterMember(), Sol.amIRosterAdmin()]).then(function (res) {
+        var allowed = !!res[0] || !!res[1];
+        if (!allowed) { gate(true); return; }
         root.innerHTML = DOC_HTML;
       });
     });
