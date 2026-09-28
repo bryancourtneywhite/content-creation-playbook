@@ -44,7 +44,8 @@
   { id: 'sponsors', label: 'Sponsors', href: 'optimize.html', highlight: true },
   { id: 'roster', label: 'MミRC Roster', href: 'roster.html', children: [
   { label: '⚔️ Roster', href: 'roster.html' },
-  { label: '📖 Day One Guide', href: 'merc-day-one-guide.html' }
+  { label: '📖 Day One Guide', href: 'merc-day-one-guide.html' },
+  { label: '📘 Global Launch Guide', href: 'merc-launch-guide.html' }
   ]},
   { id: 'misc', label: 'MISC', children: [
   { label: '🏆 Sol Leaderboard', href: 'leaderboard.html' },
