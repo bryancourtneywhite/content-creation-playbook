@@ -42,9 +42,24 @@
   .rs-stat .n { font-weight:900; font-size:22px; color:var(--accent-2); }
   .rs-stat .l { font-size:11px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); }
 
+  /* collapsible panels + groups */
+  details.rs-panel-c, details.rs-group-c { margin: 12px 0; border:1px solid var(--panel-border); border-radius:14px; overflow:hidden; background:rgba(255,255,255,0.02); }
+  details.rs-panel-c.gold { border-color:rgba(255,210,74,0.35); }
+  details > summary { list-style:none; cursor:pointer; padding:12px 16px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    font-weight:800; user-select:none; transition:background .15s ease; }
+  details > summary::-webkit-details-marker { display:none; }
+  details > summary::before { content:'▸'; color:var(--muted); transition:transform .15s ease; flex:0 0 auto; }
+  details[open] > summary::before { transform:rotate(90deg); }
+  details > summary:hover { background:rgba(214,30,44,0.06); }
+  details.rs-group-c > .rs-cards { padding:6px 14px 16px; }
+  details.rs-panel-c > .rs-queue { border:none; background:none; margin:0; padding:6px 14px 14px; }
+  /* per-group comp summary chips */
+  .rs-comp { display:inline-flex; gap:12px; align-items:center; font-size:12px; font-weight:700; color:var(--muted); flex-wrap:wrap; }
+  .rs-comp-cp { color:var(--accent-2); }
+  .rs-warn { font-size:11px; font-weight:800; color:#ffb43c; background:rgba(255,180,60,0.14); border:1px solid rgba(255,180,60,0.4); padding:2px 9px; border-radius:999px; }
   /* roster groups */
   .rs-group { margin: 22px 0; }
-  .rs-group-h { font-size:13px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent-2); margin:0 0 10px; }
+  .rs-group-h { font-size:13px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent-2); margin:0; }
   .rs-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px; }
   .rs-card { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:12px;
     background:var(--panel); border:1px solid var(--panel-border); border-left:4px solid var(--cc,#888); }
@@ -258,36 +273,72 @@
       return a.localeCompare(b, undefined, {numeric:true});
     });
     var html = '';
-    // admin approval queue (owner + delegated admins)
+    // admin approval queue (owner + delegated admins) — collapsible
     if (STATE.isAdmin) {
       var pending = STATE.rows.filter(function(r){ return r.status === 'pending'; });
-      html += '<div class="rs-queue"><h3>🛡️ Approval Queue (' + pending.length + ')</h3>' +
+      html += '<details class="rs-panel-c"' + (pending.length ? ' open' : '') + '><summary>🛡️ Approval Queue (' + pending.length + ')</summary>' +
+        '<div class="rs-queue">' +
         (pending.length ? pending.map(function (p) {
           return '<div class="rs-q-row"><div class="grow"><strong>' + esc(p.player_name) + '</strong> - ' + esc(p.aion_class) + ' · ' + esc(p.guild_role) +
             (p.note ? '<div class="rs-meta">“' + esc(p.note) + '”</div>' : '') + '</div>' +
             '<button class="rs-mini ok" data-act="confirm" data-id="' + p.id + '">Confirm</button>' +
             '<button class="rs-mini no" data-act="reject" data-id="' + p.id + '">Reject</button></div>';
-        }).join('') : '<div class="rs-meta">No pending signups.</div>') + '</div>';
+        }).join('') : '<div class="rs-meta">No pending signups.</div>') + '</div></details>';
     }
-    // OWNER-ONLY: manage roster admins (delegate admin rights)
+    // OWNER-ONLY: manage roster admins (delegate admin rights) — collapsible, closed by default
     if (STATE.isOwner) {
-      html += '<div class="rs-queue" style="border-color:rgba(255,210,74,0.4);background:rgba(255,210,74,0.06);">' +
-        '<h3>👑 Roster Admins</h3>' +
+      html += '<details class="rs-panel-c gold"><summary>👑 Roster Admins</summary>' +
+        '<div class="rs-queue" style="border-color:rgba(255,210,74,0.4);background:rgba(255,210,74,0.06);">' +
         '<div class="rs-meta" style="margin-bottom:8px;">Promote confirmed members to admin so they can approve signups, assign groups, and record attendance. Only you can grant or revoke admin.</div>' +
         confirmed.map(function (m) {
           return '<div class="rs-q-row"><div class="grow"><strong>' + esc(m.player_name) + '</strong> - ' + esc(m.aion_class) + ' · ' + esc(m.guild_role) +
             (m.is_admin ? ' <span class="rs-chip core">Admin</span>' : '') + '</div>' +
             '<button class="rs-mini ' + (m.is_admin?'no':'ok') + '" data-admin="' + (m.is_admin?'0':'1') + '" data-id="' + m.id + '">' +
               (m.is_admin ? 'Revoke admin' : 'Make admin') + '</button></div>';
-        }).join('') + '</div>';
+        }).join('') + '</div></details>';
     }
+    // groups — each collapsible with a comp summary + role-gap warning
     gk.forEach(function (g) {
       var cardFn = STATE.isAdmin ? ownerCard : rosterCard;
-      html += '<div class="rs-group"><div class="rs-group-h">' + esc(g) + ' · ' + groups[g].length + '</div>' +
-        '<div class="rs-cards">' + groups[g].map(cardFn).join('') + '</div></div>';
+      var members = groups[g];
+      html += '<details class="rs-group-c" open><summary>' +
+          '<span class="rs-group-h">' + esc(g) + ' · ' + members.length + '</span>' +
+          groupSummary(members, g) +
+        '</summary>' +
+        '<div class="rs-cards">' + members.map(cardFn).join('') + '</div></details>';
     });
     if (!confirmed.length) html += '<div class="rs-loading">No confirmed members yet.</div>';
     return html;
+  }
+
+  // Per-group composition summary: role counts, avg CP, and a warning if the
+  // group is missing a tank or healer (standard AION party needs both).
+  function groupSummary(members, groupName) {
+    var t=0,h=0,d=0,s=0, cpSum=0, cpCount=0;
+    members.forEach(function (m) {
+      if (m.guild_role === 'Tank') t++;
+      else if (m.guild_role === 'Healer') h++;
+      else if (m.guild_role === 'DPS') d++;
+      else if (m.guild_role === 'Support / Off-Heal') s++;
+      if (m.combat_power != null) { cpSum += m.combat_power; cpCount++; }
+    });
+    var avgCp = cpCount ? Math.round(cpSum / cpCount) : null;
+    var comp = '<span class="rs-comp">' +
+      '<span title="Tanks">🛡️ ' + t + '</span>' +
+      '<span title="Healers">✚ ' + h + '</span>' +
+      '<span title="DPS">⚔️ ' + d + '</span>' +
+      (s ? '<span title="Support">🎶 ' + s + '</span>' : '') +
+      (avgCp != null ? '<span class="rs-comp-cp" title="Average Combat Power">Ø ' + avgCp.toLocaleString() + ' CP</span>' : '') +
+    '</span>';
+    // warnings only for real numbered groups (not Reserve/Unassigned)
+    var warn = '';
+    if (/^Group /.test(groupName)) {
+      var gaps = [];
+      if (t === 0) gaps.push('no tank');
+      if (h === 0 && s === 0) gaps.push('no healer');
+      if (gaps.length) warn = '<span class="rs-warn" title="Composition gap">⚠️ ' + gaps.join(', ') + '</span>';
+    }
+    return comp + warn;
   }
 
   function renderEventsTab() {
