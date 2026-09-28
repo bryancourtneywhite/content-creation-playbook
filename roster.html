@@ -68,12 +68,40 @@
   .rs-mini.no { background:rgba(160,160,170,.12); }
   .rs-hidden { display:none !important; }
   .rs-loading { text-align:center; color:var(--muted); padding:40px 0; }
+
+  /* owner tabs */
+  .rs-tabs { display:flex; gap:8px; justify-content:center; margin:6px 0 18px; flex-wrap:wrap; }
+  .rs-tab { padding:9px 18px; border-radius:999px; font-weight:800; font-size:13px; cursor:pointer;
+    border:1px solid var(--panel-border); background:rgba(255,255,255,.04); color:var(--text); }
+  .rs-tab.active { background:linear-gradient(120deg,var(--accent-2),var(--accent)); color:#fff; border-color:transparent; }
+  /* inline reassign controls on owner cards */
+  .rs-assign { display:flex; gap:6px; margin-top:6px; flex-wrap:wrap; }
+  .rs-assign select { font-size:11px; padding:4px 6px; border-radius:7px; background:rgba(0,0,0,.3);
+    border:1px solid var(--panel-border); color:var(--text); }
+  [data-theme="light"] .rs-assign select { background:rgba(20,60,110,.06); }
+  /* attendance grid */
+  .rs-att-tools { display:flex; gap:10px; flex-wrap:wrap; align-items:end; margin:12px 0; }
+  .rs-att-tools input, .rs-att-tools select { padding:9px 12px; border-radius:9px; background:rgba(0,0,0,.25);
+    border:1px solid var(--panel-border); color:var(--text); font-size:13px; }
+  .rs-event { padding:12px 14px; border-radius:12px; background:var(--panel); border:1px solid var(--panel-border); margin-bottom:10px; }
+  .rs-event-h { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .rs-event-h .grow { flex:1; min-width:140px; font-weight:800; }
+  .rs-att-row { display:flex; align-items:center; gap:8px; padding:7px 0; border-top:1px solid var(--panel-border); flex-wrap:wrap; }
+  .rs-att-row .grow { flex:1; min-width:130px; }
+  .rs-att-btns { display:flex; gap:4px; }
+  .rs-ab { font-size:11px; font-weight:800; padding:5px 9px; border-radius:7px; cursor:pointer; border:1px solid var(--panel-border); background:rgba(255,255,255,.05); color:var(--muted); }
+  .rs-ab.sel.present { background:rgba(74,214,107,.2); color:#8fe6a3; border-color:rgba(74,214,107,.5); }
+  .rs-ab.sel.absent  { background:rgba(214,30,44,.2); color:#ff8089; border-color:rgba(214,30,44,.5); }
+  .rs-ab.sel.late    { background:rgba(255,180,60,.2); color:#ffb43c; border-color:rgba(255,180,60,.5); }
+  .rs-ab.sel.excused { background:rgba(140,150,170,.2); color:#c4ccdc; }
+  .rs-rate { font-size:12px; font-weight:800; }
+  .rs-rate.hi { color:#4ad66b; } .rs-rate.mid { color:#ffb43c; } .rs-rate.lo { color:#ff8089; }
 </style>
 </head>
 <body>
 
 <canvas id="bg-canvas"></canvas>
-<nav id="site-nav" data-active="misc"></nav>
+<nav id="site-nav" data-active="roster"></nav>
 
 <div class="content">
   <div class="rs-wrap">
@@ -176,68 +204,172 @@
       '</div></div>';
   }
 
-  function memberView(rows, summary, isOwner) {
-    var confirmed = rows.filter(function(r){ return r.status === 'confirmed'; });
-    // group by assigned_group (fallback 'Unassigned')
+  var GROUP_OPTS = ['Group 1','Group 2','Group 3','Group 4','Group 5','Group 6','Group 7','Group 8','Group 9','Group 10','Reserve'];
+  var STATE = { rows: [], summary: null, isOwner: false, tab: 'roster' };
+
+  function summaryHtml(summary) {
+    if (!summary) return '';
+    return '<div class="rs-summary">' +
+      '<div class="rs-stat"><div class="n">' + (summary.confirmed||0) + '</div><div class="l">Roster</div></div>' +
+      '<div class="rs-stat"><div class="n">' + (summary.war_ready||0) + '</div><div class="l">War Ready</div></div>' +
+      '<div class="rs-stat"><div class="n">' + (summary.tanks||0) + '</div><div class="l">Tanks</div></div>' +
+      '<div class="rs-stat"><div class="n">' + (summary.healers||0) + '</div><div class="l">Healers</div></div>' +
+      '<div class="rs-stat"><div class="n">' + (summary.dps||0) + '</div><div class="l">DPS</div></div>' +
+      '<div class="rs-stat"><div class="n">' + (summary.support||0) + '</div><div class="l">Support</div></div>' +
+    '</div>';
+  }
+
+  // Owner card variant with inline group/team reassignment.
+  function ownerCard(m) {
+    var color = CLASS_COLOR[m.aion_class] || '#888';
+    var gOpts = GROUP_OPTS.map(function(g){ return '<option'+(g===m.assigned_group?' selected':'')+'>'+esc(g)+'</option>'; }).join('');
+    var teamOpts = ['—','Team 1','Team 2','Team 3','Team 4','Team 5','Team 6','Team 7','Team 8','Team 9','Team 10']
+      .map(function(t){ var v=(t==='—'?'':t); return '<option value="'+esc(v)+'"'+(v===(m.static_team||'')?' selected':'')+'>'+esc(t)+'</option>'; }).join('');
+    return '<div class="rs-card" style="--cc:' + color + '">' +
+      '<div style="min-width:0;flex:1;">' +
+        '<div class="rs-name">' + (ROLE_ICON[m.guild_role]||'') + ' ' + esc(m.player_name) + '</div>' +
+        '<div class="rs-meta" style="color:' + color + '">' + esc(m.aion_class) + ' · ' + esc(m.guild_role) + '</div>' +
+        '<div class="rs-assign">' +
+          '<select data-move="group" data-id="' + m.id + '">' + gOpts + '</select>' +
+          '<select data-move="team" data-id="' + m.id + '">' + teamOpts + '</select>' +
+        '</div>' +
+      '</div></div>';
+  }
+
+  function renderRosterTab() {
+    var confirmed = STATE.rows.filter(function(r){ return r.status === 'confirmed'; });
     var groups = {};
-    confirmed.forEach(function (m) {
-      var g = m.assigned_group || 'Unassigned';
-      (groups[g] = groups[g] || []).push(m);
-    });
+    confirmed.forEach(function (m) { var g = m.assigned_group || 'Unassigned'; (groups[g]=groups[g]||[]).push(m); });
     var gk = Object.keys(groups).sort(function(a,b){
       if (a==='Reserve') return 1; if (b==='Reserve') return -1;
       if (a==='Unassigned') return 1; if (b==='Unassigned') return -1;
       return a.localeCompare(b, undefined, {numeric:true});
     });
-
     var html = '';
-    if (summary) {
-      html += '<div class="rs-summary">' +
-        '<div class="rs-stat"><div class="n">' + (summary.confirmed||0) + '</div><div class="l">Roster</div></div>' +
-        '<div class="rs-stat"><div class="n">' + (summary.war_ready||0) + '</div><div class="l">War Ready</div></div>' +
-        '<div class="rs-stat"><div class="n">' + (summary.tanks||0) + '</div><div class="l">Tanks</div></div>' +
-        '<div class="rs-stat"><div class="n">' + (summary.healers||0) + '</div><div class="l">Healers</div></div>' +
-        '<div class="rs-stat"><div class="n">' + (summary.dps||0) + '</div><div class="l">DPS</div></div>' +
-        '<div class="rs-stat"><div class="n">' + (summary.support||0) + '</div><div class="l">Support</div></div>' +
-      '</div>';
-    }
-
     // owner approval queue
-    if (isOwner) {
-      var pending = rows.filter(function(r){ return r.status === 'pending'; });
-      html += '<div class="rs-queue">' +
-        '<h3>🛡️ Approval Queue (' + pending.length + ')</h3>' +
+    if (STATE.isOwner) {
+      var pending = STATE.rows.filter(function(r){ return r.status === 'pending'; });
+      html += '<div class="rs-queue"><h3>🛡️ Approval Queue (' + pending.length + ')</h3>' +
         (pending.length ? pending.map(function (p) {
-          return '<div class="rs-q-row" data-id="' + p.id + '">' +
-            '<div class="grow"><strong>' + esc(p.player_name) + '</strong> — ' + esc(p.aion_class) + ' · ' + esc(p.guild_role) +
+          return '<div class="rs-q-row"><div class="grow"><strong>' + esc(p.player_name) + '</strong> — ' + esc(p.aion_class) + ' · ' + esc(p.guild_role) +
             (p.note ? '<div class="rs-meta">“' + esc(p.note) + '”</div>' : '') + '</div>' +
             '<button class="rs-mini ok" data-act="confirm" data-id="' + p.id + '">Confirm</button>' +
-            '<button class="rs-mini no" data-act="reject" data-id="' + p.id + '">Reject</button>' +
-          '</div>';
-        }).join('') : '<div class="rs-meta">No pending signups.</div>') +
-      '</div>';
+            '<button class="rs-mini no" data-act="reject" data-id="' + p.id + '">Reject</button></div>';
+        }).join('') : '<div class="rs-meta">No pending signups.</div>') + '</div>';
     }
-
-    // grouped roster
     gk.forEach(function (g) {
+      var cardFn = STATE.isOwner ? ownerCard : rosterCard;
       html += '<div class="rs-group"><div class="rs-group-h">' + esc(g) + ' · ' + groups[g].length + '</div>' +
-        '<div class="rs-cards">' + groups[g].map(rosterCard).join('') + '</div></div>';
+        '<div class="rs-cards">' + groups[g].map(cardFn).join('') + '</div></div>';
     });
     if (!confirmed.length) html += '<div class="rs-loading">No confirmed members yet.</div>';
+    return html;
+  }
 
-    root.innerHTML = html;
+  function renderEventsTab() {
+    return '<div class="rs-att-tools">' +
+      '<div><label style="font-size:12px;font-weight:700;">Event title</label><br><input id="ev-title" placeholder="Fortress Siege"></div>' +
+      '<div><label style="font-size:12px;font-weight:700;">Type</label><br>' +
+        '<select id="ev-type"><option>Siege</option><option>GvG</option><option>Raid</option><option>Rift</option><option>Other</option></select></div>' +
+      '<button class="rs-btn" id="ev-create">+ Create event</button>' +
+    '</div>' +
+    '<div id="ev-list" class="rs-loading">Loading events…</div>';
+  }
 
-    if (isOwner) {
-      root.querySelectorAll('.rs-mini[data-act]').forEach(function (b) {
-        b.addEventListener('click', function () {
-          var id = parseInt(b.getAttribute('data-id'), 10);
-          var act = b.getAttribute('data-act');
-          b.disabled = true; b.textContent = '…';
-          var p = (act === 'confirm') ? Sol.rosterConfirm(id) : Sol.rosterReject(id);
-          p.then(function () { render(); });
+  function memberView(rows, summary, isOwner) {
+    STATE.rows = rows; STATE.summary = summary; STATE.isOwner = isOwner;
+    var tabs = isOwner
+      ? '<div class="rs-tabs">' +
+          '<div class="rs-tab' + (STATE.tab==='roster'?' active':'') + '" data-tab="roster">Roster</div>' +
+          '<div class="rs-tab' + (STATE.tab==='events'?' active':'') + '" data-tab="events">Events &amp; Attendance</div>' +
+        '</div>'
+      : '';
+    var body = (isOwner && STATE.tab === 'events') ? renderEventsTab() : renderRosterTab();
+    root.innerHTML = summaryHtml(summary) + tabs + '<div id="rs-body">' + body + '</div>';
+    wireOwnerControls();
+    if (isOwner && STATE.tab === 'events') loadEvents();
+  }
+
+  function wireOwnerControls() {
+    // tabs
+    root.querySelectorAll('.rs-tab').forEach(function (t) {
+      t.addEventListener('click', function () { STATE.tab = t.getAttribute('data-tab'); memberView(STATE.rows, STATE.summary, STATE.isOwner); });
+    });
+    if (!STATE.isOwner) return;
+    // approve / reject
+    root.querySelectorAll('.rs-mini[data-act]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var id = parseInt(b.getAttribute('data-id'),10), act = b.getAttribute('data-act');
+        b.disabled = true; b.textContent = '…';
+        (act==='confirm'?Sol.rosterConfirm(id):Sol.rosterReject(id)).then(render);
+      });
+    });
+    // inline group/team reassignment (rebuild)
+    root.querySelectorAll('select[data-move]').forEach(function (sel) {
+      sel.addEventListener('change', function () {
+        var id = parseInt(sel.getAttribute('data-id'),10);
+        var card = sel.closest('.rs-card');
+        var group = card.querySelector('select[data-move="group"]').value;
+        var team = card.querySelector('select[data-move="team"]').value;
+        Sol.rosterMove(id, group, team).then(function () {
+          // refresh underlying rows so subsequent regroup is correct
+          Sol.fetchRoster().then(function (rows) { STATE.rows = rows; memberView(rows, STATE.summary, STATE.isOwner); });
         });
       });
-    }
+    });
+    // event create
+    var evc = root.querySelector('#ev-create');
+    if (evc) evc.addEventListener('click', function () {
+      var title = (root.querySelector('#ev-title').value||'').trim();
+      var type = root.querySelector('#ev-type').value;
+      if (title.length < 2) { root.querySelector('#ev-title').focus(); return; }
+      evc.disabled = true; evc.textContent = 'Creating…';
+      Sol.eventCreate(title, type).then(function () { evc.disabled=false; evc.textContent='+ Create event'; loadEvents(); });
+    });
+  }
+
+  function rateClass(pct){ return pct==null?'':(pct>=80?'hi':(pct>=50?'mid':'lo')); }
+
+  function loadEvents() {
+    var list = root.querySelector('#ev-list'); if (!list) return;
+    Promise.all([Sol.fetchEvents(), Sol.fetchAttendanceRates()]).then(function (res) {
+      var events = res[0]||[], rates = res[1]||[];
+      // attendance-rate leaderboard (drives dynamic rebuilds)
+      var ratesSorted = rates.slice().sort(function(a,b){ return (b.attend_pct||0)-(a.attend_pct||0); });
+      var ratesHtml = '<div class="rs-event"><div class="rs-event-h"><span class="grow">📊 Attendance rates (informs roster rebuilds)</span></div>' +
+        (ratesSorted.length ? ratesSorted.map(function(r){
+          return '<div class="rs-att-row"><span class="grow">' + esc(r.player_name) + ' <span class="rs-meta">'+esc(r.aion_class)+' · '+esc(r.guild_role)+'</span></span>' +
+            '<span class="rs-rate ' + rateClass(r.attend_pct) + '">' + (r.attend_pct==null?'—':r.attend_pct+'%') + '</span>' +
+            '<span class="rs-meta">('+ (r.attended||0) +'/'+ (r.recorded||0) +')</span></div>';
+        }).join('') : '<div class="rs-meta">No attendance recorded yet.</div>') + '</div>';
+
+      if (!events.length) { list.innerHTML = ratesHtml + '<div class="rs-meta">No events yet. Create one above.</div>'; return; }
+      // render each event with a mark grid (owner marks each confirmed member)
+      var confirmed = STATE.rows.filter(function(r){ return r.status==='confirmed'; });
+      Promise.all(events.map(function(e){ return Sol.fetchAttendance(e.id); })).then(function (attArr) {
+        var evHtml = events.map(function (e, i) {
+          var att = {}; (attArr[i]||[]).forEach(function(a){ att[a.member_id]=a.status; });
+          var when = e.starts_at ? new Date(e.starts_at).toLocaleDateString() : '';
+          var rows = confirmed.map(function (m) {
+            function ab(s,lbl){ var sel=att[m.id]===s?' sel '+s:''; return '<button class="rs-ab'+sel+'" data-ev="'+e.id+'" data-mem="'+m.id+'" data-st="'+s+'">'+lbl+'</button>'; }
+            return '<div class="rs-att-row"><span class="grow">'+esc(m.player_name)+'</span><span class="rs-att-btns">'+
+              ab('present','P')+ab('late','L')+ab('absent','A')+ab('excused','E')+'</span></div>';
+          }).join('');
+          return '<div class="rs-event"><div class="rs-event-h">'+
+            '<span class="grow">'+esc(e.title)+' <span class="rs-meta">'+esc(e.event_type||'')+' · '+when+'</span></span>'+
+            '<span class="rs-chip">✅ '+ (e.present_count||0) +'</span>'+
+            '</div>'+rows+'</div>';
+        }).join('');
+        list.innerHTML = ratesHtml + evHtml;
+        // wire attendance buttons
+        list.querySelectorAll('.rs-ab').forEach(function (b) {
+          b.addEventListener('click', function () {
+            var ev=parseInt(b.getAttribute('data-ev'),10), mem=parseInt(b.getAttribute('data-mem'),10), st=b.getAttribute('data-st');
+            Sol.attendMark(ev, mem, st).then(function () { loadEvents(); });
+          });
+        });
+      });
+    });
   }
 
   function render() {

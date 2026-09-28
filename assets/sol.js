@@ -184,6 +184,34 @@
       p_core: (opts.core != null ? opts.core : null), p_vet: (opts.vet != null ? opts.vet : null)
     });
   }
+  // Interactive rebuild: move a member to a group/team.
+  function rosterMove(memberId, group, team) {
+    return sb.rpc('roster_move', { p_member: memberId, p_group: group, p_team: team || null });
+  }
+
+  /* ---- Events + attendance ---- */
+  function fetchEvents() {
+    return sb.from('roster_events_view').select('*').order('starts_at', { ascending: false }).limit(50)
+      .then(function (r) { return r.data || []; });
+  }
+  function fetchAttendance(eventId) {
+    return sb.from('attendance').select('*').eq('event_id', eventId)
+      .then(function (r) { return r.data || []; });
+  }
+  function fetchAttendanceRates() {
+    return sb.from('attendance_rates').select('*').then(function (r) { return r.data || []; });
+  }
+  function eventCreate(title, type, startsAt) {
+    return sb.rpc('event_create', { p_title: title, p_type: type || null, p_starts: startsAt || new Date().toISOString() })
+      .then(function (r) { if (r.error) throw r.error; return r.data; });
+  }
+  function eventClose(id, open) { return sb.rpc('event_close', { p_id: id, p_open: !!open }); }
+  function attendMark(eventId, memberId, status) {
+    return sb.rpc('attend_mark', { p_event: eventId, p_member: memberId, p_status: status });
+  }
+  function attendRsvp(eventId, going) {
+    return sb.rpc('attend_rsvp', { p_event: eventId, p_going: !!going });
+  }
 
   /* ---- Check-in (earn Sol) ---- */
   function checkIn() {
@@ -232,6 +260,14 @@
     rosterConfirm: rosterConfirm,
     rosterReject: rosterReject,
     rosterAssign: rosterAssign,
+    rosterMove: rosterMove,
+    fetchEvents: fetchEvents,
+    fetchAttendance: fetchAttendance,
+    fetchAttendanceRates: fetchAttendanceRates,
+    eventCreate: eventCreate,
+    eventClose: eventClose,
+    attendMark: attendMark,
+    attendRsvp: attendRsvp,
     checkIn: checkIn
   };
 })();
