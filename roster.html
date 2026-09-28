@@ -202,32 +202,10 @@
       '</div>';
   }
 
-  function signupForm(existing) {
-    var isEdit = !!existing;
-    var opts = function (arr, sel) { return arr.map(function(v){ return '<option'+(v===sel?' selected':'')+'>'+esc(v)+'</option>'; }).join(''); };
-    root.innerHTML =
-      '<div class="rs-panel">' +
-      '<h3>' + (isEdit ? 'Edit your signup' : 'Sign up for the roster') + '</h3>' +
-      '<p>Submit your in-game identity. The guild master reviews and confirms you onto the roster.</p>' +
-      '<div class="rs-form">' +
-        '<div><label>In-game name</label><input id="f-name" maxlength="32" value="' + esc(existing && existing.player_name || '') + '" placeholder="Your AION 2 character name"></div>' +
-        '<div><label>Class</label><select id="f-class">' + opts(CLASSES, existing && existing.aion_class) + '</select></div>' +
-        '<div><label>Role</label><select id="f-role">' + opts(ROLES, existing && existing.guild_role) + '</select></div>' +
-        '<div><label>Note (optional)</label><textarea id="f-note" rows="2" maxlength="200" placeholder="Anything the guild master should know">' + esc(existing && existing.note || '') + '</textarea></div>' +
-        '<button class="rs-btn" id="f-submit">' + (isEdit ? 'Update signup' : 'Submit signup') + '</button>' +
-        '<div id="f-msg" style="color:var(--muted);font-size:13px;"></div>' +
-      '</div></div>';
-    document.getElementById('f-submit').addEventListener('click', function () {
-      var name = document.getElementById('f-name').value.trim();
-      var cls = document.getElementById('f-class').value;
-      var role = document.getElementById('f-role').value;
-      var note = document.getElementById('f-note').value.trim();
-      var msg = document.getElementById('f-msg');
-      if (name.length < 2) { msg.textContent = 'Enter your in-game name (2+ characters).'; return; }
-      msg.textContent = 'Submitting…';
-      Sol.rosterSignup(name, cls, role, note).then(function () { render(); })
-        .catch(function (e) { msg.textContent = 'Could not submit: ' + (e.message || 'try again'); });
-    });
+  // The lightweight roster signup is RETIRED. The only door onto the roster is
+  // the full guild application (apply.html). This just points people there.
+  function signupForm() {
+    applyPrompt();
   }
 
   function pendingScreen(row) {
@@ -239,9 +217,8 @@
       '<p>' + (rejected
         ? 'Your signup was not approved. You can edit and resubmit, or reach out in Discord.'
         : 'Your signup as <strong>' + esc(row.player_name) + '</strong> (' + esc(row.aion_class) + ' · ' + esc(row.guild_role) + ') is awaiting the guild master. You will see the full roster once confirmed.') + '</p>' +
-      '<button class="rs-btn" id="rs-edit">Edit my signup</button>' +
+      '<a class="rs-btn" href="apply.html">Edit my application</a>' +
       '</div>';
-    document.getElementById('rs-edit').addEventListener('click', function () { signupForm(row); });
   }
 
   function rosterCard(m) {
@@ -428,14 +405,15 @@
         var when = u.joined_at ? new Date(u.joined_at).toLocaleDateString() : '';
         var actions = '';
         if (st === 'pending' || st === 'rejected') {
-          // has a signup row -> confirm it
-          actions = '<button class="rs-mini ok" data-act="confirm" data-rid="'+u.roster_id+'">Add to roster</button>';
-        } else if (st === 'not_signed_up') {
-          // account exists but no signup -> owner adds them directly
-          actions = '<button class="rs-mini ok" data-act="add" data-uid="'+esc(u.profile_id)+'">+ Add to roster</button>';
+          // has a real application -> approve it (auto-adds to roster) or reject
+          actions = '<button class="rs-mini ok" data-act="confirm" data-rid="'+u.roster_id+'">✓ Approve to guild</button>' +
+                    '<button class="rs-mini no" data-act="reject" data-rid="'+u.roster_id+'">Reject</button>';
         } else if (st === 'confirmed') {
           actions = '<button class="rs-mini no" data-act="remove" data-rid="'+u.roster_id+'">Remove</button>';
         }
+        // NOTE: login-only "not_signed_up" accounts are intentionally NOT shown
+        // here (admin_signups inner-joins the roster) — the only path onto the
+        // roster is an approved guild application, so there is nothing to add.
         // Full application detail (only shown when the applicant submitted one).
         var appRows = '';
         function ln(label, val) { return val ? '<div class="rs-meta"><strong>' + label + ':</strong> ' + esc(val) + '</div>' : ''; }
@@ -477,8 +455,8 @@
           var orig = b.textContent;
           b.disabled = true; b.textContent = '…';
           var p;
-          if (act === 'add') { p = Sol.rosterAddMember(b.getAttribute('data-uid')); }
-          else if (act === 'confirm') { p = Sol.rosterConfirm(parseInt(b.getAttribute('data-rid'),10)); }
+          if (act === 'confirm') { p = Sol.rosterConfirm(parseInt(b.getAttribute('data-rid'),10)); }
+          else if (act === 'reject') { p = Sol.rosterReject(parseInt(b.getAttribute('data-rid'),10)); }
           else { p = Sol.rosterRemove(parseInt(b.getAttribute('data-rid'),10)); }
           p.then(function (r) {
             // supabase .rpc() resolves with { data, error } - it does NOT reject

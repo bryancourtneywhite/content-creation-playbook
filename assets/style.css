@@ -1431,14 +1431,19 @@ header.hero > .scroll-hint { position: relative; z-index: 1; }
 }
 .build-card:hover .bc-art::after { opacity: 1; }
 .build-card .bc-top { padding: 22px; display: flex; flex-direction: column; flex: 1; }
-.build-card .bc-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.build-card .bc-tags { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
 .bc-pill {
-  font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 24px; box-sizing: border-box;
+  padding: 0 12px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; line-height: 1; letter-spacing: 0.5px;
+  white-space: nowrap;
   background: rgba(214,30,44,0.14); color: #ff8089; border: 1px solid rgba(214,30,44,0.35);
-  letter-spacing: 0.5px;
 }
-.bc-pill.pve { background: rgba(80,220,130,0.14); color: #6ee7a0; border-color: rgba(80,220,130,0.35); }
-.bc-pill.pvp { background: rgba(145,70,255,0.16); color: #b98cff; border-color: rgba(145,70,255,0.4); }
+.bc-pill.pve    { background: rgba(80,220,130,0.14);  color: #6ee7a0; border-color: rgba(80,220,130,0.35); }
+.bc-pill.pvp    { background: rgba(145,70,255,0.16);  color: #b98cff; border-color: rgba(145,70,255,0.4); }
+.bc-pill.global { background: rgba(255,196,74,0.15);  color: #ffce6b; border-color: rgba(255,196,74,0.4); }
+.bc-pill.pvx    { background: rgba(90,160,255,0.15);   color: #8fb4ff; border-color: rgba(90,160,255,0.4); }
 .build-card h3 { font-size: 21px; margin-bottom: 8px; color: #fff; }
 .build-card p { color: var(--muted); font-size: 14px; flex: 1; }
 .build-card .bc-btn {
@@ -1491,12 +1496,13 @@ header.hero > .scroll-hint { position: relative; z-index: 1; }
    The class emblem (e.g. Templar) used to instantly flag class content.
    Two contexts: a large hero icon beside an article H1, and a small badge
    sitting in a card's tag row so a build card reads as "Templar" at a glance. */
+/* The emblem is a transparent, roughly-square shield. Use `contain` so the
+   whole crest is visible (never cropped/stretched) and keep width:height 1:1
+   so it can't distort. No opaque frame - it floats cleanly next to the pills. */
 .class-icon {
   display: inline-block; vertical-align: middle;
-  border-radius: 12px; object-fit: cover;
-  background: rgba(0,0,0,0.35);
-  border: 1px solid var(--panel-border);
-  box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+  object-fit: contain; aspect-ratio: 1 / 1;
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.55));
 }
 /* Hero icon: sits next to the article title on a guide page. */
 .article-head-row {
@@ -1504,15 +1510,31 @@ header.hero > .scroll-hint { position: relative; z-index: 1; }
 }
 .article-head-row .article-head-titles { flex: 1; min-width: 240px; }
 .class-icon.hero {
-  width: 68px; height: 68px; border-radius: 16px;
+  width: 64px; height: 64px;
   flex: 0 0 auto;
-  box-shadow: 0 6px 20px rgba(214,30,44,0.28);
+  filter: drop-shadow(0 4px 12px rgba(214,30,44,0.35));
 }
-@media (max-width: 560px) { .class-icon.hero { width: 54px; height: 54px; } }
-/* Card badge: a compact class emblem for a build/class card tag row. */
+@media (max-width: 560px) { .class-icon.hero { width: 52px; height: 52px; } }
+/* Card badge: a compact class emblem for a build/class card tag row.
+   The AION class icons are dark/silver emblems built for a dark UI, so at small
+   size on a dark card they read as a murky square. Give them a round dark disc
+   + accent ring (same treatment as the roster cards) so the emblem stands out
+   and the badge is a clean circle matched to the .bc-pill height. */
 .bc-tags .class-icon.badge {
-  width: 26px; height: 26px; border-radius: 8px;
-  margin-right: 2px;
+  width: 24px; height: 24px; box-sizing: border-box;
+  flex: 0 0 auto; align-self: center;
+  border-radius: 50%; padding: 3px;
+  background: #0d0b0d; border: 1px solid rgba(214,30,44,0.55);
+  box-shadow: 0 1px 5px rgba(0,0,0,0.5);
+  object-fit: contain;
+}
+[data-theme="light"] .bc-tags .class-icon.badge { border-color: rgba(20,60,110,0.5); }
+/* The <picture> wrapper is an inline box by default and, as a flex child, can
+   stretch and knock the pill heights out of proportion. Pin it to the badge
+   size and center it so the emblem and pills all sit on one tidy baseline. */
+.bc-tags picture {
+  display: inline-flex; flex: 0 0 auto; align-self: center;
+  width: 24px; height: 24px; line-height: 0;
 }
 
 /* ---------- SKILL ICONS (build/guide visuals) ----------
