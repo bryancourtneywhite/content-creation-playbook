@@ -399,16 +399,23 @@
   function render() {
     Sol.getUser().then(function (user) {
       if (!user) { loginGate(); return; }
-      Sol.myRoster().then(function (mine) {
-        if (!mine) { signupForm(null); return; }
-        if (mine.status === 'confirmed') {
-          Promise.all([Sol.fetchRoster(), Sol.rosterSummary(), Sol.myProfile(), Sol.amIRosterAdmin()]).then(function (res) {
-            var rows = res[0] || [], summary = res[1], profile = res[2], isAdmin = res[3];
-            var isOwner = profile && profile.role === 'sol_king';
-            memberView(rows, summary, isOwner, isAdmin);
+      // Resolve identity FIRST: owner/admin always get the roster, never the
+      // pending gate. Regular users follow signup -> pending -> confirmed.
+      Promise.all([Sol.myRoster(), Sol.myProfile(), Sol.amIRosterAdmin()]).then(function (res) {
+        var mine = res[0], profile = res[1], isAdmin = !!res[2];
+        var isOwner = !!(profile && profile.role === 'sol_king');
+        var privileged = isOwner || isAdmin;
+
+        // No signup row yet: owner/admin still shouldn't be gated (rare), but
+        // normally they'll have a row. Non-privileged users see the signup form.
+        if (!mine && !privileged) { signupForm(null); return; }
+
+        if (privileged || (mine && mine.status === 'confirmed')) {
+          Promise.all([Sol.fetchRoster(), Sol.rosterSummary()]).then(function (r2) {
+            memberView(r2[0] || [], r2[1], isOwner, isAdmin);
           });
         } else {
-          pendingScreen(mine);   // pending or rejected
+          pendingScreen(mine);   // pending or rejected (non-privileged only)
         }
       });
     });
