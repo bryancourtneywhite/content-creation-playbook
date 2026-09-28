@@ -350,13 +350,24 @@
       list.querySelectorAll('.rs-mini[data-act]').forEach(function (b) {
         b.addEventListener('click', function () {
           var act = b.getAttribute('data-act');
+          var orig = b.textContent;
           b.disabled = true; b.textContent = '…';
           var p;
           if (act === 'add') { p = Sol.rosterAddMember(b.getAttribute('data-uid')); }
           else if (act === 'confirm') { p = Sol.rosterConfirm(parseInt(b.getAttribute('data-rid'),10)); }
           else { p = Sol.rosterRemove(parseInt(b.getAttribute('data-rid'),10)); }
-          p.then(function () {
+          p.then(function (r) {
+            // supabase .rpc() resolves with { data, error } — it does NOT reject
+            // on a DB error, so check r.error explicitly.
+            if (r && r.error) {
+              console.error('[roster] action failed:', act, r.error);
+              b.disabled = false; b.textContent = '⚠ ' + (r.error.message || 'failed');
+              return;
+            }
             Sol.fetchRoster().then(function (rows) { STATE.rows = rows; loadSignups(); });
+          }).catch(function (e) {
+            console.error('[roster] action threw:', act, e);
+            b.disabled = false; b.textContent = '⚠ error';
           });
         });
       });
