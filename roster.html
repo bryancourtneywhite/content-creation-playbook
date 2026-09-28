@@ -67,8 +67,15 @@
   .rs-name { font-weight:800; line-height:1.15; }
   .rs-meta { font-size:12px; color:var(--muted); }
   .rs-class { display:flex; align-items:center; gap:6px; }
-  .rs-class-ico { border-radius:5px; object-fit:cover; vertical-align:middle; flex:0 0 auto;
-    background:rgba(0,0,0,0.3); box-shadow:0 1px 4px rgba(0,0,0,0.4); }
+  /* Class icons are dark/silver emblems built for a dark UI - give them a solid
+     dark disc so they stand out in BOTH themes (they washed out on light bg). */
+  .rs-class-ico {
+    border-radius:50%; object-fit:contain; vertical-align:middle; flex:0 0 auto;
+    background:#0d0b0d; padding:3px; box-sizing:content-box;
+    border:1px solid rgba(214,30,44,0.55);
+    box-shadow:0 1px 5px rgba(0,0,0,0.5);
+  }
+  [data-theme="light"] .rs-class-ico { border-color:rgba(20,60,110,0.5); box-shadow:0 1px 5px rgba(0,0,0,0.3); }
   .rs-tag-row { display:flex; gap:5px; flex-wrap:wrap; margin-top:4px; }
   .rs-chip { font-size:10px; font-weight:800; letter-spacing:.03em; text-transform:uppercase; padding:2px 7px; border-radius:999px; border:1px solid var(--panel-border); color:var(--muted); }
   .rs-chip.war { background:rgba(214,30,44,.14); color:#ff8089; border-color:rgba(214,30,44,.4); }
