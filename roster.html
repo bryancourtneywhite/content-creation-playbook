@@ -66,6 +66,9 @@
   .rs-avatar { width:40px; height:40px; border-radius:50%; object-fit:cover; flex:0 0 auto; background:rgba(255,255,255,.08); border:1px solid var(--panel-border); }
   .rs-name { font-weight:800; line-height:1.15; }
   .rs-meta { font-size:12px; color:var(--muted); }
+  .rs-class { display:flex; align-items:center; gap:6px; }
+  .rs-class-ico { border-radius:5px; object-fit:cover; vertical-align:middle; flex:0 0 auto;
+    background:rgba(0,0,0,0.3); box-shadow:0 1px 4px rgba(0,0,0,0.4); }
   .rs-tag-row { display:flex; gap:5px; flex-wrap:wrap; margin-top:4px; }
   .rs-chip { font-size:10px; font-weight:800; letter-spacing:.03em; text-transform:uppercase; padding:2px 7px; border-radius:999px; border:1px solid var(--panel-border); color:var(--muted); }
   .rs-chip.war { background:rgba(214,30,44,.14); color:#ff8089; border-color:rgba(214,30,44,.4); }
@@ -147,6 +150,19 @@
     Assassin:'#ff5563', Cleric:'#ffd24a', Chanter:'#5ad1c8', Spiritmaster:'#8fb0ff'
   };
   var ROLE_ICON = { 'Tank':'🛡️', 'DPS':'⚔️', 'Healer':'✚', 'Support / Off-Heal':'🎶' };
+  // True AION 2 class icons (assets/<Class>-icon-aion2-wiki-guide.avif).
+  // Spiritmaster uses the Elementalist icon (same class slot in AION 2).
+  var CLASS_ICON_FILE = {
+    Templar:'Templar', Gladiator:'Gladiator', Sorcerer:'Sorcerer', Ranger:'Ranger',
+    Assassin:'Assassin', Cleric:'Cleric', Chanter:'Chanter', Spiritmaster:'Elementalist'
+  };
+  function classIcon(cls, size) {
+    var base = CLASS_ICON_FILE[cls];
+    if (!base) return '';
+    var px = size || 22;
+    return '<img class="rs-class-ico" src="assets/' + base + '-icon-aion2-wiki-guide.avif" alt="' + esc(cls) + '" ' +
+      'width="' + px + '" height="' + px + '" loading="lazy" onerror="this.style.display=\'none\'">';
+  }
   var CLASSES = ['Templar','Gladiator','Sorcerer','Ranger','Assassin','Cleric','Chanter','Spiritmaster'];
   var ROLES = ['Tank','DPS','Healer','Support / Off-Heal'];
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
@@ -215,7 +231,7 @@
       '<img class="rs-avatar" src="' + esc(avatar) + '" alt="" onerror="this.style.visibility=\'hidden\'">' +
       '<div style="min-width:0;">' +
         '<div class="rs-name">' + (ROLE_ICON[m.guild_role]||'') + ' ' + esc(m.player_name) + ' <span class="rs-verified" title="Confirmed member">✓</span></div>' +
-        '<div class="rs-meta" style="color:' + color + '">' + esc(m.aion_class) + ' · ' + esc(m.guild_role) + '</div>' +
+        '<div class="rs-meta rs-class" style="color:' + color + '">' + classIcon(m.aion_class, 20) + esc(m.aion_class) + ' · ' + esc(m.guild_role) + '</div>' +
         (chips ? '<div class="rs-tag-row">' + chips + '</div>' : '') +
       '</div></div>';
   }
@@ -248,7 +264,7 @@
     function tog(field, on, lbl){ return '<button class="rs-ab'+(on?' sel present':'')+'" data-set="'+field+'" data-id="'+m.id+'" data-val="'+(on?'0':'1')+'">'+lbl+'</button>'; }
     return '<div class="rs-card" style="--cc:' + color + '">' +
       '<div style="min-width:0;flex:1;">' +
-        '<div class="rs-name">' + (ROLE_ICON[m.guild_role]||'') + ' ' + esc(m.player_name) + '</div>' +
+        '<div class="rs-name rs-class">' + classIcon(m.aion_class, 22) + (ROLE_ICON[m.guild_role]||'') + ' ' + esc(m.player_name) + '</div>' +
         '<div class="rs-assign" style="margin-top:4px;">' +
           '<select data-cr="class" data-id="' + m.id + '" title="Class" style="color:' + color + ';font-weight:700;">' + classOpts + '</select>' +
           '<select data-cr="role" data-id="' + m.id + '" title="Role">' + roleOpts + '</select>' +
