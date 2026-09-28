@@ -225,13 +225,18 @@
     var gOpts = GROUP_OPTS.map(function(g){ return '<option'+(g===m.assigned_group?' selected':'')+'>'+esc(g)+'</option>'; }).join('');
     var teamOpts = ['—','Team 1','Team 2','Team 3','Team 4','Team 5','Team 6','Team 7','Team 8','Team 9','Team 10']
       .map(function(t){ var v=(t==='—'?'':t); return '<option value="'+esc(v)+'"'+(v===(m.static_team||'')?' selected':'')+'>'+esc(t)+'</option>'; }).join('');
+    function tog(field, on, lbl){ return '<button class="rs-ab'+(on?' sel present':'')+'" data-set="'+field+'" data-id="'+m.id+'" data-val="'+(on?'0':'1')+'">'+lbl+'</button>'; }
     return '<div class="rs-card" style="--cc:' + color + '">' +
       '<div style="min-width:0;flex:1;">' +
         '<div class="rs-name">' + (ROLE_ICON[m.guild_role]||'') + ' ' + esc(m.player_name) + '</div>' +
         '<div class="rs-meta" style="color:' + color + '">' + esc(m.aion_class) + ' · ' + esc(m.guild_role) + '</div>' +
         '<div class="rs-assign">' +
-          '<select data-move="group" data-id="' + m.id + '">' + gOpts + '</select>' +
-          '<select data-move="team" data-id="' + m.id + '">' + teamOpts + '</select>' +
+          '<select data-move="group" data-id="' + m.id + '" title="Assigned Group">' + gOpts + '</select>' +
+          '<select data-move="team" data-id="' + m.id + '" title="Static Team">' + teamOpts + '</select>' +
+          '<input class="rs-cp" data-cp="' + m.id + '" type="number" min="0" placeholder="CP" title="Combat Power" value="' + (m.combat_power!=null?m.combat_power:'') + '" style="width:74px;">' +
+        '</div>' +
+        '<div class="rs-assign" style="margin-top:4px;">' +
+          tog('war', m.war_status, 'War') + tog('core', m.is_core, 'Core') + tog('vet', m.tw_vet, 'TW Vet') +
         '</div>' +
       '</div></div>';
   }
@@ -296,12 +301,54 @@
       ? '<div class="rs-tabs">' +
           '<div class="rs-tab' + (STATE.tab==='roster'?' active':'') + '" data-tab="roster">Roster</div>' +
           '<div class="rs-tab' + (STATE.tab==='events'?' active':'') + '" data-tab="events">Events &amp; Attendance</div>' +
+          (STATE.isOwner ? '<div class="rs-tab' + (STATE.tab==='signups'?' active':'') + '" data-tab="signups">Signups</div>' : '') +
         '</div>'
       : '';
-    var body = (STATE.isAdmin && STATE.tab === 'events') ? renderEventsTab() : renderRosterTab();
+    var body = (STATE.isAdmin && STATE.tab === 'events') ? renderEventsTab()
+             : (STATE.isOwner && STATE.tab === 'signups') ? renderSignupsTab()
+             : renderRosterTab();
     root.innerHTML = summaryHtml(summary) + tabs + '<div id="rs-body">' + body + '</div>';
     wireOwnerControls();
     if (STATE.isAdmin && STATE.tab === 'events') loadEvents();
+    if (STATE.isOwner && STATE.tab === 'signups') loadSignups();
+  }
+
+  // OWNER-ONLY: everyone who signed up + their roster status + contact.
+  function renderSignupsTab() {
+    return '<div id="su-list" class="rs-loading">Loading signups…</div>';
+  }
+  function loadSignups() {
+    var list = root.querySelector('#su-list'); if (!list) return;
+    Sol.adminSignups().then(function (rows) {
+      if (!rows.length) { list.innerHTML = '<div class="rs-meta">No accounts yet.</div>'; return; }
+      var STAT = { pending:'⏳ Pending', confirmed:'✅ Confirmed', rejected:'✖ Rejected', not_signed_up:'— Not signed up' };
+      list.innerHTML = rows.map(function (u) {
+        var st = u.roster_status || 'not_signed_up';
+        var canAct = (st === 'pending' || st === 'rejected');
+        var when = u.joined_at ? new Date(u.joined_at).toLocaleDateString() : '';
+        return '<div class="rs-event"><div class="rs-event-h">' +
+          '<span class="grow"><strong>' + esc(u.player_name || u.display_name || u.discord_name || '—') + '</strong>' +
+            (u.aion_class ? ' <span class="rs-meta">' + esc(u.aion_class) + ' · ' + esc(u.guild_role) + '</span>' : '') +
+            '<div class="rs-meta">🎮 ' + esc(u.discord_name||'—') + '  ·  ✉ ' + esc(u.email||'—') + '  ·  joined ' + when + '</div>' +
+            (u.note ? '<div class="rs-meta">“' + esc(u.note) + '”</div>' : '') +
+          '</span>' +
+          '<span class="rs-chip' + (st==='confirmed'?' core':(st==='pending'?' war':'')) + '">' + (STAT[st]||st) + '</span>' +
+          (u.is_admin ? '<span class="rs-chip core">Admin</span>' : '') +
+          (canAct && u.roster_id ? '<button class="rs-mini ok" data-act="confirm" data-id="'+u.roster_id+'">Add to roster</button>' : '') +
+          (st==='confirmed' && u.roster_id ? '<button class="rs-mini no" data-act="reject" data-id="'+u.roster_id+'">Remove</button>' : '') +
+        '</div></div>';
+      }).join('');
+      // wire the add/remove buttons (reuse confirm/reject RPCs)
+      list.querySelectorAll('.rs-mini[data-act]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var id=parseInt(b.getAttribute('data-id'),10), act=b.getAttribute('data-act');
+          b.disabled=true; b.textContent='…';
+          (act==='confirm'?Sol.rosterConfirm(id):Sol.rosterReject(id)).then(function(){
+            Sol.fetchRoster().then(function (rows) { STATE.rows = rows; loadSignups(); });
+          });
+        });
+      });
+    }).catch(function(){ list.innerHTML = '<div class="rs-meta">Could not load signups.</div>'; });
   }
 
   function wireOwnerControls() {
@@ -337,6 +384,23 @@
         var team = card.querySelector('select[data-move="team"]').value;
         Sol.rosterMove(id, group, team).then(function () {
           // refresh underlying rows so subsequent regroup is correct
+          Sol.fetchRoster().then(function (rows) { STATE.rows = rows; memberView(rows, STATE.summary, STATE.isOwner); });
+        });
+      });
+    });
+    // CP edit (commit on Enter or blur)
+    root.querySelectorAll('input[data-cp]').forEach(function (inp) {
+      function commit(){ var id=parseInt(inp.getAttribute('data-cp'),10); var v=inp.value===''?null:parseInt(inp.value,10);
+        Sol.rosterAssign(id, { cp: v }); }
+      inp.addEventListener('change', commit);
+      inp.addEventListener('keydown', function(e){ if(e.key==='Enter') inp.blur(); });
+    });
+    // War / Core / TW-Vet toggles
+    root.querySelectorAll('button[data-set]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var id=parseInt(b.getAttribute('data-id'),10), field=b.getAttribute('data-set'), on=b.getAttribute('data-val')==='1';
+        var opts = {}; opts[field] = on;
+        Sol.rosterAssign(id, opts).then(function () {
           Sol.fetchRoster().then(function (rows) { STATE.rows = rows; memberView(rows, STATE.summary, STATE.isOwner); });
         });
       });

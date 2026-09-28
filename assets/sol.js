@@ -160,6 +160,10 @@
   function rosterSetAdmin(id, isAdmin) {
     return sb.rpc('roster_set_admin', { p_id: id, p_is_admin: !!isAdmin });
   }
+  // Owner-only: full signups list (everyone + roster status + contact).
+  function adminSignups() {
+    return sb.rpc('admin_signups').then(function (r) { return r.data || []; });
+  }
   // Create/update my signup. status is server-managed (pending until confirmed).
   function rosterSignup(name, aionClass, guildRole, note) {
     return sb.rpc('roster_signup', {
@@ -264,6 +268,7 @@
     isRosterMember: isRosterMember,
     amIRosterAdmin: amIRosterAdmin,
     rosterSetAdmin: rosterSetAdmin,
+    adminSignups: adminSignups,
     rosterSignup: rosterSignup,
     fetchRoster: fetchRoster,
     rosterSummary: rosterSummary,
