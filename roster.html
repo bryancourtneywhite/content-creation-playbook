@@ -230,7 +230,7 @@
     return '<div class="rs-card" style="--cc:' + color + '">' +
       '<img class="rs-avatar" src="' + esc(avatar) + '" alt="" onerror="this.style.visibility=\'hidden\'">' +
       '<div style="min-width:0;">' +
-        '<div class="rs-name">' + (ROLE_ICON[m.guild_role]||'') + ' ' + esc(m.player_name) + ' <span class="rs-verified" title="Confirmed member">✓</span></div>' +
+        '<div class="rs-name">' + esc(m.player_name) + ' <span class="rs-verified" title="Confirmed member">✓</span></div>' +
         '<div class="rs-meta rs-class" style="color:' + color + '">' + classIcon(m.aion_class, 20) + esc(m.aion_class) + ' · ' + esc(m.guild_role) + '</div>' +
         (chips ? '<div class="rs-tag-row">' + chips + '</div>' : '') +
       '</div></div>';
@@ -264,7 +264,7 @@
     function tog(field, on, lbl){ return '<button class="rs-ab'+(on?' sel present':'')+'" data-set="'+field+'" data-id="'+m.id+'" data-val="'+(on?'0':'1')+'">'+lbl+'</button>'; }
     return '<div class="rs-card" style="--cc:' + color + '">' +
       '<div style="min-width:0;flex:1;">' +
-        '<div class="rs-name rs-class">' + classIcon(m.aion_class, 22) + (ROLE_ICON[m.guild_role]||'') + ' ' + esc(m.player_name) + '</div>' +
+        '<div class="rs-name rs-class">' + classIcon(m.aion_class, 22) + ' ' + esc(m.player_name) + '</div>' +
         '<div class="rs-assign" style="margin-top:4px;">' +
           '<select data-cr="class" data-id="' + m.id + '" title="Class" style="color:' + color + ';font-weight:700;">' + classOpts + '</select>' +
           '<select data-cr="role" data-id="' + m.id + '" title="Role">' + roleOpts + '</select>' +
