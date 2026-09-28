@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MミRC Day One Guide - Guild Docs - Ashura Whole Heavens</title>
-<meta name="description" content="MミRC guild members-only: the AION 2 Day One Guide, zero to 2500 Combat Power.">
+<title>MãƒŸRC Day One Guide - Guild Docs - Ashura Whole Heavens</title>
+<meta name="description" content="MãƒŸRC guild members-only: the AION 2 Day One Guide, zero to 2500 Combat Power.">
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
 <link rel="icon" href="assets/favicon.ico">
@@ -67,7 +67,7 @@
 
 <div class="content">
   <div class="gd-wrap">
-    <div id="gd-root"><div class="gd-loading">Verifying guild membership…</div></div>
+    <div id="gd-root"><div class="gd-loading">Verifying guild membershipâ€¦</div></div>
   </div>
 </div>
 
@@ -81,13 +81,22 @@
   var root = document.getElementById('gd-root');
   if (!window.Sol) { root.innerHTML = '<div class="gd-gate"><p>Guild docs are temporarily unavailable.</p></div>'; return; }
 
+  // HTML-escape helper (used by the glossary cards + DOC_HTML). Must be defined
+  // before DOC_HTML/glCard build, or the whole script throws at parse time and
+  // the page stays stuck on "Verifying membership".
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c];
+    });
+  }
+
   function gate(loggedIn) {
-    root.innerHTML = '<div class="gd-gate"><h3>🔒 Guild Docs - Members Only</h3>' +
-      '<p>The MミRC Day One Guide is available to confirmed roster members. ' +
+    root.innerHTML = '<div class="gd-gate"><h3>ðŸ”’ Guild Docs - Members Only</h3>' +
+      '<p>The MãƒŸRC Day One Guide is available to confirmed roster members. ' +
       (loggedIn ? 'Your roster signup is not confirmed yet - once the guild master approves you, this unlocks.'
                 : 'Log in with Discord and sign up for the roster to unlock it.') + '</p>' +
       (loggedIn ? '<a class="gd-btn" href="roster.html">Go to the Roster</a>'
-                : '<button class="gd-btn" id="gd-login">🎮 Log in with Discord</button>') +
+                : '<button class="gd-btn" id="gd-login">ðŸŽ® Log in with Discord</button>') +
       '</div>';
     var b = document.getElementById('gd-login');
     if (b) b.addEventListener('click', function () { Sol.loginWith('discord'); });
@@ -113,7 +122,7 @@
         else { gate(true); }
       });
     }).catch(function (e) {
-      // Never leave the visitor stuck on "Verifying…". Show the gate with a retry.
+      // Never leave the visitor stuck on "Verifyingâ€¦". Show the gate with a retry.
       console.error('[guide] membership check failed:', e);
       gate(true);
     });
@@ -158,23 +167,23 @@
   // ---- The Day One Guide content (rendered only for confirmed members) ----
   var DOC_HTML = [
     '<div class="gd-doc">',
-    '<div style="margin-bottom:12px;"><a href="roster.html" style="color:var(--muted);text-decoration:none;font-size:14px;">← Back to Roster</a></div>',
-    '<h1>MミRC - AION 2 Day One Guide</h1>',
+    '<div style="margin-bottom:12px;"><a href="roster.html" style="color:var(--muted);text-decoration:none;font-size:14px;">â† Back to Roster</a></div>',
+    '<h1>MãƒŸRC - AION 2 Day One Guide</h1>',
     '<div class="gd-sub">Zero to 2500 Combat Power</div>',
     '<p><strong>Purpose:</strong> a step-by-step roadmap from character creation to Abyss-ready CP. Follow this in order - no wasted time, no wasted energy.</p>',
 
     '<h2>Key Glossary</h2>',
     '<p class="rs-meta" style="color:var(--muted);margin-top:-4px;">Every term you need for Day One, at a glance.</p>',
     '<div class="gl-grid">',
-    glCard('#ffcb2e', ICON.quest, 'Main Story', '(Yellow Quests)', 'Your primary leveling path - follow the gold quest markers exclusively.', ['⭐ Fastest XP']),
-    glCard('#4ad66b', ICON.side, 'Side Quests', '(Green Quests)', 'Optional green markers. Only do ones that award gear or sit on your path.', ['🎁 Gear','⭐ Daeva Pts']),
-    glCard('#8fb0ff', ICON.qmark, '? Marks on Map', '', 'Undiscovered areas - either a Sealed Dungeon or a Rift Cave.', ['🗺️ Explore']),
-    glCard('#ff9d5c', ICON.chest, 'Sealed Dungeon', '', 'Treasure chests hold Enhancement Materials + Kinah. Orb chests give Healing.', ['💎 Enh. Mats','🪙 Kinah']),
-    glCard('#c07bff', ICON.portal, 'Secret Dungeons', '', 'Instanced dungeons that award Daeva Points + Enhancement Items.', ['⭐ Daeva Pts','💎 Enh. Items']),
-    glCard('#5ad1c8', ICON.expedition, 'Expedition Conquest', '', 'Energy-gated content with tiers by CP requirement. Save energy for 1600+.', ['⚡ Energy','🎖️ Top Gear']),
-    glCard('#ffd24a', ICON.daeva, 'Daeva Points', '', 'Permanent stat boosts earned from completing dungeons and quests.', ['📈 Permanent CP']),
-    glCard('#b8c0e0', ICON.feather, 'Monolith', '', 'Feather farming - a passive, daily CP source. Run it every day.', ['🪶 Passive CP']),
-    glCard('#ff5563', ICON.abyss, 'Abyss', '', 'Endgame PvPvE zone. Requires a minimum CP to enter - where real progression begins.', ['⚔️ PvPvE','🏆 Endgame']),
+    glCard('#ffcb2e', ICON.quest, 'Main Story', '(Yellow Quests)', 'Your primary leveling path - follow the gold quest markers exclusively.', ['â­ Fastest XP']),
+    glCard('#4ad66b', ICON.side, 'Side Quests', '(Green Quests)', 'Optional green markers. Only do ones that award gear or sit on your path.', ['ðŸŽ Gear','â­ Daeva Pts']),
+    glCard('#8fb0ff', ICON.qmark, '? Marks on Map', '', 'Undiscovered areas - either a Sealed Dungeon or a Rift Cave.', ['ðŸ-ºï¸ Explore']),
+    glCard('#ff9d5c', ICON.chest, 'Sealed Dungeon', '', 'Treasure chests hold Enhancement Materials + Kinah. Orb chests give Healing.', ['ðŸ’Ž Enh. Mats','ðŸª™ Kinah']),
+    glCard('#c07bff', ICON.portal, 'Secret Dungeons', '', 'Instanced dungeons that award Daeva Points + Enhancement Items.', ['â­ Daeva Pts','ðŸ’Ž Enh. Items']),
+    glCard('#5ad1c8', ICON.expedition, 'Expedition Conquest', '', 'Energy-gated content with tiers by CP requirement. Save energy for 1600+.', ['âš¡ Energy','ðŸŽ–ï¸ Top Gear']),
+    glCard('#ffd24a', ICON.daeva, 'Daeva Points', '', 'Permanent stat boosts earned from completing dungeons and quests.', ['ðŸ“ˆ Permanent CP']),
+    glCard('#b8c0e0', ICON.feather, 'Monolith', '', 'Feather farming - a passive, daily CP source. Run it every day.', ['ðŸª¶ Passive CP']),
+    glCard('#ff5563', ICON.abyss, 'Abyss', '', 'Endgame PvPvE zone. Requires a minimum CP to enter - where real progression begins.', ['âš”ï¸ PvPvE','ðŸ† Endgame']),
     '</div>',
 
     '<h2>Phase 1: Leveling (Lv 1-45)<span class="gd-phase">Target ~600 CP</span></h2>',
@@ -198,7 +207,7 @@
     '<li>Explore ? marks: Sealed Dungeons (Enhancement Mats + Kinah), Rift Caves (Daeva Points)</li>',
     '<li>Enhance your gear using stockpiled materials</li>',
     '<li>Unlock and level Pets - passive CP gain</li></ol>',
-    '<div class="gd-callout warn">⚠️ <strong>Energy Management (CRITICAL):</strong> Do NOT spend energy on 1000 CP Expedition Conquest. Save ALL energy for 1600+ CP Expedition Conquest (Urugugu Canyon). The 1000 CP tier rewards are not worth the energy.</div>',
+    '<div class="gd-callout warn">âš ï¸ <strong>Energy Management (CRITICAL):</strong> Do NOT spend energy on 1000 CP Expedition Conquest. Save ALL energy for 1600+ CP Expedition Conquest (Urugugu Canyon). The 1000 CP tier rewards are not worth the energy.</div>',
     '<p><strong>Other CP sources here:</strong> Pet grinding, Monolith feathers, Daeva Point accumulation, gear enhancement.</p>',
 
     '<h2>Phase 3: Abyss Entry (1000-1400 CP)</h2>',
@@ -244,7 +253,7 @@
     '<tr><td>5</td><td>Daily/Weekly Quests</td><td>Daeva Points + Mats</td></tr>',
     '<tr><td>6</td><td>Gear Enhancement</td><td>Direct CP gain</td></tr></table>',
     '<h3>Enhancement Priority</h3><ol><li>Weapon (biggest CP per level)</li><li>Chest</li><li>Legs</li><li>Helmet</li><li>Gloves / Boots</li><li>Accessories</li></ol>',
-    '<h3>Gear Tier Progression</h3><p>Green Quest Gear → Abyss Gear → Expedition Gear. Never enhance green gear past +3; Abyss gear worth +7-8; Expedition gear is endgame - enhance freely.</p>',
+    '<h3>Gear Tier Progression</h3><p>Green Quest Gear â†’ Abyss Gear â†’ Expedition Gear. Never enhance green gear past +3; Abyss gear worth +7-8; Expedition gear is endgame - enhance freely.</p>',
     '<h3>Breaking CP Walls</h3>',
     '<table class="gd-table"><tr><th>Stuck at</th><th>Solution</th></tr>',
     '<tr><td>1200</td><td>You missed Secret Dungeons - clear them all</td></tr>',
@@ -257,7 +266,7 @@
     '<h2>Day One Optimal Timeline</h2>',
     '<table class="gd-table"><tr><th>Time Block</th><th>Activity</th><th>Target CP</th></tr>',
     '<tr><td>Hours 1-5</td><td>Main Story Lv 1-45</td><td>~600</td></tr>',
-    '<tr><td>Hours 5-8</td><td>Garden of Illusion → North: Secret Dungeons + Green Quests</td><td>~1000</td></tr>',
+    '<tr><td>Hours 5-8</td><td>Garden of Illusion â†’ North: Secret Dungeons + Green Quests</td><td>~1000</td></tr>',
     '<tr><td>Hours 8-12</td><td>Enter Abyss - static group farming</td><td>~1200</td></tr>',
     '<tr><td>Hours 12+</td><td>Continue Abyss + begin enhancement push</td><td>~1400+</td></tr></table>',
 
@@ -269,9 +278,9 @@
     '<li>Don\'t compete with guildmates for spots - rotate or stack groups</li></ul>',
 
     '<h2>TL;DR - The Flow</h2>',
-    '<div class="gd-flow">Main Story → 45\n   ↓\nGreen Quests + Secret Dungeons (Garden of Illusion → North)\n   ↓\n1000 CP → Enter Abyss (Static Groups)\n   ↓\n1600 CP → Expedition Conquest (Urugugu Canyon)\n   ↓\nDaily Loop: Expedition + Abyss + Monolith + Pets + Enhance\n   ↓\n2500 CP ✓</div>',
+    '<div class="gd-flow">Main Story â†’ 45\n   â†“\nGreen Quests + Secret Dungeons (Garden of Illusion â†’ North)\n   â†“\n1000 CP â†’ Enter Abyss (Static Groups)\n   â†“\n1600 CP â†’ Expedition Conquest (Urugugu Canyon)\n   â†“\nDaily Loop: Expedition + Abyss + Monolith + Pets + Enhance\n   â†“\n2500 CP âœ“</div>',
 
-    '<p class="rs-meta" style="color:var(--muted);margin-top:22px;">Last Updated: Launch Day Prep - MミRC Guild. Questions? Ask in guild Discord #aion2-guides.</p>',
+    '<p class="rs-meta" style="color:var(--muted);margin-top:22px;">Last Updated: Launch Day Prep - MãƒŸRC Guild. Questions? Ask in guild Discord #aion2-guides.</p>',
     '</div>'
   ].join('');
 
