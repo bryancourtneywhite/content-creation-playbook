@@ -152,6 +152,14 @@
   function isRosterMember() {
     return myRoster().then(function (row) { return !!(row && row.status === 'confirmed'); });
   }
+  // Am I a roster ADMIN (owner OR delegated admin)? Gates the admin tools.
+  function amIRosterAdmin() {
+    return sb.rpc('my_roster_admin').then(function (r) { return !!r.data; });
+  }
+  // Owner-only: promote/demote a confirmed member to roster admin.
+  function rosterSetAdmin(id, isAdmin) {
+    return sb.rpc('roster_set_admin', { p_id: id, p_is_admin: !!isAdmin });
+  }
   // Create/update my signup. status is server-managed (pending until confirmed).
   function rosterSignup(name, aionClass, guildRole, note) {
     return sb.rpc('roster_signup', {
@@ -254,6 +262,8 @@
     fetchLeaderboard: fetchLeaderboard,
     myRoster: myRoster,
     isRosterMember: isRosterMember,
+    amIRosterAdmin: amIRosterAdmin,
+    rosterSetAdmin: rosterSetAdmin,
     rosterSignup: rosterSignup,
     fetchRoster: fetchRoster,
     rosterSummary: rosterSummary,
