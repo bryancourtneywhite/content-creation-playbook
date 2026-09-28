@@ -96,15 +96,26 @@
   function showDoc() { document.getElementById('gd-doc').style.display = 'block'; }
 
   function render() {
+    // Each check is made fail-safe so ONE erroring never hangs the page.
+    var safe = function (p) { return Promise.resolve(p).then(function (v) { return v; }, function () { return false; }); };
+
     Sol.getUser().then(function (user) {
       if (!user) { gate(false); return; }
-      // Unlock for confirmed roster members AND for owners/admins (who may not
-      // hold a personal confirmed roster row after owner consolidation).
-      Promise.all([Sol.isRosterMember(), Sol.amIRosterAdmin()]).then(function (res) {
-        var allowed = !!res[0] || !!res[1];
-        if (!allowed) { gate(true); return; }
-        root.innerHTML = DOC_HTML;
+      // Unlock for confirmed roster members OR owners/admins. Three independent
+      // fail-safe checks: member row, admin RPC, and sol_king role - if any one
+      // resolves true (and the others error), the visitor still gets in.
+      return Promise.all([
+        safe(Sol.isRosterMember()),
+        safe(Sol.amIRosterAdmin()),
+        safe(Sol.myProfile().then(function (p) { return p && p.role === 'sol_king'; }))
+      ]).then(function (res) {
+        if (res[0] || res[1] || res[2]) { root.innerHTML = DOC_HTML; }
+        else { gate(true); }
       });
+    }).catch(function (e) {
+      // Never leave the visitor stuck on "Verifying…". Show the gate with a retry.
+      console.error('[guide] membership check failed:', e);
+      gate(true);
     });
   }
 
