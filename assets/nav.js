@@ -42,7 +42,10 @@
   { label: 'Discord', href: 'https://discord.gg/rTD6qxUcmG', ext: true }
   ]},
   { id: 'sponsors', label: 'Sponsors', href: 'optimize.html', highlight: true },
-  { id: 'roster', label: 'MミRC Roster', href: 'roster.html' },
+  { id: 'roster', label: 'MミRC Roster', href: 'roster.html', children: [
+  { label: '⚔️ Roster', href: 'roster.html' },
+  { label: '📖 Day One Guide', href: 'merc-day-one-guide.html' }
+  ]},
   { id: 'misc', label: 'MISC', children: [
   { label: '🏆 Sol Leaderboard', href: 'leaderboard.html' },
   { label: 'My Profile', href: 'profile.html' },
