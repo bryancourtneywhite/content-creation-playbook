@@ -210,6 +210,14 @@
   function rosterMove(memberId, group, team) {
     return sb.rpc('roster_move', { p_member: memberId, p_group: group, p_team: team || null });
   }
+  // Explicit set of group + team (allows clearing to unassigned via '').
+  function rosterSetGroupTeam(id, group, team) {
+    return sb.rpc('roster_set_group_team', { p_id: id, p_group: group || '', p_team: team || '' });
+  }
+  // Swap a member's class and/or role.
+  function rosterSetClassRole(id, aionClass, guildRole) {
+    return sb.rpc('roster_set_class_role', { p_id: id, p_class: aionClass || null, p_role: guildRole || null });
+  }
 
   /* ---- Events + attendance ---- */
   function fetchEvents() {
@@ -288,6 +296,8 @@
     rosterReject: rosterReject,
     rosterAssign: rosterAssign,
     rosterMove: rosterMove,
+    rosterSetGroupTeam: rosterSetGroupTeam,
+    rosterSetClassRole: rosterSetClassRole,
     fetchEvents: fetchEvents,
     fetchAttendance: fetchAttendance,
     fetchAttendanceRates: fetchAttendanceRates,
