@@ -164,6 +164,16 @@
   function adminSignups() {
     return sb.rpc('admin_signups').then(function (r) { return r.data || []; });
   }
+  // Owner/admin: add an account directly to the roster (confirmed), even if they
+  // never filled out the signup form. Defaults class/role; edit inline after.
+  function rosterAddMember(userId, name, aionClass, guildRole) {
+    return sb.rpc('roster_add_member', {
+      p_user: userId, p_name: name || null,
+      p_class: aionClass || 'Templar', p_role: guildRole || 'DPS'
+    });
+  }
+  // Owner/admin: remove a roster row entirely (returns them to "not signed up").
+  function rosterRemove(id) { return sb.rpc('roster_remove', { p_id: id }); }
   // Create/update my signup. status is server-managed (pending until confirmed).
   function rosterSignup(name, aionClass, guildRole, note) {
     return sb.rpc('roster_signup', {
@@ -269,6 +279,8 @@
     amIRosterAdmin: amIRosterAdmin,
     rosterSetAdmin: rosterSetAdmin,
     adminSignups: adminSignups,
+    rosterAddMember: rosterAddMember,
+    rosterRemove: rosterRemove,
     rosterSignup: rosterSignup,
     fetchRoster: fetchRoster,
     rosterSummary: rosterSummary,

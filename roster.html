@@ -324,8 +324,17 @@
       var STAT = { pending:'⏳ Pending', confirmed:'✅ Confirmed', rejected:'✖ Rejected', not_signed_up:'— Not signed up' };
       list.innerHTML = rows.map(function (u) {
         var st = u.roster_status || 'not_signed_up';
-        var canAct = (st === 'pending' || st === 'rejected');
         var when = u.joined_at ? new Date(u.joined_at).toLocaleDateString() : '';
+        var actions = '';
+        if (st === 'pending' || st === 'rejected') {
+          // has a signup row -> confirm it
+          actions = '<button class="rs-mini ok" data-act="confirm" data-rid="'+u.roster_id+'">Add to roster</button>';
+        } else if (st === 'not_signed_up') {
+          // account exists but no signup -> owner adds them directly
+          actions = '<button class="rs-mini ok" data-act="add" data-uid="'+esc(u.profile_id)+'">+ Add to roster</button>';
+        } else if (st === 'confirmed') {
+          actions = '<button class="rs-mini no" data-act="remove" data-rid="'+u.roster_id+'">Remove</button>';
+        }
         return '<div class="rs-event"><div class="rs-event-h">' +
           '<span class="grow"><strong>' + esc(u.player_name || u.display_name || u.discord_name || '—') + '</strong>' +
             (u.aion_class ? ' <span class="rs-meta">' + esc(u.aion_class) + ' · ' + esc(u.guild_role) + '</span>' : '') +
@@ -334,16 +343,19 @@
           '</span>' +
           '<span class="rs-chip' + (st==='confirmed'?' core':(st==='pending'?' war':'')) + '">' + (STAT[st]||st) + '</span>' +
           (u.is_admin ? '<span class="rs-chip core">Admin</span>' : '') +
-          (canAct && u.roster_id ? '<button class="rs-mini ok" data-act="confirm" data-id="'+u.roster_id+'">Add to roster</button>' : '') +
-          (st==='confirmed' && u.roster_id ? '<button class="rs-mini no" data-act="reject" data-id="'+u.roster_id+'">Remove</button>' : '') +
+          actions +
         '</div></div>';
       }).join('');
-      // wire the add/remove buttons (reuse confirm/reject RPCs)
+      // wire the add/confirm/remove buttons
       list.querySelectorAll('.rs-mini[data-act]').forEach(function (b) {
         b.addEventListener('click', function () {
-          var id=parseInt(b.getAttribute('data-id'),10), act=b.getAttribute('data-act');
-          b.disabled=true; b.textContent='…';
-          (act==='confirm'?Sol.rosterConfirm(id):Sol.rosterReject(id)).then(function(){
+          var act = b.getAttribute('data-act');
+          b.disabled = true; b.textContent = '…';
+          var p;
+          if (act === 'add') { p = Sol.rosterAddMember(b.getAttribute('data-uid')); }
+          else if (act === 'confirm') { p = Sol.rosterConfirm(parseInt(b.getAttribute('data-rid'),10)); }
+          else { p = Sol.rosterRemove(parseInt(b.getAttribute('data-rid'),10)); }
+          p.then(function () {
             Sol.fetchRoster().then(function (rows) { STATE.rows = rows; loadSignups(); });
           });
         });
