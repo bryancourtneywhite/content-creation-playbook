@@ -401,21 +401,22 @@
       ? '<div class="rs-tabs">' +
           '<div class="rs-tab' + (STATE.tab==='roster'?' active':'') + '" data-tab="roster">Roster</div>' +
           '<div class="rs-tab' + (STATE.tab==='events'?' active':'') + '" data-tab="events">Events &amp; Attendance</div>' +
-          (STATE.isOwner ? '<div class="rs-tab' + (STATE.tab==='signups'?' active':'') + '" data-tab="signups">Signups</div>' : '') +
+          (STATE.isAdmin ? '<div class="rs-tab' + (STATE.tab==='signups'?' active':'') + '" data-tab="signups">Applications</div>' : '') +
         '</div>'
       : '';
     var body = (STATE.isAdmin && STATE.tab === 'events') ? renderEventsTab()
-             : (STATE.isOwner && STATE.tab === 'signups') ? renderSignupsTab()
+             : (STATE.isAdmin && STATE.tab === 'signups') ? renderSignupsTab()
              : renderRosterTab();
     root.innerHTML = summaryHtml(summary) + tabs + '<div id="rs-body">' + body + '</div>';
     wireOwnerControls();
     if (STATE.isAdmin && STATE.tab === 'events') loadEvents();
-    if (STATE.isOwner && STATE.tab === 'signups') loadSignups();
+    if (STATE.isAdmin && STATE.tab === 'signups') loadSignups();
   }
 
-  // OWNER-ONLY: everyone who signed up + their roster status + contact.
+  // ADMIN (owner or delegated): everyone who applied + their roster status,
+  // contact, and full application details. Approve here to add them to roster.
   function renderSignupsTab() {
-    return '<div id="su-list" class="rs-loading">Loading signups…</div>';
+    return '<div id="su-list" class="rs-loading">Loading applications…</div>';
   }
   function loadSignups() {
     var list = root.querySelector('#su-list'); if (!list) return;

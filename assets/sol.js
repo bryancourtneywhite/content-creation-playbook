@@ -211,9 +211,16 @@
   }
   // Read the roster. RLS returns all CONFIRMED rows only to confirmed members;
   // to everyone else it returns just their own row.
+  // NOTE: we select an EXPLICIT non-sensitive column list (not '*') so private
+  // application answers (pvp_history, economic_profile, vod_link, timezone,
+  // discord_handle, flex_scale, ...) are never shipped to regular members. Admins
+  // read the full application data through the admin-gated adminSignups() RPC.
+  var ROSTER_COLS = 'id,user_id,player_name,aion_class,guild_role,status,' +
+    'assigned_group,static_team,combat_power,war_status,is_core,tw_vet,' +
+    'is_reserve,is_admin,note,confirmed_at,created_at';
   function fetchRoster() {
     return sb.from('guild_roster')
-      .select('*')
+      .select(ROSTER_COLS)
       .order('assigned_group', { ascending: true })
       .order('player_name', { ascending: true })
       .then(function (r) { return r.data || []; });
