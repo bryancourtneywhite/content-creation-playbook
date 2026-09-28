@@ -41,6 +41,23 @@
     background: rgba(0,0,0,0.28); border:1px solid var(--panel-border); border-radius: 12px; padding: 14px 18px; white-space: pre-wrap; }
   [data-theme="light"] .gd-flow { background: rgba(20,60,110,0.05); }
   .gd-loading { text-align:center; color:var(--muted); padding:40px 0; }
+  /* visual glossary cards */
+  .gl-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:16px 0 6px; }
+  .gl-card { display:flex; gap:14px; padding:16px; border-radius:14px;
+    background:var(--panel); border:1px solid var(--panel-border); border-left:4px solid var(--gc,#888);
+    transition:transform .12s ease, box-shadow .2s ease; }
+  .gl-card:hover { transform:translateY(-2px); box-shadow:0 10px 26px rgba(0,0,0,0.4); }
+  .gl-ico { flex:0 0 auto; width:52px; height:52px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+    color:var(--gc,#ccc); background:rgba(0,0,0,0.35); border:1px solid var(--panel-border);
+    box-shadow:inset 0 0 18px rgba(0,0,0,0.4); }
+  [data-theme="light"] .gl-ico { background:#12100f; }
+  .gl-body { min-width:0; }
+  .gl-term { font-weight:800; font-size:15px; color:var(--text); line-height:1.2; }
+  .gl-sub { font-size:12px; font-weight:700; color:var(--gc,#aaa); }
+  .gl-mean { font-size:13px; color:var(--muted); margin-top:4px; line-height:1.45; }
+  .gl-tags { display:flex; flex-wrap:wrap; gap:5px; margin-top:8px; }
+  .gl-tag { font-size:11px; font-weight:700; padding:2px 8px; border-radius:999px;
+    background:rgba(214,30,44,0.12); color:var(--gc,#ff8089); border:1px solid var(--panel-border); }
 </style>
 </head>
 <body>
@@ -91,6 +108,42 @@
     });
   }
 
+  // ---- Original SVG glossary icons (crimson/theme-tinted; use currentColor) ----
+  function svg(inner) {
+    return '<svg viewBox="0 0 48 48" width="34" height="34" fill="none" stroke="currentColor" ' +
+      'stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + inner + '</svg>';
+  }
+  var ICON = {
+    // gold quest marker: a diamond exclamation
+    quest: svg('<path d="M24 5 43 24 24 43 5 24Z" fill="currentColor" fill-opacity="0.14"/><path d="M24 15v11" /><circle cx="24" cy="33" r="1.6" fill="currentColor" stroke="none"/>'),
+    // side quest: a smaller diamond with a plus
+    side: svg('<path d="M24 8 40 24 24 40 8 24Z" fill="currentColor" fill-opacity="0.12"/><path d="M24 17v14M17 24h14"/>'),
+    // ? map pin
+    qmark: svg('<path d="M24 43s13-11 13-22a13 13 0 1 0-26 0c0 11 13 22 13 22Z" fill="currentColor" fill-opacity="0.12"/><path d="M20 18a4 4 0 1 1 6 3.5c-1.6 1-2 1.8-2 3.5"/><circle cx="24" cy="31" r="1.4" fill="currentColor" stroke="none"/>'),
+    // treasure chest
+    chest: svg('<rect x="8" y="18" width="32" height="20" rx="2" fill="currentColor" fill-opacity="0.12"/><path d="M8 26h32M8 18l4-6h24l4 6"/><rect x="21" y="24" width="6" height="7" rx="1" fill="currentColor" stroke="none"/>'),
+    // dungeon portal (archway swirl)
+    portal: svg('<path d="M12 40V22a12 12 0 0 1 24 0v18" fill="currentColor" fill-opacity="0.10"/><path d="M12 40V22a12 12 0 0 1 24 0v18"/><path d="M24 40V26a6 6 0 0 1 0 0"/><circle cx="24" cy="24" r="4"/>'),
+    // expedition: energy crystal
+    expedition: svg('<path d="M24 5 34 20 24 43 14 20Z" fill="currentColor" fill-opacity="0.14"/><path d="M14 20h20M24 5v38"/>'),
+    // daeva points: radiant star
+    daeva: svg('<path d="M24 5l4.6 12.5L41 20l-9 8.5L34 41l-10-6.5L14 41l2-12.5L7 20l12.4-2.5Z" fill="currentColor" fill-opacity="0.16"/>'),
+    // monolith: feather
+    feather: svg('<path d="M34 8C20 10 12 22 12 34l-4 6M34 8c4 12-2 26-14 28M34 8c1 8-1 14-4 18M18 30h10" fill="currentColor" fill-opacity="0.06"/>'),
+    // abyss: vortex
+    abyss: svg('<circle cx="24" cy="24" r="18" fill="currentColor" fill-opacity="0.10"/><path d="M24 8c9 0 16 7 16 16M40 24a16 16 0 0 1-16 16M8 24C8 15 15 8 24 8"/><circle cx="24" cy="24" r="5"/>')
+  };
+  function glCard(color, icon, term, sub, meaning, tags) {
+    var chips = (tags||[]).map(function(t){ return '<span class="gl-tag">' + esc(t) + '</span>'; }).join('');
+    return '<div class="gl-card" style="--gc:' + color + '">' +
+      '<div class="gl-ico">' + icon + '</div>' +
+      '<div class="gl-body">' +
+        '<div class="gl-term">' + esc(term) + (sub ? ' <span class="gl-sub">' + esc(sub) + '</span>' : '') + '</div>' +
+        '<div class="gl-mean">' + esc(meaning) + '</div>' +
+        (chips ? '<div class="gl-tags">' + chips + '</div>' : '') +
+      '</div></div>';
+  }
+
   // ---- The Day One Guide content (rendered only for confirmed members) ----
   var DOC_HTML = [
     '<div class="gd-doc">',
@@ -100,17 +153,18 @@
     '<p><strong>Purpose:</strong> a step-by-step roadmap from character creation to Abyss-ready CP. Follow this in order - no wasted time, no wasted energy.</p>',
 
     '<h2>Key Glossary</h2>',
-    '<table class="gd-table"><tr><th>Term</th><th>Meaning</th></tr>',
-    '<tr><td>Main Story (Yellow Quests)</td><td>Your primary leveling path - gold quest markers</td></tr>',
-    '<tr><td>Side Quests (Green Quests)</td><td>Optional - green markers. Only do ones that award gear or are on your path</td></tr>',
-    '<tr><td>? Marks on Map</td><td>Undiscovered areas - a Sealed Dungeon or Rift Cave</td></tr>',
-    '<tr><td>Sealed Dungeon</td><td>Treasure chests = Enhancement Materials + Kinah. Orb chests = Healing</td></tr>',
-    '<tr><td>Secret Dungeons</td><td>Instanced dungeons awarding Daeva Points + Enhancement Items</td></tr>',
-    '<tr><td>Expedition Conquest</td><td>Energy-gated content. Different tiers by CP requirement</td></tr>',
-    '<tr><td>Daeva Points</td><td>Permanent stat boosts from completing dungeons/quests</td></tr>',
-    '<tr><td>Monolith</td><td>Feather farming - passive CP source</td></tr>',
-    '<tr><td>Abyss</td><td>Endgame PvPvE zone - requires minimum CP to enter</td></tr>',
-    '</table>',
+    '<p class="rs-meta" style="color:var(--muted);margin-top:-4px;">Every term you need for Day One, at a glance.</p>',
+    '<div class="gl-grid">',
+    glCard('#ffcb2e', ICON.quest, 'Main Story', '(Yellow Quests)', 'Your primary leveling path - follow the gold quest markers exclusively.', ['⭐ Fastest XP']),
+    glCard('#4ad66b', ICON.side, 'Side Quests', '(Green Quests)', 'Optional green markers. Only do ones that award gear or sit on your path.', ['🎁 Gear','⭐ Daeva Pts']),
+    glCard('#8fb0ff', ICON.qmark, '? Marks on Map', '', 'Undiscovered areas - either a Sealed Dungeon or a Rift Cave.', ['🗺️ Explore']),
+    glCard('#ff9d5c', ICON.chest, 'Sealed Dungeon', '', 'Treasure chests hold Enhancement Materials + Kinah. Orb chests give Healing.', ['💎 Enh. Mats','🪙 Kinah']),
+    glCard('#c07bff', ICON.portal, 'Secret Dungeons', '', 'Instanced dungeons that award Daeva Points + Enhancement Items.', ['⭐ Daeva Pts','💎 Enh. Items']),
+    glCard('#5ad1c8', ICON.expedition, 'Expedition Conquest', '', 'Energy-gated content with tiers by CP requirement. Save energy for 1600+.', ['⚡ Energy','🎖️ Top Gear']),
+    glCard('#ffd24a', ICON.daeva, 'Daeva Points', '', 'Permanent stat boosts earned from completing dungeons and quests.', ['📈 Permanent CP']),
+    glCard('#b8c0e0', ICON.feather, 'Monolith', '', 'Feather farming - a passive, daily CP source. Run it every day.', ['🪶 Passive CP']),
+    glCard('#ff5563', ICON.abyss, 'Abyss', '', 'Endgame PvPvE zone. Requires a minimum CP to enter - where real progression begins.', ['⚔️ PvPvE','🏆 Endgame']),
+    '</div>',
 
     '<h2>Phase 1: Leveling (Lv 1-45)<span class="gd-phase">Target ~600 CP</span></h2>',
     '<p><em>Time: 4-6 hours of focused play</em></p>',
