@@ -346,19 +346,6 @@
     </div>
   </div>
 
-  <!-- LEADERBOARD (rendered directly below the join module) -->
-  <div class="section-head" style="margin-top:34px;">
-    <div class="kicker">🏆 The Ascension Ranks</div>
-    <h2>Sol Leaderboard</h2>
-    <p>Top Sols by Sol earned. Check in daily to climb.</p>
-  </div>
-  <div class="lb-list" id="home-leaderboard" style="max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:10px;">
-    <div style="text-align:center;color:var(--muted);padding:20px;">Summoning the ranks…</div>
-  </div>
-  <div class="btn-row" style="justify-content:center;margin-top:18px;">
-    <a class="tool-btn" href="leaderboard.html">🏆 Full Leaderboard →</a>
-  </div>
-
   <div data-follow></div>
 
   
@@ -544,24 +531,27 @@
   if (!listEl) return;
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
 
-  // Top 5 ranks
-  Sol.fetchLeaderboard(5).then(function (rows) {
-    if (!rows.length) {
-      listEl.innerHTML = '<li class="sw-loading">No Sols ranked yet — be the first.</li>';
-      return;
-    }
-    listEl.innerHTML = rows.map(function (r) {
-      var info = Sol.roleInfo(r.role);
-      return '<li>' +
-        '<span class="sw-pos">' + (r.position === 1 ? '👑' : r.position) + '</span>' +
-        '<span style="min-width:0;">' +
-          '<span class="sw-name">' + esc(Sol.displayName(r.alias)) + '</span>' +
-          '<span class="sw-role" style="display:block;color:' + info.color + '">' + info.icon + ' ' + info.label + '</span>' +
-        '</span>' +
-        '<span class="sw-sol">' + (r.sols || 0).toLocaleString() + '<small>SOL</small></span>' +
-      '</li>';
-    }).join('');
-  }).catch(function(){ listEl.innerHTML = '<li class="sw-loading">Leaderboard unavailable.</li>'; });
+  // Top 5 ranks (callable so a check-in can refresh it)
+  function loadWidget() {
+    Sol.fetchLeaderboard(5).then(function (rows) {
+      if (!rows.length) {
+        listEl.innerHTML = '<li class="sw-loading">No Sols ranked yet — be the first.</li>';
+        return;
+      }
+      listEl.innerHTML = rows.map(function (r) {
+        var info = Sol.roleInfo(r.role);
+        return '<li>' +
+          '<span class="sw-pos">' + (r.position === 1 ? '👑' : r.position) + '</span>' +
+          '<span style="min-width:0;">' +
+            '<span class="sw-name">' + esc(Sol.displayName(r.alias)) + '</span>' +
+            '<span class="sw-role" style="display:block;color:' + info.color + '">' + info.icon + ' ' + info.label + '</span>' +
+          '</span>' +
+          '<span class="sw-sol">' + (r.sols || 0).toLocaleString() + '<small>SOL</small></span>' +
+        '</li>';
+      }).join('');
+    }).catch(function(){ listEl.innerHTML = '<li class="sw-loading">Leaderboard unavailable.</li>'; });
+  }
+  loadWidget();
 
   // If logged in, show the user's own rank + change the CTA
   Sol.getSession().then(function (s) {
@@ -611,7 +601,7 @@
     var note = document.getElementById('join-checknote'); jCheck.disabled = true; note.textContent = 'Absorbing Sol…';
     Sol.checkIn().then(function (r) {
       if (r && r.ok) { note.textContent = '+' + r.awarded + ' Sol! Streak x' + r.streak + (r.rankedUp ? ' — RANK UP! 🎉' : '');
-        renderJoin(); loadHomeBoard(); setTimeout(function(){ jCheck.disabled = false; }, 1500); }
+        renderJoin(); loadWidget(); setTimeout(function(){ jCheck.disabled = false; }, 1500); }
       else if (r && r.reason === 'cooldown') { note.textContent = 'Come back in ~' + r.hoursLeft + 'h ⏳'; jCheck.disabled = false; }
       else { note.textContent = 'Try again in a moment.'; jCheck.disabled = false; }
     }).catch(function (e) { note.textContent = 'Error: ' + e.message; jCheck.disabled = false; });
@@ -619,33 +609,6 @@
   Sol.onAuthChange(function () { renderJoin(); });
   renderJoin();
 
-  /* ---- Home leaderboard (below the join module) ---- */
-  var board = document.getElementById('home-leaderboard');
-  function loadHomeBoard() {
-    if (!board) return;
-    Sol.getUser().then(function (me) {
-      var myId = me && me.id;
-      Sol.fetchLeaderboard(10).then(function (rows) {
-        if (!rows.length) { board.innerHTML = '<div style="text-align:center;color:var(--muted);padding:20px;">No Sols ranked yet — be the first.</div>'; return; }
-        board.innerHTML = rows.map(function (r) {
-          var info = Sol.roleInfo(r.role);
-          var top = r.position === 1 ? 'top1' : r.position === 2 ? 'top2' : r.position === 3 ? 'top3' : '';
-          var elite = (r.sols >= 5000) ? ' elite' : '';           // high-rank highlight
-          var meClass = (myId && r.id === myId) ? ' me' : '';
-          var avatar = '<img class="lb-avatar" src="' + esc(Sol.avatarFor(r.avatar_url)) + '" alt="">';
-          return '<div class="lb-row ' + top + elite + meClass + '">' +
-            '<div class="lb-pos">' + (r.position === 1 ? '👑' : '#' + r.position) + '</div>' +
-            '<div class="lb-who">' + avatar + '<div style="min-width:0;">' +
-              '<div class="lb-alias">' + esc(Sol.displayName(r.alias)) + '</div>' +
-              '<div class="lb-role" style="color:' + info.color + '">' + info.icon + ' ' + info.label + '</div>' +
-            '</div></div>' +
-            '<div class="lb-sols">' + (r.sols||0).toLocaleString() + '<small>SOL</small></div>' +
-          '</div>';
-        }).join('');
-      });
-    });
-  }
-  loadHomeBoard();
 })();
 </script>
 </body>
