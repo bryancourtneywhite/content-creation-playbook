@@ -257,7 +257,19 @@
   '</div>';
   }
 
-  // Decide YouTube pane: live embed vs offline schedule card, driven by data/live.json.
+  // Uploads playlist = channel id with the "UC" prefix swapped to "UU".
+  // Embedding this playlist auto-plays the CHANNEL'S LATEST video, so the
+  // YouTube box always shows real content even when I'm not live.
+  function uploadsPlaylist(chanId) {
+  return (chanId && chanId.indexOf('UC') === 0)
+  ? 'UU' + chanId.slice(2)
+  : null;
+  }
+
+  // Decide YouTube pane, driven by data/live.json:
+  //   live on YouTube    -> live_stream embed
+  //   not live / offline -> latest-video embed (uploads playlist) + schedule caption
+  //   config unavailable -> latest-video embed (best-effort) else offline card
   fetch('data/live.json', { cache: 'no-store' })
   .then(function (r) { return r.ok ? r.json() : null; })
   .then(function (d) {
@@ -267,25 +279,57 @@
   var slot2 = document.getElementById('yt-slot-2');
   var off = document.getElementById('yt-offline');
   var off2 = document.getElementById('yt-offline-2');
+  var f = document.getElementById('yt-frame');
+  var f2 = document.getElementById('yt-frame-2');
+
+  var src = null;
   if (isLiveYT && YT_CHANNEL_ID) {
-  var live = 'https://www.youtube.com/embed/live_stream?channel=' + YT_CHANNEL_ID;
-  var f = document.getElementById('yt-frame'); if (f) f.src = live;
-  var f2 = document.getElementById('yt-frame-2'); if (f2) f2.src = live;
+  src = 'https://www.youtube.com/embed/live_stream?channel=' + YT_CHANNEL_ID;
+  } else {
+  var pl = uploadsPlaylist(YT_CHANNEL_ID);
+  if (pl) src = 'https://www.youtube.com/embed/videoseries?list=' + pl + '&rel=0';
+  }
+
+  if (src) {
+  if (f) f.src = src;
+  if (f2) f2.src = src;
   if (slot) slot.style.display = '';
   if (slot2) slot2.style.display = '';
+  // Keep the schedule visible as a small caption beneath the video (offline only).
+  if (!isLiveYT && sched) {
+  var cap = '<div class="oc-inline">🌙 <strong>' + escHtml(sched.headline || 'Next Stream') +
+  '</strong> - ' + escHtml(sched.dates || '') + '</div>';
+  if (off) { off.innerHTML = cap; off.className = 'yt-sched-caption'; off.style.display = ''; }
+  if (off2) { off2.innerHTML = cap; off2.className = 'yt-sched-caption'; off2.style.display = ''; }
+  } else {
   if (off) off.style.display = 'none';
   if (off2) off2.style.display = 'none';
+  }
   } else {
+  // No channel id at all -> fall back to the branded offline card.
   if (off) off.innerHTML = offlineCardHTML(sched);
   if (off2) off2.innerHTML = offlineCardHTML(sched);
   }
   })
   .catch(function () {
-  // Fallback: show a generic offline card if the config can't load.
+  // Config couldn't load: still try the latest-video embed, else offline card.
+  var slot = document.getElementById('yt-slot');
+  var slot2 = document.getElementById('yt-slot-2');
   var off = document.getElementById('yt-offline');
   var off2 = document.getElementById('yt-offline-2');
+  var pl = uploadsPlaylist(YT_CHANNEL_ID);
+  if (pl) {
+  var src = 'https://www.youtube.com/embed/videoseries?list=' + pl + '&rel=0';
+  var f = document.getElementById('yt-frame'); if (f) f.src = src;
+  var f2 = document.getElementById('yt-frame-2'); if (f2) f2.src = src;
+  if (slot) slot.style.display = '';
+  if (slot2) slot2.style.display = '';
+  if (off) off.style.display = 'none';
+  if (off2) off2.style.display = 'none';
+  } else {
   if (off) off.innerHTML = offlineCardHTML(null);
   if (off2) off2.innerHTML = offlineCardHTML(null);
+  }
   });
 
   // Twitch embeds REQUIRE the parent domain(s) where they are hosted.

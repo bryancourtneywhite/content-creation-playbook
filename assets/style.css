@@ -1379,6 +1379,12 @@ header.hero > .scroll-hint { position: relative; z-index: 1; }
 .offline-card .oc-btn:hover { filter: brightness(1.12); transform: scale(1.04); }
 .offline-card .oc-moon { position: absolute; top: 14px; right: 18px; font-size: 26px; opacity: 0.5; }
 
+/* Small schedule caption shown beneath the YouTube latest-video embed (offline). */
+.yt-sched-caption {
+  margin-top: 10px; font-size: 13.5px; color: var(--muted); text-align: center;
+}
+.yt-sched-caption .oc-inline strong { color: var(--text); }
+
 /* ---------- BUILDS / ARTICLES ---------- */
 .build-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
 .build-card {
