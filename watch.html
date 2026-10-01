@@ -237,6 +237,11 @@
   // #yt-frame iframe src to:
   //  'https://www.youtube.com/embed/live_stream?channel=' + YT_CHANNEL_ID
   var YT_CHANNEL_ID = 'UCXfA4M5_bHzLAoRkj-7Kz_A';  // Ashura Whole Heavens
+  // Fallback video shown when NOT live. Direct video IDs embed reliably;
+  // the channel "uploads playlist" (UU...) is blocked by YouTube and shows
+  // "This video is unavailable", so we embed a specific video instead.
+  // Update this to your newest video any time you want the box to feature it.
+  var FEATURED_VIDEO_ID = 'ayyzLdGOaNc';  // Templar Global Build (Lv45 vs Lv50)
 
   function escHtml(s) {
   return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
@@ -257,23 +262,22 @@
   '</div>';
   }
 
-  // Uploads playlist = channel id with the "UC" prefix swapped to "UU".
-  // Embedding this playlist auto-plays the CHANNEL'S LATEST video, so the
-  // YouTube box always shows real content even when I'm not live.
-  function uploadsPlaylist(chanId) {
-  return (chanId && chanId.indexOf('UC') === 0)
-  ? 'UU' + chanId.slice(2)
-  : null;
+  // Build a reliable YouTube embed URL for a given video id.
+  // Direct /embed/<id> works for both normal uploads AND live videos, and is
+  // NOT subject to the uploads-playlist embed block.
+  function videoEmbed(id) {
+  return id ? 'https://www.youtube.com/embed/' + id + '?rel=0' : null;
   }
 
   // Decide YouTube pane, driven by data/live.json:
-  //   live on YouTube    -> live_stream embed
-  //   not live / offline -> latest-video embed (uploads playlist) + schedule caption
-  //   config unavailable -> latest-video embed (best-effort) else offline card
+  //   live on YouTube + youtubeLiveId -> embed that live video directly
+  //   not live / offline              -> featured-video embed + schedule caption
+  //   config unavailable              -> featured-video embed (best-effort) else offline card
   fetch('data/live.json', { cache: 'no-store' })
   .then(function (r) { return r.ok ? r.json() : null; })
   .then(function (d) {
   var isLiveYT = d && d.live && d.platform === 'youtube';
+  var liveId = d && d.youtubeLiveId;
   var sched = d && d.schedule;
   var slot = document.getElementById('yt-slot');
   var slot2 = document.getElementById('yt-slot-2');
@@ -283,11 +287,12 @@
   var f2 = document.getElementById('yt-frame-2');
 
   var src = null;
-  if (isLiveYT && YT_CHANNEL_ID) {
-  src = 'https://www.youtube.com/embed/live_stream?channel=' + YT_CHANNEL_ID;
+  if (isLiveYT && liveId) {
+  // Live on YouTube: embed the live video by its id (reliable; live_stream?channel= is deprecated).
+  src = videoEmbed(liveId);
   } else {
-  var pl = uploadsPlaylist(YT_CHANNEL_ID);
-  if (pl) src = 'https://www.youtube.com/embed/videoseries?list=' + pl + '&rel=0';
+  // Not live (or no live id yet): show the featured video so the box is never empty/broken.
+  src = videoEmbed(FEATURED_VIDEO_ID);
   }
 
   if (src) {
@@ -312,14 +317,13 @@
   }
   })
   .catch(function () {
-  // Config couldn't load: still try the latest-video embed, else offline card.
+  // Config couldn't load: still try the featured-video embed, else offline card.
   var slot = document.getElementById('yt-slot');
   var slot2 = document.getElementById('yt-slot-2');
   var off = document.getElementById('yt-offline');
   var off2 = document.getElementById('yt-offline-2');
-  var pl = uploadsPlaylist(YT_CHANNEL_ID);
-  if (pl) {
-  var src = 'https://www.youtube.com/embed/videoseries?list=' + pl + '&rel=0';
+  var src = videoEmbed(FEATURED_VIDEO_ID);
+  if (src) {
   var f = document.getElementById('yt-frame'); if (f) f.src = src;
   var f2 = document.getElementById('yt-frame-2'); if (f2) f2.src = src;
   if (slot) slot.style.display = '';
