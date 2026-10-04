@@ -114,7 +114,7 @@
   <div class="watch-grid" style="grid-template-columns:1fr 1fr;">
   <div>
   <div class="embed-label"><span class="pf-dot yt"></span> YouTube Chat</div>
-  <div class="embed-wrap" style="aspect-ratio:auto;height:100%;min-height:520px;">
+  <div class="embed-wrap" style="aspect-ratio:auto;height:100%;min-height:520px;background:#0f0d12;">
   <iframe id="yt-chat" src="about:blank" title="YouTube live chat"></iframe>
   </div>
   <div id="yt-chat-note" class="chat-note" style="display:none;">
@@ -379,7 +379,7 @@
   var frame = document.getElementById('yt-chat');
   var note = document.getElementById('yt-chat-note');
   if (ytId && frame) {
-  frame.src = 'https://www.youtube.com/live_chat?v=' + encodeURIComponent(ytId) + '&embed_domain=' + host;
+  frame.src = 'https://www.youtube.com/live_chat?v=' + encodeURIComponent(ytId) + '&embed_domain=' + host + '&dark_theme=1';
   } else {
   if (frame) frame.style.display = 'none';
   if (note) note.style.display = 'block';
