@@ -73,10 +73,13 @@
         pool.forEach(function (p) { weighted.push(p); if (p.brandUrl) weighted.push(p); });
         var p = weighted[Math.floor(Math.random() * weighted.length)];
         var lk = pickGearLink(p);
+        var thumb = p.image
+          ? '<img class="sr-gear-img" src="' + esc(href(p.image)) + '" alt="" loading="lazy">'
+          : '<span class="sr-gear-ico">' + esc(p.icon || '🖱️') + '</span>';
         slot.innerHTML =
           '<div class="sr-gear-head">🎯 Gear I run</div>' +
           '<a class="sr-gear-item" href="' + esc(lk.url) + '" target="_blank" rel="sponsored nofollow noopener">' +
-            '<span class="sr-gear-ico">' + esc(p.icon || '🖱️') + '</span>' +
+            thumb +
             '<span class="sr-gear-body">' +
               '<span class="sr-gear-name">' + esc(p.name) + '</span>' +
               '<span class="sr-gear-sub">' + esc(p.brand) + ' · View on ' + esc(lk.label) + ' →</span>' +
