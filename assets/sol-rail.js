@@ -40,7 +40,50 @@
     return '<button class="sr-x" id="sr-close" aria-label="Dismiss">✕</button>' +
       '<div class="sr-head">🏆 Sol Leaderboard</div>' +
       '<ol class="sr-list">' + (rows || '<li class="sr-empty">Be the first to rank.</li>') + '</ol>' +
-      cta;
+      cta +
+      '<div class="sr-gear" id="sr-gear"></div>';
+  }
+
+  /* ---- Rotating gear slot: ONE item at a time, native, economical ----
+     Shows a single piece of the gear Sol actually uses, rotating per page
+     load so it isn't repetitive. Pulls from the same products.json the
+     Hardware page uses, so there's one source of truth. Routes to the
+     brand-direct (best payout) link when present, else Amazon. The whole
+     rail (this included) is dismissible, so it never becomes a wall. */
+  function pickGearLink(p) {
+    if (p.brandUrl) return { url: p.brandUrl, label: p.brandLabel || 'Official' };
+    if (p.amazonUrl) return { url: p.amazonUrl, label: 'Amazon' };
+    if (p.asin) return { url: 'https://www.amazon.com/dp/' + encodeURIComponent(p.asin) + '/?tag=solashur0f-20', label: 'Amazon' };
+    return null;
+  }
+
+  function renderGear() {
+    var slot = document.getElementById('sr-gear');
+    if (!slot) return;
+    fetch(href('data/products.json'))
+      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (data) {
+        // Promotable = real tracked link + a short promo blurb; prefer brand-direct (Razer) + ExitLag-tier gear.
+        var pool = (data.products || []).filter(function (p) {
+          return !p.free && pickGearLink(p);
+        });
+        if (!pool.length) return;
+        // Weight brand-direct (Razer) items so the best-payout gear shows more often.
+        var weighted = [];
+        pool.forEach(function (p) { weighted.push(p); if (p.brandUrl) weighted.push(p); });
+        var p = weighted[Math.floor(Math.random() * weighted.length)];
+        var lk = pickGearLink(p);
+        slot.innerHTML =
+          '<div class="sr-gear-head">🎯 Gear I run</div>' +
+          '<a class="sr-gear-item" href="' + esc(lk.url) + '" target="_blank" rel="sponsored nofollow noopener">' +
+            '<span class="sr-gear-ico">' + esc(p.icon || '🖱️') + '</span>' +
+            '<span class="sr-gear-body">' +
+              '<span class="sr-gear-name">' + esc(p.name) + '</span>' +
+              '<span class="sr-gear-sub">' + esc(p.brand) + ' · View on ' + esc(lk.label) + ' →</span>' +
+            '</span>' +
+          '</a>';
+      })
+      .catch(function () { /* silent: no gear slot if data unavailable */ });
   }
 
   function render() {
@@ -57,6 +100,7 @@
         }
         el.innerHTML = card(top, cta);
         wire();
+        renderGear();
       });
     }).catch(function(){ /* silent */ });
   }
