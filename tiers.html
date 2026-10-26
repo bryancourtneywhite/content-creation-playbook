@@ -65,16 +65,16 @@
   </div>
   </div>
 
-  <!-- Mode toggle -->
-  <div class="platform-tabs" style="max-width:420px;margin:0 auto 12px;">
-  <div class="platform-tab active" data-mode="pvp">⚔️ PvP</div>
-  <div class="platform-tab" data-mode="pve">🛡️ PvE</div>
+  <!-- Season 1 is a single combined meta ranking (from the tier-list video) -->
+  <div style="text-align:center;margin:0 auto 12px;">
+  <a class="big-btn questlog" style="display:inline-block;" href="https://youtu.be/JA2R3FW_lI4" target="_blank" rel="noopener">▶️ Watch the full tier-list breakdown</a>
   </div>
 
   <div class="callout" style="max-width:820px;margin:0 auto 26px;text-align:center;">
-  🧭 <strong>How to read this:</strong> tiers rank overall strength in the current meta.
+  🧭 <strong>How to read this:</strong> tiers rank overall strength in the current Season 1 meta.
   <strong>S</strong> = meta-defining, <strong>A</strong> = strong &amp; reliable,
-  <strong>B</strong> = viable with effort, <strong>C</strong> = needs buffs. Every class can
+  <strong>B</strong> = viable with effort, <strong>C</strong> = needs buffs,
+  <strong>D</strong> = struggling in the current meta. Every class can
   win in the right hands - this is about the current ceiling and ease of impact.
   </div>
 
@@ -142,38 +142,35 @@
   new classes release. This is an editable starting ranking, not a
   fabricated authority claim: it reflects a Templar/Gladiator main's
   read of the meta and is meant to be updated live.  */
-  var PATCH = 'Launch Meta';
-  var UPDATED = '2026-09-25';
+  var PATCH = 'Global Season 1';
+  var UPDATED = '2026-10-25';
 
-  var TIERS = {
-  pvp: {
-  S: ['Templar', 'Gladiator'],
-  A: ['Assassin', 'Ranger', 'Chanter'],
-  B: ['Sorcerer', 'Cleric'],
-  C: ['Spiritmaster', 'Brawler']
-  },
-  pve: {
-  S: ['Gladiator', 'Sorcerer'],
-  A: ['Templar', 'Ranger', 'Chanter'],
-  B: ['Assassin', 'Spiritmaster', 'Brawler'],
-  C: ['Cleric']
-  }
+  // Global Season 1 meta tier list (from the Oct 2026 tier-list video).
+  // One meta ranking shown for both modes. Spiritmaster and Brawler are not
+  // placed in this video's list, so they are intentionally omitted rather
+  // than guessed into a tier.
+  var SEASON1 = {
+  S: ['Chanter'],
+  A: ['Templar', 'Cleric'],
+  B: ['Ranger', 'Elementalist', 'Gladiator'],
+  C: ['Sorcerer'],
+  D: ['Assassin']
   };
+  var TIERS = { pvp: SEASON1, pve: SEASON1 };
   /* Optional per-class note shown on hover/tap. */
   var NOTES = {
-  'Templar': 'My main - god-mode PvX survivability + strong burst.',
-  'Gladiator': 'Rank 1 pick - huge burst and cleave, easy to impact with.',
-  'Assassin': 'High skill ceiling, elite in the right hands.',
+  'Chanter': 'Meta-defining this season - top-tier uptime, group value, and sustain.',
+  'Templar': 'My main - god-mode PvX survivability with strong burst.',
+  'Cleric': 'Strong this season - heals plus real pressure in the right hands.',
   'Ranger': 'Safe, consistent ranged damage.',
-  'Sorcerer': 'Massive AoE - shines in PvE packs.',
-  'Cleric': 'Support-leaning; strong in groups, weaker solo PvP.',
-  'Chanter': 'Hybrid buffer/bruiser - great uptime and group value.',
-  'Brawler': 'Close-range fighter - needs setup to shine.',
-  'Spiritmaster': 'Situational; needs tuning to keep pace.'
+  'Elementalist': 'Big ranged AoE and burst - viable with good positioning.',
+  'Gladiator': 'Huge burst and cleave, easy to impact with.',
+  'Sorcerer': 'Massive AoE but exposed - needs setup to shine this season.',
+  'Assassin': 'High skill ceiling; underperforming the field in the current meta.'
   };
 
-  var TIER_ORDER = ['S', 'A', 'B', 'C'];
-  var TIER_LABEL = { S: 'S', A: 'A', B: 'B', C: 'C' };
+  var TIER_ORDER = ['S', 'A', 'B', 'C', 'D'];
+  var TIER_LABEL = { S: 'S', A: 'A', B: 'B', C: 'C', D: 'D' };
 
   var board = document.getElementById('tier-board');
   var patchEl = document.getElementById('tier-patch');
