@@ -2,6 +2,11 @@
   "_comment": "Your video library. Add a new video: copy an entry, set the YouTube id (the part after youtu.be/ or watch?v=), title, and tags. The Watch page shows these in a searchable grid; the homepage 'Latest videos' row and other pages read from here too. Newest / best first is nice.",
   "videos": [
   {
+  "id": "ZMA43c_WJdA",
+  "title": "AION 2 - Ultimate Gear Progression Guide // PREPARE For LUDRA",
+  "tags": ["gear", "progression", "combat power", "cp", "ludra", "siege", "stats", "guide", "aion 2"]
+  },
+  {
   "id": "lSeRM7foIhE",
   "title": "MY TEMPLAR FOUGHT 300 PLAYERS IN THE ABYSS",
   "tags": ["templar", "pvp", "abyss", "highlight", "immortal", "aion 2"]
