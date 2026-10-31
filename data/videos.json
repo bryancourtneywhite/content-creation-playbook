@@ -2,6 +2,11 @@
   "_comment": "Your video library. Add a new video: copy an entry, set the YouTube id (the part after youtu.be/ or watch?v=), title, and tags. The Watch page shows these in a searchable grid; the homepage 'Latest videos' row and other pages read from here too. Newest / best first is nice.",
   "videos": [
   {
+  "id": "7ie8zCbComM",
+  "title": "AION 2 - World's First Rank 1 Templar Build (Updated Global Season 1)",
+  "tags": ["templar", "build", "pvp", "pve", "pvx", "season 1", "rank one", "stigmas", "macros", "guide", "aion 2"]
+  },
+  {
   "id": "ZMA43c_WJdA",
   "title": "AION 2 - Ultimate Gear Progression Guide // PREPARE For LUDRA",
   "tags": ["gear", "progression", "combat power", "cp", "ludra", "siege", "stats", "guide", "aion 2"]
