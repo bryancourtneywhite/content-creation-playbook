@@ -299,38 +299,67 @@
   </div>
   <p>Level the Genus to <strong>10 (max)</strong> as soon as you can for the better stat values.</p>
 
-  <div class="skill-grid-label">Priority Stats to Analyze (PvX Build)</div>
-  <p>Each Genus slot has a preferred stat pool. The table below covers both the <strong>Non-Special</strong> and
-  <strong>Special Insight</strong> layouts, slot by slot:</p>
-  <div class="substat-table-wrap" style="overflow-x:auto;">
+  <div class="skill-grid-label">Best Stats Per Slot (PvX Build)</div>
+  <p>Each Genus board has preferred stats per slot. <strong>Cogni, Fera, Varian, and Special</strong> all share the same layout. <strong>Natura</strong> differs on slots 4 and 7 (uses multi-hit/perfect stats instead of crit dmg).</p>
+
+  <div class="callout" style="border-left-color:#7eb8ff;margin-bottom:12px;">
+  <strong style="color:#fff;">Block-based builds:</strong> replace Accuracy / Critical Hit on slots 3, 6, and 9 with <strong>Block</strong>.
+  &nbsp;&nbsp;<strong style="color:#fff;">PvP note:</strong> Status Effect Chance (slot 4) and Status Effect Resist (slot 7) are PvP only; swap in their respective defensive variants.
+  </div>
+
+  <p style="font-weight:600;margin-bottom:4px;">Cogni, Fera, Varian &amp; Special</p>
+  <div class="substat-table-wrap" style="overflow-x:auto;margin-bottom:20px;">
   <table class="substat-table" style="width:100%;border-collapse:collapse;">
   <thead>
   <tr>
-  <th style="text-align:left;padding:8px;border-bottom:1px solid var(--border,#333);">Slot</th>
-  <th style="text-align:left;padding:8px;border-bottom:1px solid var(--border,#333);">Non-Special Genus Insight</th>
-  <th style="text-align:left;padding:8px;border-bottom:1px solid var(--border,#333);">Special Insight</th>
+  <th style="text-align:left;padding:8px;border-bottom:1px solid var(--border,#333);width:60px;">Slot</th>
+  <th style="text-align:left;padding:8px;border-bottom:1px solid var(--border,#333);">Best Stats</th>
   </tr>
   </thead>
   <tbody>
-  <tr><td style="padding:8px;"><strong>1</strong></td><td style="padding:8px;">Critical Hit, Accuracy, Block (or Evasion)</td><td style="padding:8px;">Max Attack, Attack Bonus</td></tr>
-  <tr><td style="padding:8px;"><strong>2</strong></td><td style="padding:8px;">Max Attack, Attack Bonus</td><td style="padding:8px;">Max Attack, Attack Bonus</td></tr>
-  <tr><td style="padding:8px;"><strong>3</strong></td><td style="padding:8px;">Damage Boost, Double Chance, Weapon Damage Boost, or Perfect Chance</td><td style="padding:8px;">Damage Boost, Weapon Damage Boost, Double Chance, or Perfect Chance</td></tr>
-  <tr><td style="padding:8px;"><strong>4</strong></td><td style="padding:8px;">Critical Hit, Accuracy, Block (or Evasion)</td><td style="padding:8px;">Max Attack, Attack Bonus</td></tr>
-  <tr><td style="padding:8px;"><strong>5</strong></td><td style="padding:8px;">Max Attack, Attack Bonus</td><td style="padding:8px;">Max Attack, Attack Bonus</td></tr>
-  <tr><td style="padding:8px;"><strong>6</strong></td><td style="padding:8px;">Critical Hit, Accuracy, Damage Tolerance</td><td style="padding:8px;">Damage Tolerance, Weapon Damage Tolerance</td></tr>
-  <tr><td style="padding:8px;"><strong>7</strong></td><td style="padding:8px;">Critical Hit, Accuracy, Block (or Evasion)</td><td style="padding:8px;">Max Attack, Attack Bonus</td></tr>
-  <tr><td style="padding:8px;"><strong>8</strong></td><td style="padding:8px;">Max Attack, Attack Bonus</td><td style="padding:8px;">Max Attack, Attack Bonus</td></tr>
-  <tr><td style="padding:8px;"><strong>9</strong></td><td style="padding:8px;">Damage Boost, Weapon Damage Boost, Double Chance, or Perfect Chance</td><td style="padding:8px;">Damage Boost, or Perfect Chance</td></tr>
+  <tr><td style="padding:8px;"><strong>1</strong></td><td style="padding:8px;">Attack Bonus, Max Attack</td></tr>
+  <tr><td style="padding:8px;"><strong>2</strong></td><td style="padding:8px;">HP Increase, Defense Increase</td></tr>
+  <tr><td style="padding:8px;"><strong>3</strong></td><td style="padding:8px;">Accuracy Bonus, Critical Hit <em>(Block for block-based builds)</em></td></tr>
+  <tr><td style="padding:8px;"><strong>4</strong></td><td style="padding:8px;">Critical Dmg Boost, Dmg Boost <em>(+ Status Effect Chance for PvP)</em></td></tr>
+  <tr><td style="padding:8px;"><strong>5</strong></td><td style="padding:8px;">Attack Bonus, Max Attack</td></tr>
+  <tr><td style="padding:8px;"><strong>6</strong></td><td style="padding:8px;">Accuracy Bonus, Critical Hit <em>(Block for block-based builds)</em></td></tr>
+  <tr><td style="padding:8px;"><strong>7</strong></td><td style="padding:8px;">Critical Dmg Tolerance, Dmg Tolerance, Endurance <em>(+ Status Effect Resist for PvP)</em></td></tr>
+  <tr><td style="padding:8px;"><strong>8</strong></td><td style="padding:8px;">HP Increase, Defense Bonus, Critical Dmg Def</td></tr>
+  <tr><td style="padding:8px;"><strong>9</strong></td><td style="padding:8px;">Accuracy Bonus, Critical Hit <em>(Block for block-based builds)</em></td></tr>
+  </tbody>
+  </table>
+  </div>
+
+  <p style="font-weight:600;margin-bottom:4px;">Natura (different on slots 4 and 7)</p>
+  <div class="substat-table-wrap" style="overflow-x:auto;margin-bottom:20px;">
+  <table class="substat-table" style="width:100%;border-collapse:collapse;">
+  <thead>
+  <tr>
+  <th style="text-align:left;padding:8px;border-bottom:1px solid var(--border,#333);width:60px;">Slot</th>
+  <th style="text-align:left;padding:8px;border-bottom:1px solid var(--border,#333);">Best Stats</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr><td style="padding:8px;"><strong>1</strong></td><td style="padding:8px;">Attack Bonus, Max Attack</td></tr>
+  <tr><td style="padding:8px;"><strong>2</strong></td><td style="padding:8px;">HP Increase, Defense Increase</td></tr>
+  <tr><td style="padding:8px;"><strong>3</strong></td><td style="padding:8px;">Accuracy Bonus, Critical Hit <em>(Block for block-based builds)</em></td></tr>
+  <tr><td style="padding:8px;"><strong>4 *</strong></td><td style="padding:8px;">Multi-hit Chance, Perfect Chance <em>(+ Status Effect Chance or Accuracy for PvP)</em></td></tr>
+  <tr><td style="padding:8px;"><strong>5</strong></td><td style="padding:8px;">Attack Bonus, Max Attack</td></tr>
+  <tr><td style="padding:8px;"><strong>6</strong></td><td style="padding:8px;">Accuracy Bonus, Critical Hit <em>(Block for block-based builds)</em></td></tr>
+  <tr><td style="padding:8px;"><strong>7 *</strong></td><td style="padding:8px;">Multi-hit Resist, Perfect Resist, Endurance <em>(+ Status Effect Resist for PvP)</em></td></tr>
+  <tr><td style="padding:8px;"><strong>8</strong></td><td style="padding:8px;">HP Increase, Defense Bonus, Critical Dmg Def</td></tr>
+  <tr><td style="padding:8px;"><strong>9</strong></td><td style="padding:8px;">Accuracy Bonus, Critical Hit <em>(Block for block-based builds)</em></td></tr>
   </tbody>
   </table>
   </div>
 
   <div class="skill-grid-label">Priority Slots</div>
   <ol>
-  <li><strong>Slot No. 4</strong> - highest priority.</li>
-  <li><strong>Slot No. 7</strong>.</li>
-  <li><strong>Slot No. 2</strong> and <strong>Slot No. 8</strong>.</li>
-  <li><strong>Remaining slots</strong> - focus on Attack and Accuracy / Critical.</li>
+  <li><strong>Slots 1 and 5</strong> - Attack Bonus / Max Attack first (biggest CP impact).</li>
+  <li><strong>Slot 4</strong> - Critical Dmg Boost or Multi-hit Chance (Natura): highest offensive payoff per slot.</li>
+  <li><strong>Slot 7</strong> - Dmg Tolerance or Multi-hit Resist (Natura): best survivability return.</li>
+  <li><strong>Slots 3, 6, 9</strong> - Accuracy / Critical Hit (or Block): fill these once the top four are locked.</li>
+  <li><strong>Slots 2 and 8</strong> - HP / Defense: last, since they contribute least to your offensive output.</li>
   </ol>
 
   <div class="skill-grid-label" id="daeva-board">Daeva Board Layouts</div>
